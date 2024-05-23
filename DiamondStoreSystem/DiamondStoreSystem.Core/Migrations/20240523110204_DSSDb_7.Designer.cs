@@ -4,14 +4,16 @@ using DiamondStoreSystem.Core.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DiamondStoreSystem.Core.Migrations
 {
     [DbContext(typeof(DiamondStoreSystemDbContext))]
-    partial class DiamondStoreSystemDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240523110204_DSSDb_7")]
+    partial class DSSDb_7
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

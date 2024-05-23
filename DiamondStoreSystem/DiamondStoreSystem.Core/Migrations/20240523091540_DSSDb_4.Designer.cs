@@ -4,14 +4,16 @@ using DiamondStoreSystem.Core.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DiamondStoreSystem.Core.Migrations
 {
     [DbContext(typeof(DiamondStoreSystemDbContext))]
-    partial class DiamondStoreSystemDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240523091540_DSSDb_4")]
+    partial class DSSDb_4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -89,6 +91,7 @@ namespace DiamondStoreSystem.Core.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("AccountID")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("DOB")
@@ -171,7 +174,9 @@ namespace DiamondStoreSystem.Core.Migrations
                 {
                     b.HasOne("DiamondStoreSystem.Core.Models.Account", "Account")
                         .WithMany()
-                        .HasForeignKey("AccountID");
+                        .HasForeignKey("AccountID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Account");
                 });

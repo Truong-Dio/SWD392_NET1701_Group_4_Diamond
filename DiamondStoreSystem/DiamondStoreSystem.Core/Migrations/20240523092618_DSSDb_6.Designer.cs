@@ -4,14 +4,16 @@ using DiamondStoreSystem.Core.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DiamondStoreSystem.Core.Migrations
 {
     [DbContext(typeof(DiamondStoreSystemDbContext))]
-    partial class DiamondStoreSystemDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240523092618_DSSDb_6")]
+    partial class DSSDb_6
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -43,7 +45,7 @@ namespace DiamondStoreSystem.Core.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("AccountID")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Address")
                         .IsRequired()
@@ -78,8 +80,6 @@ namespace DiamondStoreSystem.Core.Migrations
 
                     b.HasKey("UserUID");
 
-                    b.HasIndex("AccountID");
-
                     b.ToTable("Customers");
                 });
 
@@ -89,7 +89,8 @@ namespace DiamondStoreSystem.Core.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("AccountID")
-                        .HasColumnType("nvarchar(450)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("DOB")
                         .HasColumnType("datetime2");
@@ -115,17 +116,12 @@ namespace DiamondStoreSystem.Core.Migrations
 
                     b.HasKey("EmpID");
 
-                    b.HasIndex("AccountID");
-
                     b.ToTable("Employees");
                 });
 
             modelBuilder.Entity("DiamondStoreSystem.Core.Models.PurchaseOrder", b =>
                 {
                     b.Property<string>("POID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("CustomerUserUID")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("DateOrdered")
@@ -136,9 +132,6 @@ namespace DiamondStoreSystem.Core.Migrations
 
                     b.Property<string>("EmpID")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("EmployeeEmpID")
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("OrderStatus")
                         .HasColumnType("int");
@@ -151,54 +144,7 @@ namespace DiamondStoreSystem.Core.Migrations
 
                     b.HasKey("POID");
 
-                    b.HasIndex("CustomerUserUID");
-
-                    b.HasIndex("EmployeeEmpID");
-
                     b.ToTable("PurchaseOrders");
-                });
-
-            modelBuilder.Entity("DiamondStoreSystem.Core.Models.Customer", b =>
-                {
-                    b.HasOne("DiamondStoreSystem.Core.Models.Account", "Account")
-                        .WithMany()
-                        .HasForeignKey("AccountID");
-
-                    b.Navigation("Account");
-                });
-
-            modelBuilder.Entity("DiamondStoreSystem.Core.Models.Employee", b =>
-                {
-                    b.HasOne("DiamondStoreSystem.Core.Models.Account", "Account")
-                        .WithMany()
-                        .HasForeignKey("AccountID");
-
-                    b.Navigation("Account");
-                });
-
-            modelBuilder.Entity("DiamondStoreSystem.Core.Models.PurchaseOrder", b =>
-                {
-                    b.HasOne("DiamondStoreSystem.Core.Models.Customer", "Customer")
-                        .WithMany("PurchaseOrders")
-                        .HasForeignKey("CustomerUserUID");
-
-                    b.HasOne("DiamondStoreSystem.Core.Models.Employee", "Employee")
-                        .WithMany("PurchaseOrders")
-                        .HasForeignKey("EmployeeEmpID");
-
-                    b.Navigation("Customer");
-
-                    b.Navigation("Employee");
-                });
-
-            modelBuilder.Entity("DiamondStoreSystem.Core.Models.Customer", b =>
-                {
-                    b.Navigation("PurchaseOrders");
-                });
-
-            modelBuilder.Entity("DiamondStoreSystem.Core.Models.Employee", b =>
-                {
-                    b.Navigation("PurchaseOrders");
                 });
 #pragma warning restore 612, 618
         }

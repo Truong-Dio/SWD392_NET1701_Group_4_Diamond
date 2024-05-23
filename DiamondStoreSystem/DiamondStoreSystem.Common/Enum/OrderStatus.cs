@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DiamondStoreSystem.Core.Enum
+namespace DiamondStoreSystem.Common.Enum
 {
     public enum OrderStatus
     {
