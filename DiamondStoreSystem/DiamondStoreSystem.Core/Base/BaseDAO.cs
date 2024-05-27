@@ -1,4 +1,4 @@
-﻿using DiamondStoreSystem.Core.Models;
+﻿using DiamondStore.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ namespace DiamondStoreSystem.Core.Base
 {
     public class BaseDAO<T> where T : class
     {
-        protected readonly DiamondStoreSystemDbContext _context;
+        protected readonly DiamondStoreDbContext _context;
         protected readonly DbSet<T> _dbSet;
 
         public BaseDAO()

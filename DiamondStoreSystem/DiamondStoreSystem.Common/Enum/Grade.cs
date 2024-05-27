@@ -6,12 +6,8 @@ using System.Threading.Tasks;
 
 namespace DiamondStore.Common.Enum
 {
-    public enum OrderStatus
+    public enum Grade
     {
-
-        Cancelled,
-        Pending,
-        Confirmed,
-        Shipped
+        Poor, Fair, Good, VeryGood, Excellent
     }
 }

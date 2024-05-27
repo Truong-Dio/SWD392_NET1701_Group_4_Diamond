@@ -6,12 +6,9 @@ using System.Threading.Tasks;
 
 namespace DiamondStore.Common.Enum
 {
-    public enum OrderStatus
+    public enum LabCreated
     {
-
-        Cancelled,
-        Pending,
-        Confirmed,
-        Shipped
+        Artificial,
+        Natural
     }
 }
