@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace DiamondStore.Common.Enum
 {
-    public enum OrderStatus
+    public enum Role
     {
-
-        Cancelled,
-        Pending,
-        Confirmed,
-        Shipped
+        Customer,
+        SalesStaff,
+        DeliveryStaff,
+        Manager,
+        Admin
     }
 }

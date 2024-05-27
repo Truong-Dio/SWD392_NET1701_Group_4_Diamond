@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 
 namespace DiamondStore.Common.Enum
 {
-    public enum OrderStatus
+    public enum Material
     {
-
-        Cancelled,
-        Pending,
-        Confirmed,
-        Shipped
+        PreciousMetals,
+        SterlingSilver,
+        HypoallergenicMetals,
+        Leather,
+        Fabric,
+        Silicone
     }
 }

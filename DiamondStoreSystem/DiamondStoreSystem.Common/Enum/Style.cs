@@ -6,12 +6,9 @@ using System.Threading.Tasks;
 
 namespace DiamondStore.Common.Enum
 {
-    public enum OrderStatus
+    public enum Style
     {
-
-        Cancelled,
-        Pending,
-        Confirmed,
-        Shipped
+        Ring,
+        Necklace, Pendant, Earring, Shake, Charm, Neck, Straps, Stirrups, GoldenFortune
     }
 }
