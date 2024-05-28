@@ -1,4 +1,4 @@
-﻿using DiamondStore.Common.Enum;
+﻿using DiamondStoreSystem.Common.Enum;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DiamondStore.Data.Entities
+namespace DiamondStoreSystem.DTO.Entities
 {
     public class Order
     {

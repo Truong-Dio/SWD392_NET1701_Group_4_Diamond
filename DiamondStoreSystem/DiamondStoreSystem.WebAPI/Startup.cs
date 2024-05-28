@@ -1,7 +1,15 @@
+using AutoMapper;
+using DiamondStoreSystem.Business.IService;
+using DiamondStoreSystem.Business.Service;
+using DiamondStoreSystem.DTO.Entities;
+using DiamondStoreSystem.Repository;
+using DiamondStoreSystem.WebAPI.AppStarts;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -26,12 +34,35 @@ namespace DiamondStoreSystem.WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<DiamondStoreDbContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnetion"));
+            });
+            
+            var mapperConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MapperConfig());
+            });
+
+            IMapper mapper = mapperConfig.CreateMapper();
+            services.AddSingleton(mapper);
+
+            services.AddMvc();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "DiamondStoreSystem.WebAPI", Version = "v1" });
             });
+            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IAccessoryService, AccessoryService>();
+            services.AddScoped<IDiamondService, DiamondService>();
+            services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IOrderDetailService, OrderDetailService>();
+            services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IProductDiamondService, ProductDiamondService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
