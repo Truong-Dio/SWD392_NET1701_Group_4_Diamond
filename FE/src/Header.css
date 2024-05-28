@@ -1,0 +1,33 @@
+.header-container {
+    border: 2px solid #333; 
+    padding: 10px; 
+    margin-bottom: 20px; 
+  }
+  
+  nav {
+    background-color: #333; /* Màu nền */
+  }
+  
+  ul {
+    list-style-type: none; /* Ẩn dấu chấm đầu dòng */
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* Ngăn các phần tử con chạy ra khỏi khung của ul */
+  }
+  
+  li {
+    float: left; /* Đặt phần tử li bên cạnh nhau */
+  }
+  
+  li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+  }
+  
+  li a:hover {
+    background-color: #111; /* Màu nền khi rê chuột vào */
+  }
+  
