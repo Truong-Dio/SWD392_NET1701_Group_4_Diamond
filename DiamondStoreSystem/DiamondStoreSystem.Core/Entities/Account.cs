@@ -1,10 +1,10 @@
-﻿using DiamondStore.Common.Enum;
+﻿using DiamondStoreSystem.Common.Enum;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Principal;
 
-namespace DiamondStore.Data.Entities
+namespace DiamondStoreSystem.DTO.Entities
 {
     public class Account
     {

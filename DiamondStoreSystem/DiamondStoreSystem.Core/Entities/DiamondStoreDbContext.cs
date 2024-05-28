@@ -11,7 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DiamondStore.Data.Entities
+namespace DiamondStoreSystem.DTO.Entities
 {
     public class DiamondStoreDbContext : DbContext
     {
@@ -36,7 +36,7 @@ namespace DiamondStore.Data.Entities
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true).Build();
-            optionsBuilder.UseSqlServer(configuration.GetConnectionString("DiamondStoreSystemDb"));
+            optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnetion"));
         }
     }
 }

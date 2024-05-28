@@ -21,7 +21,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DiamondStoreSystem.Common\DiamondStoreSystem.Common.csproj" />
-    <ProjectReference Include="..\DiamondStoreSystem.Contracts\DiamondStoreSystem.Contracts.csproj" />
+    <ProjectReference Include="..\DiamondStoreSystem.Contracts\DiamondStoreSystem.DTO.csproj" />
+    <ProjectReference Include="..\DiamondStoreSystem.Repository\DiamondStoreSystem.Repository.csproj" />
     <ProjectReference Include="..\DiamondStoreSystem.Services\DiamondStoreSystem.Business.csproj" />
   </ItemGroup>
 
@@ -29,10 +30,6 @@
     <Content Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controllers\" />
   </ItemGroup>
 
 </Project>

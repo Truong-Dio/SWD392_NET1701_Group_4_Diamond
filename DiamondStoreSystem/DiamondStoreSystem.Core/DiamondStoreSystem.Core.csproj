@@ -36,8 +36,4 @@
     <ProjectReference Include="..\DiamondStoreSystem.Common\DiamondStoreSystem.Common.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DAO\" />
-  </ItemGroup>
-
 </Project>
