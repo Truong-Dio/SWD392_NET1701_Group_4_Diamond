@@ -1,5 +1,6 @@
 ﻿using DiamondStoreSystem.Business.IService;
-using DiamondStoreSystem.DTO.EntitiesRequest;
+using DiamondStoreSystem.Business.Service;
+using DiamondStoreSystem.DTO.EntitiesRequest.Product;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DiamondStoreSystem.WebAPI.Controllers
@@ -45,6 +46,20 @@ namespace DiamondStoreSystem.WebAPI.Controllers
         public IActionResult GetCertificate(string id)
         {
             var result = _diamondService.ShowCertificate(id);
+            return Ok(result);
+        }
+
+        [HttpDelete("Delete")]
+        public IActionResult DeleteDiamond(string id)
+        {
+            var result = _diamondService.Delete(id);
+            return Ok(result);
+        }
+
+        [HttpDelete("HardDelete")]
+        public IActionResult Delete(string id)
+        {
+            var result = _diamondService.HardDelete(id);
             return Ok(result);
         }
     }

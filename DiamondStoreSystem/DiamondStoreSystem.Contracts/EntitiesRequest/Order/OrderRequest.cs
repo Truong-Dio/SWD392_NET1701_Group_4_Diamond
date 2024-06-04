@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DiamondStoreSystem.DTO.EntitiesResponse
+namespace DiamondStoreSystem.DTO.EntitiesRequest.Order
 {
-    public class OrderResponse
+    public class OrderRequest
     {
         [Key]
         public string OrderID { get; set; }

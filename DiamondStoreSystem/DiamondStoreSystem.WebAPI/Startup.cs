@@ -60,8 +60,6 @@ namespace DiamondStoreSystem.WebAPI
             services.AddScoped<IDiamondService, DiamondService>();
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IOrderDetailService, OrderDetailService>();
-            services.AddScoped<IProductService, ProductService>();
-            services.AddScoped<IProductDiamondService, ProductDiamondService>();
 
         }
 

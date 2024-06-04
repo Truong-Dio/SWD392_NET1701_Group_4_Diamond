@@ -2,7 +2,7 @@
 using DiamondStoreSystem.Business.IService;
 using DiamondStoreSystem.Business.Service;
 using DiamondStoreSystem.DTO.Entities;
-using DiamondStoreSystem.DTO.EntitiesRequest;
+using DiamondStoreSystem.DTO.EntitiesRequest.Account;
 using DiamondStoreSystem.DTO.EntitiesResponse;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -47,6 +47,13 @@ namespace DiamondStoreSystem.WebAPI.Controllers
         public IActionResult CreateNewAccount([FromBody] AccountRequest account)
         {
             var result = _accountService.Add(account);
+            return Ok(result);
+        }
+
+        [HttpDelete("Delete")]
+        public IActionResult Delete(string id)
+        {
+            var result = _accountService.HardDelete(id);
             return Ok(result);
         }
     }

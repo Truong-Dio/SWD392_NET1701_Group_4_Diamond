@@ -17,6 +17,9 @@ namespace DiamondStoreSystem.DTO.Entities
         public Material Material { get; set; }
         public Style Style { get; set; }
         public string Brand { get; set; }
-        public bool Status { get; set; } = true;
+        public bool Block { get; set; }
+        public double Price { get; set; }
+        public int UnitInStock { get; set; }
+        public ICollection<OrderDetail> OrderDetails { get; set; }
     }
 }

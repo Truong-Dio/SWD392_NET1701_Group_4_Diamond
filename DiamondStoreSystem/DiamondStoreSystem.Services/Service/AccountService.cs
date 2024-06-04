@@ -3,8 +3,8 @@ using DiamondStoreSystem.Business.Interface;
 using DiamondStoreSystem.Business.IService;
 using DiamondStoreSystem.Common;
 using DiamondStoreSystem.DTO.Entities;
-using DiamondStoreSystem.DTO.EntitiesRequest;
-using DiamondStoreSystem.DTO.EntitiesResponse;
+using DiamondStoreSystem.DTO.EntitiesRequest.Account;
+using DiamondStoreSystem.DTO.EntitiesResponse.Account;
 using DiamondStoreSystem.Repository;
 using System;
 using System.Collections.Generic;
@@ -18,11 +18,12 @@ namespace DiamondStoreSystem.Business.Service
     {
         private readonly IMapper _mapper;
         private readonly IGenericRepository<Account> _repository;
-
-        public AccountService(IGenericRepository<Account> repository, IMapper mapper)
+        private readonly IOrderService _orderService;
+        public AccountService(IGenericRepository<Account> repository, IMapper mapper, IOrderService orderService)
         {
             _mapper = mapper;
-            _repository = repository; 
+            _repository = repository;
+            _orderService = orderService;
         }
         public IDSSResult Add(AccountRequest account)
         {
@@ -57,7 +58,12 @@ namespace DiamondStoreSystem.Business.Service
                     return result;
                 }
                 var account = _mapper.Map<Account>(result.Data);
-                account.Status = false;
+                account.Block = true;
+                var temp = _orderService.HardDeleteRangeByAccountID(account.AccountID);
+                if (temp.Status <= 0)
+                {
+                    return temp;
+                }
                 _repository.HardDeleteByString(account.AccountID);
                 var check = _repository.Save();
                 if (check == 0)
@@ -75,14 +81,13 @@ namespace DiamondStoreSystem.Business.Service
         {
             try
             {
-                //var accountRequest = _mapper.Map<Account>(AccountRequest);
                 var result = GetByEmail(AccountId);
                 if (result.Data == null)
                 {
                     return result;
                 }
                 var account = _mapper.Map<Account>(result.Data);
-                account.Status = false;
+                account.Block = true;
                 _repository.Update(account);
                 var check = _repository.Save();
                 if (check == 0)
@@ -114,18 +119,32 @@ namespace DiamondStoreSystem.Business.Service
             }
         }
 
-        public IDSSResult Get(string email, string password)
+        public IDSSResult Login(AccountAuth auth)
         {
             try
             {
-                var result = _repository.GetFirstOrDefault(x => x.Email == email && x.Password == password);
+                var result = _repository.GetFirstOrDefault(x => x.Email == auth.Email && x.Password == auth.Password);
                 
                 if (result == null)
                 {
                     return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
                 }
 
-                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, _mapper.Map<AccountResponse>(result));
+                switch (result.Role)
+                {
+                    case Common.Enum.Role.Customer:
+                        return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, _mapper.Map<AccountCustomerResponse>(result));
+                    case Common.Enum.Role.SalesStaff:
+                        return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, _mapper.Map<AccountEmployeeResponse>(result));
+                    case Common.Enum.Role.DeliveryStaff:
+                        return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, _mapper.Map<AccountEmployeeResponse>(result));
+                    case Common.Enum.Role.Manager:
+                        return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, _mapper.Map<AccountEmployeeResponse>(result));
+                    case Common.Enum.Role.Admin:
+                        return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, _mapper.Map<AccountEmployeeResponse>(result));
+                    default:
+                        return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, result);
+                }
             }
             catch (Exception ex)
             {
@@ -137,12 +156,12 @@ namespace DiamondStoreSystem.Business.Service
         {
             try
             {
-                var accounts = _repository.Find(x => x.AccountID == AccountId);
-                if (accounts == null)
+                var account = _repository.GetFirstOrDefault(x => x.AccountID == AccountId);
+                if (account == null)
                 {
                     return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
                 }
-                return new DSSResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_READ_MSG, _mapper.Map<AccountResponse>(accounts));
+                return new DSSResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_READ_MSG, account);
             }
             catch (Exception ex)
             {
@@ -159,7 +178,7 @@ namespace DiamondStoreSystem.Business.Service
                 {
                     return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
                 }
-                return new DSSResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_READ_MSG, _mapper.Map<AccountResponse>(accounts));
+                return new DSSResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_READ_MSG, _mapper.Map<AccountEmployeeResponse>(accounts));
             }
             catch (Exception ex)
             {
@@ -200,13 +219,7 @@ namespace DiamondStoreSystem.Business.Service
                 {
                     return result;
                 }
-                var account = (AccountResponse)result.Data;
-                account.Address = accountClient.Address;
-                account.Phone = accountClient.Phone;
-                account.FirstName = accountClient.FirstName;
-                account.LastName = accountClient.LastName;
-                account.Gender = accountClient.Gender;
-                account.DOB = accountClient.DOB;
+                var account = (AccountEmployeeResponse)result.Data;
                 await _repository.UpdateByIdByString(_mapper.Map<Account>(account), email);
                 var check = _repository.Save();
                 if (check == 0)

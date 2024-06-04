@@ -3,8 +3,8 @@ using DiamondStoreSystem.Business.Interface;
 using DiamondStoreSystem.Business.IService;
 using DiamondStoreSystem.Common;
 using DiamondStoreSystem.DTO.Entities;
-using DiamondStoreSystem.DTO.EntitiesRequest;
-using DiamondStoreSystem.DTO.EntitiesResponse;
+using DiamondStoreSystem.DTO.EntitiesRequest.Product;
+using DiamondStoreSystem.DTO.EntitiesResponse.Product;
 using DiamondStoreSystem.Repository;
 using System;
 using System.Collections.Generic;
@@ -58,7 +58,7 @@ namespace DiamondStoreSystem.Business.Service
                     return result;
                 }
                 Diamond diamond = _mapper.Map<Diamond>(result.Data);
-                diamond.Status = false;
+                diamond.Block = true;
                 _repository.Update(diamond);
                 var check = _repository.Save();
                 if (check <= 0)
@@ -142,6 +142,29 @@ namespace DiamondStoreSystem.Business.Service
                     return result;
                 }
                 return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, _mapper.Map<CertificateResponse>((DiamondResponse)result.Data));
+            }
+            catch (Exception ex)
+            {
+                return new DSSResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+        }
+
+        public IDSSResult HardDelete(string DiamondId)
+        {
+            try
+            {
+                var result = GetByID(DiamondId);
+                if (result.Status <= 0)
+                {
+                    return result;
+                }
+                _repository.HardDeleteByString(DiamondId);
+                var check = _repository.Save();
+                if (check <= 0)
+                {
+                    return new DSSResult(Const.FAIL_DELETE_CODE, Const.FAIL_DELETE_MSG);
+                }
+                return new DSSResult(Const.SUCCESS_DELETE_CODE, Const.SUCCESS_DELETE_MSG);
             }
             catch (Exception ex)
             {

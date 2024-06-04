@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DiamondStoreSystem.DTO.EntitiesResponse
+namespace DiamondStoreSystem.DTO.EntitiesRequest.Product
 {
-    public class AccessoryResponse
+    public class AccessoryRequest
     {
         [Key]
         public string AccessoryID { get; set; }
