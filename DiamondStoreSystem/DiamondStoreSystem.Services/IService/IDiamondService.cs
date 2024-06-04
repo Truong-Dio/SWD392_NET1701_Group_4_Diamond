@@ -15,5 +15,6 @@ namespace DiamondStoreSystem.Business.IService
         public IDSSResult Delete(string DiamondId);
         public IDSSResult Add(DiamondRequest DiamondRequest);
         public IDSSResult GetByID(string DiamondId);
+        public IDSSResult ShowCertificate(string DiamondId);
     }
 }

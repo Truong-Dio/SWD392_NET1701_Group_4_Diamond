@@ -54,7 +54,7 @@ namespace DiamondStoreSystem.Business.Service
                 var result = GetByID(AccountId);
                 if (result.Data == null)
                 {
-                    return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
+                    return result;
                 }
                 var account = _mapper.Map<Account>(result.Data);
                 account.Status = false;
@@ -79,7 +79,7 @@ namespace DiamondStoreSystem.Business.Service
                 var result = GetByEmail(AccountId);
                 if (result.Data == null)
                 {
-                    return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
+                    return result;
                 }
                 var account = _mapper.Map<Account>(result.Data);
                 account.Status = false;
@@ -175,7 +175,7 @@ namespace DiamondStoreSystem.Business.Service
                 var result = GetByEmail(accountRequest.Email);
                 if (result.Data == null)
                 {
-                    return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
+                    return result;
                 }
                 _repository.Update(accountRequest);
                 var check = _repository.Save();
@@ -198,7 +198,7 @@ namespace DiamondStoreSystem.Business.Service
                 var result = GetByEmail(email);
                 if (result.Data == null)
                 {
-                    return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
+                    return result;
                 }
                 var account = (AccountResponse)result.Data;
                 account.Address = accountClient.Address;

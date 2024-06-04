@@ -31,6 +31,11 @@ namespace DiamondStoreSystem.Business.Service
             throw new NotImplementedException();
         }
 
+        public IDSSResult GetByOrderID(string orderId)
+        {
+            throw new NotImplementedException();
+        }
+
         public IDSSResult Update(OrderDetailRequest OrderDetailRequest)
         {
             throw new NotImplementedException();

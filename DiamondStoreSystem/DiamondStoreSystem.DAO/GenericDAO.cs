@@ -129,7 +129,7 @@ namespace DiamondStoreSystem.DAO
 
         public virtual void UpdateRange(IQueryable<T> entities)
         {
-            Table.RemoveRange(entities);
+            Table.UpdateRange(entities);
         }
 
         public virtual async Task Update(T entity)
