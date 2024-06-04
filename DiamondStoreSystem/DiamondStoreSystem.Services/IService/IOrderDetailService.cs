@@ -15,5 +15,6 @@ namespace DiamondStoreSystem.Business.IService
         public IDSSResult Delete(string OrderDetailId);
         public IDSSResult Add(OrderDetailRequest OrderDetailRequest);
         public IDSSResult GetByID(string OrderDetailId);
+        public IDSSResult GetByOrderID(string orderId);
     }
 }

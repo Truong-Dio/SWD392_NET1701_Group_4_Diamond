@@ -26,44 +26,28 @@ namespace DiamondStoreSystem.WebAPI.Controllers
         public IActionResult GetAllAccount()
         {
             var result = _accountService.Get();
-            if (result.Status <= 0)
-            {
-                return Ok(result.Message);
-            }
-            return Ok(result.Data);
+            return Ok(result);
         }
 
         [HttpGet("Email")]
         public IActionResult Get(string email)
         {
             var result = _accountService.GetByEmail(email);
-            if (result.Status <= 0)
-            {
-                return Ok(result.Message);
-            }
-            return Ok(result.Data);
+            return Ok(result);
         }
 
         [HttpPut("Email")]
         public async Task<IActionResult> UpdateAccountByClient(string email, [FromBody] AccountClient accountClient)
         {
             var result = await _accountService.UpdateByEmail(email, accountClient);
-            if (result.Status <= 0)
-            {
-                return Ok(result.Message);
-            }
-            return Ok(result.Message);
+            return Ok(result);
         }
 
         [HttpPost]
         public IActionResult CreateNewAccount([FromBody] AccountRequest account)
         {
             var result = _accountService.Add(account);
-            if (result.Status <= 0)
-            {
-                return Ok(result.Message);
-            }
-            return Ok(result.Message);
+            return Ok(result);
         }
     }
 }

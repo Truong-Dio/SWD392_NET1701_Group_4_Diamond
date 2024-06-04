@@ -37,6 +37,9 @@ namespace DiamondStoreSystem.WebAPI.AppStarts
             CreateMap<ProductDiamond, ProductDiamondResponse>().ReverseMap();
             CreateMap<ProductDiamond, ProductDiamondRequest>().ReverseMap();
             CreateMap<ProductDiamondRequest, ProductDiamondResponse>().ReverseMap();
+
+            CreateMap<DiamondResponse, CertificateResponse>().ReverseMap();
+            CreateMap<Diamond, CertificateResponse>().ReverseMap();
         }
     }
 }
