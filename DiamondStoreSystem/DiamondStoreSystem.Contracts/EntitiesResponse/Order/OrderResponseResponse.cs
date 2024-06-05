@@ -6,17 +6,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DiamondStoreSystem.DTO.EntitiesRequest
+namespace DiamondStoreSystem.DTO.EntitiesResponse.Order
 {
-    public class OrderRequest
+    public class OrderResponse
     {
-        [Key]
         public string OrderID { get; set; }
         public OrderStatus OrderStatus { get; set; }
         public DateTime DateOrdered { get; set; }
         public DateTime? DateReceived { get; set; }
         public double TotalPrice { get; set; }
         public string AccountID { get; set; }
-        public bool Status { get; set; }
+        public PayMethod PayMethod { get; set; }
     }
 }

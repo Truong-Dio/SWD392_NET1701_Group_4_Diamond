@@ -19,6 +19,7 @@ namespace DiamondStoreSystem.DTO.Entities
         public string AccountID { get; set; }
         public ICollection<OrderDetail> OrderDetails { get; set; }
         public Account Account { get; set; }
-        public bool Status { get; set; }
+        public PayMethod PayMethod { get; set; }
+        public bool Block { get; set; }
     }
 }

@@ -6,17 +6,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DiamondStoreSystem.DTO.EntitiesResponse
+namespace DiamondStoreSystem.DTO.EntitiesRequest.Product
 {
-    public class AccessoryResponse
+    public class AccessoryRequest
     {
-        [Key]
         public string AccessoryID { get; set; }
         public string AccessoryName { get; set; }
         public string Description { get; set; }
         public Material Material { get; set; }
         public Style Style { get; set; }
         public string Brand { get; set; }
-        public bool Status { get; set; } = true;
+        public double Price { get; set; }
+        public int UnitInStock { get; set; }
     }
 }

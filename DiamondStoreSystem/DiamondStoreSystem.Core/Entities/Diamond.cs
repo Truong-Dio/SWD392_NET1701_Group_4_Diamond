@@ -1,6 +1,7 @@
 ﻿using DiamondStoreSystem.Common.Enum;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
@@ -14,13 +15,13 @@ namespace DiamondStoreSystem.DTO.Entities
         public string DiamondID { get; set; }
         public string Origin { get; set; }
         public LabCreated LabCreated { get; set; }
-        public float TablePercent { get; set; }
-        public float DepthPercent { get; set; }
+        public double TablePercent { get; set; }
+        public double DepthPercent { get; set; }
         public string Description { get; set; }
         public int GIAReportNumber { get; set; }
         public DateTime IssueDate { get; set; }
         public Shape Shape { get; set; }
-        public float CaratWeight { get; set; }
+        public double CaratWeight { get; set; }
         public ColorGrade ColorGrade { get; set; }
         public ClarityGrade ClarityGrade { get; set; }
         public Grade CutGrade { get; set; }
@@ -28,10 +29,13 @@ namespace DiamondStoreSystem.DTO.Entities
         public Grade SymmetryGrade { get; set; }
         public Grade FluoresceneGrade { get; set; }
         public string Inscription { get; set; }
-        public float Height {  get; set; }
-        public float Width { get; set; }
-        public float Length { get; set; }
-        public ICollection<ProductDiamond> ProductDiamonds { get; set; }
-        public bool Status { get; set; } = true;
+        public double Height {  get; set; }
+        public double Width { get; set; }
+        public double Length { get; set; }
+        public double Price {  get; set; }
+        public bool Block { get; set; }
+        public int UnitInStock { get; set; }
+        public string SKU {  get; set; }
+        public ICollection<OrderDetail> OrderDetails { get; set; }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using DiamondStoreSystem.Business.Interface;
-using DiamondStoreSystem.DTO.EntitiesRequest;
+using DiamondStoreSystem.DTO.EntitiesRequest.Product;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,9 +11,10 @@ namespace DiamondStoreSystem.Business.IService
     public interface IAccessoryService
     {
         public IDSSResult Get();
-        public IDSSResult Update(AccessoryRequest AccessoryRequest);
-        public IDSSResult Delete(string AccessoryId);
-        public IDSSResult Add(AccessoryRequest AccessoryRequest);
-        public IDSSResult GetByID(string AccessoryId);
+        public IDSSResult Update(AccessoryRequest accessoryRequest);
+        public IDSSResult Delete(string accessoryId);
+        public IDSSResult Add(AccessoryRequest accessoryRequest);
+        public IDSSResult GetByID(string accessoryId);
+        public IDSSResult HardDelete(string accessoryId);
     }
 }

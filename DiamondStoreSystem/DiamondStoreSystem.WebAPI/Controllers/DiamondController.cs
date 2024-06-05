@@ -1,5 +1,7 @@
-﻿using DiamondStoreSystem.Business.IService;
-using DiamondStoreSystem.DTO.EntitiesRequest;
+﻿using AutoMapper;
+using DiamondStoreSystem.Business.IService;
+using DiamondStoreSystem.Business.Service;
+using DiamondStoreSystem.DTO.EntitiesRequest.Product;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DiamondStoreSystem.WebAPI.Controllers
@@ -7,9 +9,11 @@ namespace DiamondStoreSystem.WebAPI.Controllers
     public class DiamondController : Controller
     {
         private readonly IDiamondService _diamondService;
-        public DiamondController(IDiamondService diamondService)
+        private readonly IMapper _mapper;
+        public DiamondController(IDiamondService diamondService, IMapper mapper)
         {
             _diamondService = diamondService;
+            _mapper = mapper;
         }
 
         [HttpGet("Diamonds")]
@@ -26,7 +30,7 @@ namespace DiamondStoreSystem.WebAPI.Controllers
             return Ok(result);
         }
 
-        [HttpPut("DiamondID")]
+        [HttpPut("Update")]
         public IActionResult UpdateDiamond(string id, [FromBody]DiamondRequest diamondRequest)
         {
             diamondRequest.DiamondID = id;
@@ -34,7 +38,7 @@ namespace DiamondStoreSystem.WebAPI.Controllers
             return Ok(result);
         }
 
-        [HttpPost("Diamond")]
+        [HttpPost("Create")]
         public IActionResult AddDiamond([FromBody]DiamondRequest diamondRequest)
         {
             var result = _diamondService.Add(diamondRequest);
@@ -45,6 +49,20 @@ namespace DiamondStoreSystem.WebAPI.Controllers
         public IActionResult GetCertificate(string id)
         {
             var result = _diamondService.ShowCertificate(id);
+            return Ok(result);
+        }
+
+        [HttpDelete("Delete")]
+        public IActionResult DeleteDiamond(string id)
+        {
+            var result = _diamondService.Delete(id);
+            return Ok(result);
+        }
+
+        [HttpDelete("HardDelete")]
+        public IActionResult Delete(string id)
+        {
+            var result = _diamondService.HardDelete(id);
             return Ok(result);
         }
     }
