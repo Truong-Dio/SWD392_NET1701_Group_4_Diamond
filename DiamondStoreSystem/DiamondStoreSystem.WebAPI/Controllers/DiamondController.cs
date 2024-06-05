@@ -1,4 +1,5 @@
-﻿using DiamondStoreSystem.Business.IService;
+﻿using AutoMapper;
+using DiamondStoreSystem.Business.IService;
 using DiamondStoreSystem.Business.Service;
 using DiamondStoreSystem.DTO.EntitiesRequest.Product;
 using Microsoft.AspNetCore.Mvc;
@@ -8,9 +9,11 @@ namespace DiamondStoreSystem.WebAPI.Controllers
     public class DiamondController : Controller
     {
         private readonly IDiamondService _diamondService;
-        public DiamondController(IDiamondService diamondService)
+        private readonly IMapper _mapper;
+        public DiamondController(IDiamondService diamondService, IMapper mapper)
         {
             _diamondService = diamondService;
+            _mapper = mapper;
         }
 
         [HttpGet("Diamonds")]
@@ -27,7 +30,7 @@ namespace DiamondStoreSystem.WebAPI.Controllers
             return Ok(result);
         }
 
-        [HttpPut("DiamondID")]
+        [HttpPut("Update")]
         public IActionResult UpdateDiamond(string id, [FromBody]DiamondRequest diamondRequest)
         {
             diamondRequest.DiamondID = id;
@@ -35,7 +38,7 @@ namespace DiamondStoreSystem.WebAPI.Controllers
             return Ok(result);
         }
 
-        [HttpPost("Diamond")]
+        [HttpPost("Create")]
         public IActionResult AddDiamond([FromBody]DiamondRequest diamondRequest)
         {
             var result = _diamondService.Add(diamondRequest);

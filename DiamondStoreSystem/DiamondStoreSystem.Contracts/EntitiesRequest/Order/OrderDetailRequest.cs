@@ -9,7 +9,6 @@ namespace DiamondStoreSystem.DTO.EntitiesRequest.Order
 {
     public class OrderDetailRequest
     {
-        [Key]
         public string OrderDetailID { get; set; }
         public string DiamondID { get; set; }
         public string OrderID { get; set; }

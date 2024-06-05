@@ -59,7 +59,7 @@ namespace DiamondStoreSystem.Business.Service
                 }
                 Accessory Accessory = _mapper.Map<Accessory>(result.Data);
                 Accessory.Block = true;
-                _repository.Update(Accessory);
+                _repository.UpdateByIdByString(Accessory, accessoryId);
                 var check = _repository.Save();
                 if (check <= 0)
                 {

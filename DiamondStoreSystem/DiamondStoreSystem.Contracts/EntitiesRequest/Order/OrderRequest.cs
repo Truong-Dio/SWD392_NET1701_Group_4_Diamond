@@ -10,13 +10,12 @@ namespace DiamondStoreSystem.DTO.EntitiesRequest.Order
 {
     public class OrderRequest
     {
-        [Key]
         public string OrderID { get; set; }
         public OrderStatus OrderStatus { get; set; }
         public DateTime DateOrdered { get; set; }
         public DateTime? DateReceived { get; set; }
         public double TotalPrice { get; set; }
         public string AccountID { get; set; }
-        public bool Status { get; set; }
+        public PayMethod PayMethod { get; set; }
     }
 }

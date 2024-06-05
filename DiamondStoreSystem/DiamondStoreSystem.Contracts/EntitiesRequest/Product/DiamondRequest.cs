@@ -10,7 +10,6 @@ namespace DiamondStoreSystem.DTO.EntitiesRequest.Product
 {
     public class DiamondRequest
     {
-        [Key]
         public string DiamondID { get; set; }
         public string Origin { get; set; }
         public LabCreated LabCreated { get; set; }
@@ -31,6 +30,9 @@ namespace DiamondStoreSystem.DTO.EntitiesRequest.Product
         public double Height { get; set; }
         public double Width { get; set; }
         public double Length { get; set; }
-        public bool Status { get; set; } = true;
+        public double Price { get; set; }
+        public bool Block { get; set; }
+        public int UnitInStock { get; set; }
+        public string SKU { get; set; }
     }
 }

@@ -35,7 +35,7 @@ namespace DiamondStoreSystem.DTO.Entities
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true).Build();
-            optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnetion"));
+            optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -47,7 +47,7 @@ namespace DiamondStoreSystem.DTO.Entities
     );
 
             modelBuilder.Entity<Account>().HasData(
-                new Account { AccountID = "ACC001", Email = "example@email.com", Password = "Pa$$w0rd", LastName = "Smith", FirstName = "John", Phone = 1234567890, Address = "123 Main Street", Gender = "Male", DOB = new DateTime(1990, 1, 1), JoinDate = new DateTime(2023, 5, 15), LoyaltyPoint = 100, Block = false }
+                new Account { AccountID = "ACC001", Email = "example@email.com", Password = "Pa$$w0rd", LastName = "Smith", FirstName = "John", Phone = 1234567890, Address = "123 Main Street", Gender = Gender.Male, DOB = new DateTime(1990, 1, 1), JoinDate = new DateTime(2023, 5, 15), LoyaltyPoint = 100, Block = false }
             );
 
             modelBuilder.Entity<Order>().HasData(

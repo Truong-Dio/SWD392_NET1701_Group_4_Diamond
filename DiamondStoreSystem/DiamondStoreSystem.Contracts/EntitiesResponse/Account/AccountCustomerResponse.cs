@@ -15,9 +15,9 @@ namespace DiamondStoreSystem.DTO.EntitiesResponse.Account
         public string FirstName { get; set; }
         public int Phone { get; set; }
         public string Address { get; set; }
-        public string Gender { get; set; }
+        public Gender Gender { get; set; }
         public DateTime DOB { get; set; }
         public DateTime JoinDate { get; set; }
-        public int? LoyaltyPoint { get; set; }
+        public int? LoyaltyPoint { get; set; } = 0;
     }
 }

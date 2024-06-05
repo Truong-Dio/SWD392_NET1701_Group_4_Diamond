@@ -9,6 +9,7 @@ using DiamondStoreSystem.DTO.EntitiesResponse.Order;
 using DiamondStoreSystem.DTO.EntitiesResponse.Product;
 using DiamondStoreSystem.Repository;
 using MailKit.Search;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,31 +23,35 @@ namespace DiamondStoreSystem.Business.Service
     {
         private readonly IMapper _mapper;
         private readonly IGenericRepository<OrderDetail> _repository;
-        private readonly IOrderService _orderService;
+        private readonly IServiceProvider _serviceProvider;
         private readonly IDiamondService _diamondService;
         private readonly IAccessoryService _accessoryService;
 
-        public OrderDetailService(IMapper mapper, IGenericRepository<OrderDetail> repository, IOrderService orderService, IDiamondService diamondService, IAccessoryService accessoryService)
+        public OrderDetailService(IMapper mapper, IGenericRepository<OrderDetail> repository, IServiceProvider serviceProvider, IDiamondService diamondService, IAccessoryService accessoryService)
         {
             _mapper = mapper;
             _repository = repository;
-            _orderService = orderService;
+            _serviceProvider = serviceProvider;
             _diamondService = diamondService;
             _accessoryService = accessoryService;
         }
+
+        private IOrderService OrderService => _serviceProvider.GetService<IOrderService>();
+
 
         public IDSSResult Add(OrderDetailRequest orderDetailRequest)
         {
             try
             {
                 var result = GetByID(orderDetailRequest.OrderDetailID);
-                if (result.Status > 0) return result;
+                if (result.Status > 0) return new DSSResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
                 var resultQuantity = UpdateQuantityDecrease(ref orderDetailRequest);
+                if(resultQuantity.Status <= 0) return resultQuantity;
                 _repository.Insert(_mapper.Map<OrderDetail>(orderDetailRequest));
                 var check = _repository.Save();
                 if (check <= 0) return new DSSResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
-                var resultUpdateTotalPrice = _orderService.UpdateTotalPrice(orderDetailRequest.OrderID);
-                if (result.Status <= 0) return resultUpdateTotalPrice;
+                var resultUpdateTotalPrice = OrderService.UpdateTotalPrice(orderDetailRequest.OrderID);
+                if (resultUpdateTotalPrice.Status <= 0) return resultUpdateTotalPrice;
                 return new DSSResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG);
             }
             catch (Exception ex)
@@ -82,6 +87,10 @@ namespace DiamondStoreSystem.Business.Service
 
                 if (resultAccssry.Status <= 0) return resultAccssry;
 
+            }
+            else
+            {
+                orderDetailRequest.AccessoryID = null;
             }
             var resultDmnd = _diamondService.Update(_mapper.Map<DiamondRequest>(diamond));
 
@@ -208,7 +217,7 @@ namespace DiamondStoreSystem.Business.Service
 
             diamond.UnitInStock = diamond.UnitInStock + orderDetailResponse.Quantity;
 
-            AccessoryResponse accessory = new();
+            AccessoryResponse accessory;
 
             if (!string.IsNullOrEmpty(orderDetailResponse.AccessoryID))
             {
@@ -241,7 +250,7 @@ namespace DiamondStoreSystem.Business.Service
                     return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
                 }
 
-                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, _mapper.Map<OrderDetailResponse>(result));
+                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, result.Result.ToList());
             }
             catch (Exception ex)
             {
@@ -258,7 +267,7 @@ namespace DiamondStoreSystem.Business.Service
                     return result;
                 }
 
-                (result.Data as List<OrderDetail>).ForEach(orderDetail => _repository.HardDeleteByString(orderDetail.OrderDetailID));
+                (result.Data as List<OrderDetail>).ForEach(orderDetail => HardDelete(orderDetail.OrderDetailID));
                 var check = _repository.Save();
                 if (check <= 0)
                 {
@@ -300,7 +309,7 @@ namespace DiamondStoreSystem.Business.Service
                     return result;
                 }
 
-                            (result.Data as List<OrderDetail>).ForEach(orderDetail => _repository.HardDeleteByString(orderDetail.OrderDetailID));
+                            (result.Data as List<OrderDetail>).ForEach(orderDetail => HardDelete(orderDetail.OrderDetailID));
                 var check = _repository.Save();
                 if (check <= 0)
                 {
@@ -342,7 +351,7 @@ namespace DiamondStoreSystem.Business.Service
                     return result;
                 }
 
-                            (result.Data as List<OrderDetail>).ForEach(orderDetail => _repository.HardDeleteByString(orderDetail.OrderDetailID));
+                            (result.Data as List<OrderDetail>).ForEach(orderDetail => HardDelete(orderDetail.OrderDetailID));
                 var check = _repository.Save();
                 if (check <= 0)
                 {

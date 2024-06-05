@@ -5,7 +5,6 @@ using DiamondStoreSystem.DTO.Entities;
 using DiamondStoreSystem.Repository;
 using DiamondStoreSystem.WebAPI.AppStarts;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
@@ -36,16 +35,16 @@ namespace DiamondStoreSystem.WebAPI
         {
             services.AddDbContext<DiamondStoreDbContext>(options =>
             {
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnetion"));
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
-            
+
             var mapperConfig = new MapperConfiguration(mc =>
             {
                 mc.AddProfile(new MapperConfig());
             });
 
             IMapper mapper = mapperConfig.CreateMapper();
-            services.AddSingleton(mapper);
+            services.AddSingleton(mapper); // Register AutoMapper
 
             services.AddMvc();
 
@@ -54,13 +53,13 @@ namespace DiamondStoreSystem.WebAPI
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "DiamondStoreSystem.WebAPI", Version = "v1" });
             });
+
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IAccessoryService, AccessoryService>();
             services.AddScoped<IDiamondService, DiamondService>();
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IOrderDetailService, OrderDetailService>();
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

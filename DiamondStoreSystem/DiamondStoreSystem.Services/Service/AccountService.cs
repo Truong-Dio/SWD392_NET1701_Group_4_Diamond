@@ -6,6 +6,7 @@ using DiamondStoreSystem.DTO.Entities;
 using DiamondStoreSystem.DTO.EntitiesRequest.Account;
 using DiamondStoreSystem.DTO.EntitiesResponse.Account;
 using DiamondStoreSystem.Repository;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,13 +19,16 @@ namespace DiamondStoreSystem.Business.Service
     {
         private readonly IMapper _mapper;
         private readonly IGenericRepository<Account> _repository;
-        private readonly IOrderService _orderService;
-        public AccountService(IGenericRepository<Account> repository, IMapper mapper, IOrderService orderService)
+        private readonly IServiceProvider _serviceProvider;
+
+        public AccountService(IGenericRepository<Account> repository, IMapper mapper, IServiceProvider serviceProvider)
         {
             _mapper = mapper;
             _repository = repository;
-            _orderService = orderService;
+            _serviceProvider = serviceProvider;
         }
+
+        private IOrderService OrderService => _serviceProvider.GetService<IOrderService>();
         public IDSSResult Add(AccountRequest account)
         {
             try
@@ -59,7 +63,7 @@ namespace DiamondStoreSystem.Business.Service
                 }
                 var account = _mapper.Map<Account>(result.Data);
                 account.Block = true;
-                var temp = _orderService.HardDeleteRangeByAccountID(account.AccountID);
+                var temp = OrderService.HardDeleteRangeByAccountID(account.AccountID);
                 if (temp.Status <= 0)
                 {
                     return temp;
@@ -88,7 +92,7 @@ namespace DiamondStoreSystem.Business.Service
                 }
                 var account = _mapper.Map<Account>(result.Data);
                 account.Block = true;
-                _repository.Update(account);
+                _repository.UpdateByIdByString(account, AccountId);
                 var check = _repository.Save();
                 if (check == 0)
                 {
@@ -111,7 +115,7 @@ namespace DiamondStoreSystem.Business.Service
                 {
                     return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
                 }
-                return new DSSResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_READ_MSG, accounts);
+                return new DSSResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_READ_MSG, accounts.ToList().Select(a => _mapper.Map<AccountAllField>(a)));
             }
             catch (Exception ex)
             {
@@ -119,11 +123,11 @@ namespace DiamondStoreSystem.Business.Service
             }
         }
 
-        public IDSSResult Login(AccountAuth auth)
+        public IDSSResult Login(string email, string password)
         {
             try
             {
-                var result = _repository.GetFirstOrDefault(x => x.Email == auth.Email && x.Password == auth.Password);
+                var result = _repository.GetFirstOrDefault(x => x.Email == email && x.Password == password);
                 
                 if (result == null)
                 {
@@ -186,23 +190,23 @@ namespace DiamondStoreSystem.Business.Service
             }
         }
 
-        public IDSSResult Update(AccountRequest AccountRequest)
+        public IDSSResult Update(AccountAllField account)
         {
             try
             {
-                var accountRequest = _mapper.Map<Account>(AccountRequest);
+                var accountRequest = _mapper.Map<Account>(account);
                 var result = GetByEmail(accountRequest.Email);
                 if (result.Data == null)
                 {
                     return result;
                 }
-                _repository.Update(accountRequest);
+                _repository.UpdateByIdByString(accountRequest, accountRequest.AccountID);
                 var check = _repository.Save();
                 if (check == 0)
                 {
                     return new DSSResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
                 }
-                return new DSSResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_READ_MSG);
+                return new DSSResult(Const.SUCCESS_UPDATE_CODE, Const.SUCCESS_UPDATE_MSG);
             }
             catch (Exception ex)
             {
@@ -220,7 +224,14 @@ namespace DiamondStoreSystem.Business.Service
                     return result;
                 }
                 var account = (AccountEmployeeResponse)result.Data;
-                await _repository.UpdateByIdByString(_mapper.Map<Account>(account), email);
+                account.JoinDate = accountClient.JoinDate;
+                account.FirstName = accountClient.FirstName;
+                account.LastName = accountClient.LastName;
+                account.Email = email;
+                account.DOB = accountClient.DOB;
+                account.Phone = accountClient.Phone;
+                account.Address = accountClient.Address;
+                await _repository.UpdateByIdByString(_mapper.Map<Account>(account), account.AccountID);
                 var check = _repository.Save();
                 if (check == 0)
                 {

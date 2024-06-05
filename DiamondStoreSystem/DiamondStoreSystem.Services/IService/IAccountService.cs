@@ -11,12 +11,12 @@ namespace DiamondStoreSystem.Business.IService
     public interface IAccountService
     {
         public IDSSResult Get();
-        public IDSSResult Update(AccountRequest AccountRequest);
+        public IDSSResult Update(AccountAllField account);
         public IDSSResult Delete(string AccountId);
         public IDSSResult Add(AccountRequest AccountRequest);
         public IDSSResult GetByID(string AccountId);
         public IDSSResult GetByEmail(string email);
-        public IDSSResult Login(AccountAuth auth);
+        public IDSSResult Login(string email, string password);
         public IDSSResult HardDelete(string AccountId);
         public Task<IDSSResult> UpdateByEmail(string email, AccountClient accountClient);
     }

@@ -59,7 +59,7 @@ namespace DiamondStoreSystem.Business.Service
                 }
                 Diamond diamond = _mapper.Map<Diamond>(result.Data);
                 diamond.Block = true;
-                _repository.Update(diamond);
+                _repository.UpdateByIdByString(diamond, DiamondId);
                 var check = _repository.Save();
                 if (check <= 0)
                 {

@@ -19,6 +19,7 @@ namespace DiamondStoreSystem.WebAPI.AppStarts
             CreateMap<Account, AccountCustomerResponse>().ReverseMap();
             CreateMap<AccountRequest, AccountCustomerResponse>().ReverseMap();
             CreateMap<AccountRequest, AccountEmployeeResponse>().ReverseMap();
+            CreateMap<Account, AccountAllField>().ReverseMap();
 
             CreateMap<Accessory, AccessoryResponse>().ReverseMap();
             CreateMap<Accessory, AccessoryRequest>().ReverseMap();

@@ -1,4 +1,5 @@
-﻿using DiamondStoreSystem.Business.Interface;
+﻿using AutoMapper;
+using DiamondStoreSystem.Business.Interface;
 using DiamondStoreSystem.Business.IService;
 using DiamondStoreSystem.Business.Service;
 using DiamondStoreSystem.DTO.Entities;
@@ -17,12 +18,14 @@ namespace DiamondStoreSystem.WebAPI.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IAccountService _accountService;
-        public AccountController(IAccountService accountService)
+        private readonly IMapper _mapper;
+        public AccountController(IAccountService accountService, IMapper mapper)
         {
+            _mapper = mapper;
             _accountService = accountService;
         }
 
-        [HttpGet("Accounts")]
+        [HttpGet("GetAll")]
         public IActionResult GetAllAccount()
         {
             var result = _accountService.Get();
@@ -36,14 +39,26 @@ namespace DiamondStoreSystem.WebAPI.Controllers
             return Ok(result);
         }
 
-        [HttpPut("Email")]
+        [HttpPost("Login")]
+        public IActionResult Post(string email, string password)
+        {
+            var result = _accountService.Login(email, password);
+            return Ok(result);
+        }
+
+        [HttpPut("UpdateByEmail")]
         public async Task<IActionResult> UpdateAccountByClient(string email, [FromBody] AccountClient accountClient)
         {
             var result = await _accountService.UpdateByEmail(email, accountClient);
             return Ok(result);
         }
-
-        [HttpPost]
+        [HttpPut("Update")]
+        public IActionResult UpdateByAdmin(string accountid, [FromBody]AccountAllField account)
+        {
+            account.AccountID = accountid;
+            return Ok(_accountService.Update(account));
+        }
+        [HttpPost("Create")]
         public IActionResult CreateNewAccount([FromBody] AccountRequest account)
         {
             var result = _accountService.Add(account);
@@ -52,6 +67,13 @@ namespace DiamondStoreSystem.WebAPI.Controllers
 
         [HttpDelete("Delete")]
         public IActionResult Delete(string id)
+        {
+            var result = _accountService.HardDelete(id);
+            return Ok(result);
+        }
+
+        [HttpDelete("HardDelete")]
+        public IActionResult HardDelete(string id)
         {
             var result = _accountService.HardDelete(id);
             return Ok(result);
