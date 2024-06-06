@@ -10,6 +10,7 @@ namespace DiamondStoreSystem.Business.IService
 {
     public interface IAccessoryService
     {
+        public IDSSResult GetFull();
         public IDSSResult Get();
         public IDSSResult Update(AccessoryRequest accessoryRequest);
         public IDSSResult Delete(string accessoryId);

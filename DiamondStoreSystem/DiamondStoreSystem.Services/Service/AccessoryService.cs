@@ -72,8 +72,7 @@ namespace DiamondStoreSystem.Business.Service
                 return new DSSResult(Const.ERROR_EXCEPTION, ex.Message);
             }
         }
-
-        public IDSSResult Get()
+        public IDSSResult GetFull()
         {
             try
             {
@@ -83,7 +82,24 @@ namespace DiamondStoreSystem.Business.Service
                     return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
                 }
 
-                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, result.Select(result => _mapper.Map<AccessoryResponse>(result)));
+                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, result);
+            }
+            catch (Exception ex)
+            {
+                return new DSSResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+        }
+        public IDSSResult Get()
+        {
+            try
+            {
+                var result = _repository.GetWhere(a => a.Block == false);
+                if (result.Result.ToList() == null)
+                {
+                    return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
+                }
+
+                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, result.Result.Select(result => _mapper.Map<AccessoryResponse>(result)).ToList());
             }
             catch (Exception ex)
             {
@@ -95,13 +111,15 @@ namespace DiamondStoreSystem.Business.Service
         {
             try
             {
-                var result = _repository.GetFirstOrDefault(accessory => accessory.AccessoryID == accessoryId);
-                if (result == null)
+                var result = Get();
+                if (result.Status <= 0)
                 {
-                    return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
+                    return result;
                 }
-
-                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, _mapper.Map<AccessoryResponse>(result));
+                var accessories = (result.Data as List<AccessoryResponse>);
+                var accessory = accessories.FirstOrDefault(accessory => accessory.AccessoryID == accessoryId);
+                if (accessory == null) return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
+                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, accessory);
             }
             catch (Exception ex)
             {

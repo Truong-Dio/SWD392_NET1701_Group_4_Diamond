@@ -129,13 +129,13 @@ namespace DiamondStoreSystem.Business.Service
         {
             try
             {
-                var result = _repository.GetAll();
-                if (result.ToList() == null)
+                var result = _repository.GetWhere(x => !x.Block);
+                if (result.Result == null)
                 {
                     return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
                 }
-
-                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, result.Select(result => _mapper.Map<OrderDetailResponse>(result)));
+                var ods = result.Result as List<OrderDetail>;
+                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, ods.Select(result => _mapper.Map<OrderDetailResponse>(result)));
             }
             catch (Exception ex)
             {
@@ -147,7 +147,7 @@ namespace DiamondStoreSystem.Business.Service
         {
             try
             {
-                var result = _repository.GetFirstOrDefault(orderDetail => orderDetail.OrderDetailID == orderDetailId);
+                var result = _repository.GetFirstOrDefault(orderDetail => orderDetail.OrderDetailID == orderDetailId && !orderDetail.Block);
                 if (result == null)
                 {
                     return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
@@ -244,7 +244,7 @@ namespace DiamondStoreSystem.Business.Service
         {
             try
             {
-                var result = _repository.GetWhere(orderDetail => orderDetail.OrderID == orderId);
+                var result = _repository.GetWhere(orderDetail => orderDetail.OrderID == orderId && !orderDetail.Block);
                 if (result == null)
                 {
                     return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
@@ -285,7 +285,7 @@ namespace DiamondStoreSystem.Business.Service
         {
             try
             {
-                var result = _repository.GetWhere(orderDetail => orderDetail.DiamondID == diamondId);
+                var result = _repository.GetWhere(orderDetail => orderDetail.DiamondID == diamondId && !orderDetail.Block);
                 if (result == null)
                 {
                     return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
@@ -327,7 +327,7 @@ namespace DiamondStoreSystem.Business.Service
         {
             try
             {
-                var result = _repository.GetWhere(orderDetail => orderDetail.AccessoryID == accessoryId);
+                var result = _repository.GetWhere(orderDetail => orderDetail.AccessoryID == accessoryId && !orderDetail.Block);
                 if (result == null)
                 {
                     return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);

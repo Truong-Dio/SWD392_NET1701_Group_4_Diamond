@@ -108,11 +108,12 @@ namespace DiamondStoreSystem.Business.Service
         {
             try
             {
-                var order = _orderRepository.GetAll();
-                if (order == null)
+                var order = _orderRepository.GetWhere(x => !x.Block);
+                if (order.Result == null)
                 {
                     return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
                 }
+                var result = order.Result as List<Order>;
                 return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, order);
             }
             catch (Exception ex)
@@ -125,7 +126,7 @@ namespace DiamondStoreSystem.Business.Service
         {
             try
             {
-                var order = _orderRepository.GetFirstOrDefault(o => o.OrderID == OrderId);
+                var order = _orderRepository.GetFirstOrDefault(o => o.OrderID == OrderId && !o.Block);
                 if (order == null)
                 {
                     return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
@@ -203,7 +204,7 @@ namespace DiamondStoreSystem.Business.Service
         {
             try
             {
-                var orders = _orderRepository.GetWhere(order => order.AccountID == accountID).Result.ToList();
+                var orders = _orderRepository.GetWhere(order => order.AccountID == accountID && !order.Block).Result.ToList();
 
                 if (orders == null)
                 {

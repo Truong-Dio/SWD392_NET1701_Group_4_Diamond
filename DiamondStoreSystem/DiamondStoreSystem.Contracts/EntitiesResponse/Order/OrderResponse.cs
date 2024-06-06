@@ -17,5 +17,6 @@ namespace DiamondStoreSystem.DTO.EntitiesResponse.Order
         public double TotalPrice { get; set; }
         public string AccountID { get; set; }
         public PayMethod PayMethod { get; set; }
+        public string AccessoryID {  get; set; }
     }
 }

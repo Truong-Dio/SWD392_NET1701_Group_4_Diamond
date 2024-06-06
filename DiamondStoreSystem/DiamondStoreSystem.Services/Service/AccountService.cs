@@ -110,12 +110,13 @@ namespace DiamondStoreSystem.Business.Service
         {
             try
             {
-                var accounts = _repository.GetAll();
-                if (accounts == null)
+                var result = _repository.GetWhere(a => !a.Block);
+                if (result == null)
                 {
                     return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
                 }
-                return new DSSResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_READ_MSG, accounts.ToList().Select(a => _mapper.Map<AccountAllField>(a)));
+                var account = result.Result as List<Account>;
+                return new DSSResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_READ_MSG, account.Select(a => _mapper.Map<AccountAllField>(a)));
             }
             catch (Exception ex)
             {
@@ -127,7 +128,7 @@ namespace DiamondStoreSystem.Business.Service
         {
             try
             {
-                var result = _repository.GetFirstOrDefault(x => x.Email == email && x.Password == password);
+                var result = _repository.GetFirstOrDefault(x => x.Email == email && x.Password == password && !x.Block);
                 
                 if (result == null)
                 {
@@ -160,7 +161,7 @@ namespace DiamondStoreSystem.Business.Service
         {
             try
             {
-                var account = _repository.GetFirstOrDefault(x => x.AccountID == AccountId);
+                var account = _repository.GetFirstOrDefault(x => x.AccountID == AccountId && !x.Block);
                 if (account == null)
                 {
                     return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
@@ -177,7 +178,7 @@ namespace DiamondStoreSystem.Business.Service
         {
             try
             {
-                var accounts = _repository.Find(x => x.Email == email);
+                var accounts = _repository.Find(x => x.Email == email && !x.Block);
                 if (accounts == null)
                 {
                     return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
