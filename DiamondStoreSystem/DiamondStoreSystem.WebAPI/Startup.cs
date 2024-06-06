@@ -46,13 +46,21 @@ namespace DiamondStoreSystem.WebAPI
             IMapper mapper = mapperConfig.CreateMapper();
             services.AddSingleton(mapper); // Register AutoMapper
 
-            services.AddMvc();
+            services.AddMvc(options => options.EnableEndpointRouting = false)
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "DiamondStoreSystem.WebAPI", Version = "v1" });
             });
+
+            services.AddCors(options => options.AddPolicy("CorsPolicy", builder =>
+            {
+                builder.WithOrigins("http://www.mydomain.com")
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+            }));
 
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped<IAccountService, AccountService>();
@@ -72,11 +80,15 @@ namespace DiamondStoreSystem.WebAPI
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "DiamondStoreSystem.WebAPI v1"));
             }
 
+            app.UseCors("CorsPolicy");
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseMvc();
 
             app.UseEndpoints(endpoints =>
             {
