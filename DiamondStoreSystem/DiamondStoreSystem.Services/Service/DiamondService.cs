@@ -77,13 +77,13 @@ namespace DiamondStoreSystem.Business.Service
         {
             try
             {
-                var result = _repository.GetAll();
-                if (result.ToList() == null)
+                var result = _repository.GetWhere(a => a.Block == false);
+                if (result == null)
                 {
                     return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
                 }
-
-                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, result.Select(result => _mapper.Map<DiamondResponse>(result)));
+                var diamonds = result.Result as List<Diamond>;
+                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, diamonds.Select(result => _mapper.Map<DiamondResponse>(result)));
             }
             catch (Exception ex)
             {
@@ -95,7 +95,7 @@ namespace DiamondStoreSystem.Business.Service
         {
             try
             {
-                var result = _repository.GetFirstOrDefault(diamond => diamond.DiamondID == DiamondId);
+                var result = _repository.GetFirstOrDefault(diamond => diamond.DiamondID == DiamondId && !diamond.Block);
                 if (result == null)
                 {
                     return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
