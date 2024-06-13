@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DiamondStoreSystem.WebAPI.Controllers
 {
+    [Route("api/[controller]")]
     public class DiamondController : Controller
     {
         private readonly IDiamondService _diamondService;

@@ -43,7 +43,7 @@ namespace DiamondStoreSystem.Business.Service
         {
             try
             {
-                var result = GetByID(orderDetailRequest.OrderDetailID);
+                var result = IsExist(orderDetailRequest.OrderDetailID);
                 if (result.Status > 0) return new DSSResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
                 var resultQuantity = UpdateQuantityDecrease(ref orderDetailRequest);
                 if(resultQuantity.Status <= 0) return resultQuantity;
@@ -53,6 +53,23 @@ namespace DiamondStoreSystem.Business.Service
                 var resultUpdateTotalPrice = OrderService.UpdateTotalPrice(orderDetailRequest.OrderID);
                 if (resultUpdateTotalPrice.Status <= 0) return resultUpdateTotalPrice;
                 return new DSSResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG);
+            }
+            catch (Exception ex)
+            {
+                return new DSSResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+        }
+        public IDSSResult IsExist(string orderDetailId)
+        {
+            try
+            {
+                var result = _repository.GetFirstOrDefault(orderDetail => orderDetail.OrderDetailID == orderDetailId);
+                if (result == null)
+                {
+                    return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
+                }
+
+                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, _mapper.Map<OrderDetailResponse>(result));
             }
             catch (Exception ex)
             {

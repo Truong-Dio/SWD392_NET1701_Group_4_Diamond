@@ -29,7 +29,7 @@ namespace DiamondStoreSystem.Business.Service
         {
             try
             {
-                var result = GetByID(accessoryRequest.AccessoryID);
+                var result = IsExist(accessoryRequest.AccessoryID);
                 if (result.Status > 0)
                 {
                     return result;
@@ -118,6 +118,20 @@ namespace DiamondStoreSystem.Business.Service
                 }
                 var accessories = (result.Data as List<AccessoryResponse>);
                 var accessory = accessories.FirstOrDefault(accessory => accessory.AccessoryID == accessoryId);
+                if (accessory == null) return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
+                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, accessory);
+            }
+            catch (Exception ex)
+            {
+                return new DSSResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+        }
+
+        private IDSSResult IsExist(string accessoryId)
+        {
+            try
+            {
+                var accessory = _repository.GetFirstOrDefault(r => r.AccessoryID == accessoryId);
                 if (accessory == null) return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
                 return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, accessory);
             }

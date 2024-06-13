@@ -31,7 +31,23 @@ namespace DiamondStoreSystem.Business.Service
         }
 
         private IOrderDetailService OrderDetailService => _serviceProvider.GetService<IOrderDetailService>();
+        public IDSSResult GetFull()
+        {
+            try
+            {
+                var result = _orderRepository.GetAll();
+                if (result.ToList() == null)
+                {
+                    return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
+                }
 
+                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, result);
+            }
+            catch (Exception ex)
+            {
+                return new DSSResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+        }
         public IDSSResult HardDelete(string orderId)
         {
             try
@@ -60,7 +76,7 @@ namespace DiamondStoreSystem.Business.Service
         {
             try
             {
-                var result = GetByID(OrderRequest.OrderID);
+                var result = IsExist(OrderRequest.OrderID);
                 if (result.Data != null)
                 {
                     return result;
@@ -127,6 +143,22 @@ namespace DiamondStoreSystem.Business.Service
             try
             {
                 var order = _orderRepository.GetFirstOrDefault(o => o.OrderID == OrderId && !o.Block);
+                if (order == null)
+                {
+                    return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
+                }
+                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, order);
+            }
+            catch (Exception ex)
+            {
+                return new DSSResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+        }
+        public IDSSResult IsExist(string OrderId)
+        {
+            try
+            {
+                var order = _orderRepository.GetFirstOrDefault(o => o.OrderID == OrderId);
                 if (order == null)
                 {
                     return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
