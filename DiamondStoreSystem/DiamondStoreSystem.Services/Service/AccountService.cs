@@ -33,7 +33,7 @@ namespace DiamondStoreSystem.Business.Service
         {
             try
             {
-                var result = GetByID(account.AccountID);
+                var result = IsExist(account.AccountID);
                 if (result.Data != null)
                 {
                     return new DSSResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
@@ -45,6 +45,22 @@ namespace DiamondStoreSystem.Business.Service
                     return new DSSResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
                 }
                 return new DSSResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG);
+            }
+            catch (Exception ex)
+            {
+                return new DSSResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+        }
+        private IDSSResult IsExist(string AccountId)
+        {
+            try
+            {
+                var account = _repository.GetFirstOrDefault(x => x.AccountID == AccountId);
+                if (account == null)
+                {
+                    return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
+                }
+                return new DSSResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_READ_MSG, account);
             }
             catch (Exception ex)
             {
