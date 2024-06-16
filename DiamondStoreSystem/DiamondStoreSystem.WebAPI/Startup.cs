@@ -33,11 +33,6 @@ namespace DiamondStoreSystem.WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<DiamondStoreDbContext>(options =>
-            {
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
-            });
-
             var mapperConfig = new MapperConfiguration(mc =>
             {
                 mc.AddProfile(new MapperConfig());
@@ -68,6 +63,7 @@ namespace DiamondStoreSystem.WebAPI
             services.AddScoped<IDiamondService, DiamondService>();
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IOrderDetailService, OrderDetailService>();
+            services.AddScoped<DiamondStoreDbContext, DiamondStoreDbContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
