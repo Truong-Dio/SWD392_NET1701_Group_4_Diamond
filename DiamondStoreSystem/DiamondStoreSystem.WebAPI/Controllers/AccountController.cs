@@ -2,9 +2,11 @@
 using DiamondStoreSystem.Business.Interface;
 using DiamondStoreSystem.Business.IService;
 using DiamondStoreSystem.Business.Service;
+using DiamondStoreSystem.Common.Enum;
 using DiamondStoreSystem.DTO.Entities;
 using DiamondStoreSystem.DTO.EntitiesRequest.Account;
 using DiamondStoreSystem.DTO.EntitiesResponse;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -33,20 +35,22 @@ namespace DiamondStoreSystem.WebAPI.Controllers
         }
 
         [HttpGet("Email")]
+        [Authorize(Roles = "Admin")]
         public IActionResult Get(string email)
         {
             var result = _accountService.GetByEmail(email);
             return Ok(result);
         }
 
-        [HttpPost("Login")]
-        public IActionResult Post(string email, string password)
-        {
-            var result = _accountService.Login(email, password);
-            return Ok(result);
-        }
-
+        //[HttpPost("Login")]
+        //public IActionResult Post(string email, string password)
+        //{
+        //    var result = _accountService.Login(email, password);
+        //    return Ok(result);
+        //}
+        
         [HttpPut("UpdateByEmail")]
+        [Authorize(Roles = "1")]
         public async Task<IActionResult> UpdateAccountByClient(string email, [FromBody] AccountClient accountClient)
         {
             var result = await _accountService.UpdateByEmail(email, accountClient);
