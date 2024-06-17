@@ -16,20 +16,12 @@ namespace DiamondStoreSystem.DTO.Entities
 {
     public class DiamondStoreDbContext : DbContext
     {
-        public DiamondStoreDbContext() : base()
-        {
-        }
-
-
-        public DbSet<Account> Accounts { get; set; }
         public DbSet<Accessory> Accessories { get; set; }
+        public DbSet<Account> Accounts { get; set; }
         public DbSet<Diamond> Diamonds { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
-        public DiamondStoreDbContext(DbContextOptions<DiamondStoreDbContext> options) : base(options)
-        {
-            
-        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             var configuration = new ConfigurationBuilder()
@@ -42,25 +34,147 @@ namespace DiamondStoreSystem.DTO.Entities
         {
             base.OnModelCreating(modelBuilder);
 
+            // Configure the relationships for Order and Account
+            modelBuilder.Entity<Order>()
+                .HasOne(o => o.Account)
+                .WithMany(a => a.Orders)
+                .HasForeignKey(o => o.AccountID)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Order>()
+                .HasOne(o => o.EmployeeAccount)
+                .WithMany()
+                .HasForeignKey(o => o.EmployeeAssignID)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Add dummy data
             modelBuilder.Entity<Accessory>().HasData(
-        new Accessory { AccessoryID = "ACC001", AccessoryName = "Necklace", Description = "Silver necklace with diamond pendant", Material = Material.SterlingSilver, Style = Style.Pendant, Brand = "ABC Jewelry", Block = false, Price = 100.00, UnitInStock = 50 }
-    );
+                new Accessory
+                {
+                    AccessoryID = "A001",
+                    AccessoryName = "Gold Ring",
+                    Description = "A beautiful gold ring",
+                    Material = Material.HypoallergenicMetals,
+                    Style = Style.Ring,
+                    Brand = "BrandA",
+                    Block = false,
+                    Price = 500.0,
+                    UnitInStock = 10
+                },
+                new Accessory
+                {
+                    AccessoryID = "A002",
+                    AccessoryName = "Silver Necklace",
+                    Description = "A shiny silver necklace",
+                    Material = Material.Fabric,
+                    Style = Style.Ring,
+                    Brand = "BrandB",
+                    Block = false,
+                    Price = 200.0,
+                    UnitInStock = 15
+                }
+            );
 
             modelBuilder.Entity<Account>().HasData(
-                new Account { AccountID = "ACC001", Email = "example@email.com", Password = "Pa$$w0rd", LastName = "Smith", FirstName = "John", Phone = 1234567890, Address = "123 Main Street", Gender = Gender.Male, DOB = new DateTime(1990, 1, 1), JoinDate = new DateTime(2023, 5, 15), LoyaltyPoint = 100, Block = false }
-            );
-
-            modelBuilder.Entity<Order>().HasData(
-                new Order { OrderID = "ORD001", OrderStatus = OrderStatus.Pending, DateOrdered = new DateTime(2023, 6, 1), DateReceived = null, TotalPrice = 200.00, AccountID = "ACC001", PayMethod = PayMethod.CreditCard, Block = false }
-            );
-
-            modelBuilder.Entity<OrderDetail>().HasData(
-                new OrderDetail { OrderDetailID = "OD001", DiamondID = "DIA001", OrderID = "ORD001", Quantity = 2, Price = 150.00, AccessoryID = "ACC001" }
+                new Account
+                {
+                    AccountID = "C001",
+                    Email = "customer1@example.com",
+                    Password = "password",
+                    LastName = "Doe",
+                    FirstName = "John",
+                    Phone = 1234567890,
+                    Address = "123 Main St",
+                    Gender = Gender.Male,
+                    DOB = new DateTime(1990, 1, 1),
+                    JoinDate = new DateTime(2020, 1, 1),
+                    LoyaltyPoint = 100,
+                    Block = false,
+                    Role = Role.Customer,
+                    WorkingSchedule = WorkingSchedule.Morning
+                },
+                new Account
+                {
+                    AccountID = "E001",
+                    Email = "employee1@example.com",
+                    Password = "password",
+                    LastName = "Smith",
+                    FirstName = "Jane",
+                    Phone = 9876543210,
+                    Address = "456 Elm St",
+                    Gender = Gender.Female,
+                    DOB = new DateTime(1985, 5, 15),
+                    JoinDate = new DateTime(2019, 5, 15),
+                    Block = false,
+                    Role = Role.SalesStaff,
+                    WorkingSchedule = WorkingSchedule.Afternoon
+                }
             );
 
             modelBuilder.Entity<Diamond>().HasData(
-                new Diamond { DiamondID = "DIA001", Origin = "Africa", LabCreated = LabCreated.Natural, TablePercent = 60.0, DepthPercent = 61.2, Description = "Round brilliant cut diamond", GIAReportNumber = 1234567890, IssueDate = new DateTime(2023, 5, 1), Shape = Shape.Round, CaratWeight = 1.5, ColorGrade = ColorGrade.E, ClarityGrade = ClarityGrade.VS1, CutGrade = Grade.Excellent, PolishGrade = Grade.Excellent, SymmetryGrade = Grade.Excellent, FluoresceneGrade = Grade.Good, Inscription = "None", Height = 5.75, Width = 5.75, Length = 5.75, Price = 1000.00, Block = false, UnitInStock = 10, SKU = "DIA001-SG" },
-                new Diamond { DiamondID = "DIA002", Origin = "Africa", LabCreated = LabCreated.Natural, TablePercent = 60.0, DepthPercent = 61.2, Description = "Round brilliant cut diamond", GIAReportNumber = 1234567891, IssueDate = new DateTime(2023, 5, 1), Shape = Shape.Round, CaratWeight = 1.5, ColorGrade = ColorGrade.E, ClarityGrade = ClarityGrade.VS1, CutGrade = Grade.Excellent, PolishGrade = Grade.Excellent, SymmetryGrade = Grade.Excellent, FluoresceneGrade = Grade.Good, Inscription = "None", Height = 5.75, Width = 5.75, Length = 5.75, Price = 1000.00, Block = false, UnitInStock = 10, SKU = "DIA501-SG" }
+                new Diamond
+                {
+                    DiamondID = "D001",
+                    Origin = "South Africa",
+                    LabCreated = LabCreated.Artificial,
+                    TablePercent = 55.0,
+                    DepthPercent = 60.0,
+                    Description = "A beautiful diamond",
+                    GIAReportNumber = 123456,
+                    IssueDate = new DateTime(2020, 6, 1),
+                    Shape = Shape.Round,
+                    CaratWeight = 1.5,
+                    ColorGrade = ColorGrade.D,
+                    ClarityGrade = ClarityGrade.VVS1,
+                    CutGrade = Grade.Excellent,
+                    PolishGrade = Grade.Excellent,
+                    SymmetryGrade = Grade.Excellent,
+                    FluoresceneGrade = Grade.Excellent,
+                    Inscription = "GIA123456",
+                    Height = 5.0,
+                    Width = 5.0,
+                    Length = 5.0,
+                    Price = 10000.0,
+                    Block = false,
+                    UnitInStock = 5,
+                    SKU = "SKU001"
+                }
+            );
+
+            modelBuilder.Entity<Order>().HasData(
+                new Order
+                {
+                    OrderID = "O001",
+                    OrderStatus = OrderStatus.Pending,
+                    DateOrdered = DateTime.Now,
+                    DateReceived = null,
+                    TotalPrice = 10500.0,
+                    AccountID = "C001",
+                    PayMethod = PayMethod.CreditCard,
+                    Block = false,
+                    EmployeeAssignID = "E001"
+                }
+            );
+
+            modelBuilder.Entity<OrderDetail>().HasData(
+                new OrderDetail
+                {
+                    OrderDetailID = "OD001",
+                    DiamondID = "D001",
+                    OrderID = "O001",
+                    Quantity = 1,
+                    Price = 10000.0,
+                    Block = false
+                },
+                new OrderDetail
+                {
+                    OrderDetailID = "OD002",
+                    AccessoryID = "A001",
+                    OrderID = "O001",
+                    Quantity = 1,
+                    Price = 500.0,
+                    Block = false
+                }
             );
         }
     }

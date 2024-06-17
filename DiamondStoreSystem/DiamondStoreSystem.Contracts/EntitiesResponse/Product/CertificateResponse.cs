@@ -10,7 +10,7 @@ namespace DiamondStoreSystem.DTO.EntitiesResponse.Product
     public class CertificateResponse
     {
         public int GIAReportNumber { get; set; }
-        public Shape Shaping { get; set; }
+        public Shape Shape { get; set; }
         public Grade CutGrade { get; set; }
         public double Height { get; set; }
         public double Width { get; set; }
