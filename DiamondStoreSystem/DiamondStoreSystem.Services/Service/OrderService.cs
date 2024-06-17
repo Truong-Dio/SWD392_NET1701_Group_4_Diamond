@@ -129,8 +129,8 @@ namespace DiamondStoreSystem.Business.Service
                 {
                     return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
                 }
-                var result = order.Result as List<Order>;
-                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, order);
+                var result = (order.Result as List<Order>).Select(o => _mapper.Map<OrderResponse>(o));
+                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, result);
             }
             catch (Exception ex)
             {
@@ -147,7 +147,7 @@ namespace DiamondStoreSystem.Business.Service
                 {
                     return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
                 }
-                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, order);
+                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, _mapper.Map<OrderResponse>(order));
             }
             catch (Exception ex)
             {

@@ -11,12 +11,12 @@ namespace DiamondStoreSystem.DTO.EntitiesResponse.Order
     public class OrderResponse
     {
         public string OrderID { get; set; }
-        public OrderStatus OrderStatus { get; set; }
+        public string OrderStatus { get; set; }
         public DateTime DateOrdered { get; set; }
         public DateTime? DateReceived { get; set; }
         public double TotalPrice { get; set; }
         public string AccountID { get; set; }
-        public PayMethod PayMethod { get; set; }
+        public string PayMethod { get; set; }
         public string AccessoryID {  get; set; }
     }
 }
