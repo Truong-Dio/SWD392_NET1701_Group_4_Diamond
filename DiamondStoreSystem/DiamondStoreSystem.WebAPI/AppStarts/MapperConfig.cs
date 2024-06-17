@@ -21,7 +21,10 @@ namespace DiamondStoreSystem.WebAPI.AppStarts
             CreateMap<AccountRequest, AccountEmployeeResponse>().ReverseMap();
             CreateMap<Account, AccountAllField>().ReverseMap();
 
-            CreateMap<Accessory, AccessoryResponse>().ReverseMap();
+            CreateMap<Accessory, AccessoryResponse>()
+                        .ForMember(dest => dest.Material, opt => opt.MapFrom(src => src.Material.ToString()))
+                        .ForMember(dest => dest.Style, opt => opt.MapFrom(src => src.Style.ToString()))
+                        .ReverseMap(); 
             CreateMap<Accessory, AccessoryRequest>().ReverseMap();
             CreateMap<AccessoryRequest, AccessoryResponse>().ReverseMap();
 
@@ -29,7 +32,10 @@ namespace DiamondStoreSystem.WebAPI.AppStarts
             CreateMap<Diamond, DiamondRequest>().ReverseMap();
             CreateMap<DiamondRequest, DiamondResponse>().ReverseMap();
 
-            CreateMap<Order, OrderResponse>().ReverseMap();
+            CreateMap<Order, OrderResponse>()
+           .ForMember(dest => dest.OrderStatus, opt => opt.MapFrom(src => src.OrderStatus.ToString()))
+           .ForMember(dest => dest.PayMethod, opt => opt.MapFrom(src => src.PayMethod.ToString()))
+           .ReverseMap();
             CreateMap<Order, OrderRequest>().ReverseMap();
             CreateMap<OrderRequest, OrderResponse>().ReverseMap();
 
