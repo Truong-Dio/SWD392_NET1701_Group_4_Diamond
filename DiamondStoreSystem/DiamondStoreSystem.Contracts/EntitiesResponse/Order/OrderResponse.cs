@@ -18,5 +18,6 @@ namespace DiamondStoreSystem.DTO.EntitiesResponse.Order
         public string AccountID { get; set; }
         public string PayMethod { get; set; }
         public string AccessoryID {  get; set; }
+        public string EmployeeAssignID { get; set; }
     }
 }

@@ -17,5 +17,6 @@ namespace DiamondStoreSystem.DTO.EntitiesRequest.Order
         public double TotalPrice { get; set; }
         public string AccountID { get; set; }
         public PayMethod PayMethod { get; set; }
+        public string EmployeeAssignID { get; set; }
     }
 }
