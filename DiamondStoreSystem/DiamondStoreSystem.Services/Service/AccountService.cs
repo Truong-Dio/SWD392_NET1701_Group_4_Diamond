@@ -156,21 +156,6 @@ namespace DiamondStoreSystem.Business.Service
                     Email = email,
                     Password = password
                     });
-                //switch (result.Role)
-                //{
-                //    case Common.Enum.Role.Customer:
-                //        return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, _mapper.Map<AccountCustomerResponse>(result));
-                //    case Common.Enum.Role.SalesStaff:
-                //        return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, _mapper.Map<AccountEmployeeResponse>(result));
-                //    case Common.Enum.Role.DeliveryStaff:
-                //        return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, _mapper.Map<AccountEmployeeResponse>(result));
-                //    case Common.Enum.Role.Manager:
-                //        return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, _mapper.Map<AccountEmployeeResponse>(result));
-                //    case Common.Enum.Role.Admin:
-                //        return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, _mapper.Map<AccountEmployeeResponse>(result));
-                //    default:
-                //        return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, result);
-                //}
             }
             catch (Exception ex)
             {
