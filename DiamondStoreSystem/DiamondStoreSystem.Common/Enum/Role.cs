@@ -10,7 +10,6 @@ namespace DiamondStoreSystem.Common.Enum
     {
         Customer,
         SalesStaff,
-        DeliveryStaff,
         Manager,
         Admin
     }

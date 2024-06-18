@@ -108,6 +108,22 @@ namespace DiamondStoreSystem.DTO.Entities
                     Block = false,
                     Role = Role.SalesStaff,
                     WorkingSchedule = WorkingSchedule.Afternoon
+                },
+                new Account
+                {
+                    AccountID = "E002",
+                    Email = "admin@example.com",
+                    Password = "string",
+                    LastName = "Smith",
+                    FirstName = "Jane",
+                    Phone = 9876543210,
+                    Address = "456 Elm St",
+                    Gender = Gender.Female,
+                    DOB = new DateTime(1985, 5, 15),
+                    JoinDate = new DateTime(2019, 5, 15),
+                    Block = false,
+                    Role = Role.Admin,
+                    WorkingSchedule = WorkingSchedule.Afternoon
                 }
             );
 
