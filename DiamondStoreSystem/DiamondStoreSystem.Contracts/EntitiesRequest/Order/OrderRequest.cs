@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace DiamondStoreSystem.DTO.EntitiesRequest.Order
@@ -15,6 +16,7 @@ namespace DiamondStoreSystem.DTO.EntitiesRequest.Order
         public DateTime DateOrdered { get; set; }
         public DateTime? DateReceived { get; set; }
         public double TotalPrice { get; set; }
+        [JsonIgnore]
         public string AccountID { get; set; }
         public PayMethod PayMethod { get; set; }
         public string EmployeeAssignID { get; set; }
