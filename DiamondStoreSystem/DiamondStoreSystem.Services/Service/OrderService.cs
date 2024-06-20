@@ -4,17 +4,12 @@ using DiamondStoreSystem.Business.IService;
 using DiamondStoreSystem.Common;
 using DiamondStoreSystem.DTO.Entities;
 using DiamondStoreSystem.DTO.EntitiesRequest.Order;
-using DiamondStoreSystem.DTO.EntitiesResponse.Account;
 using DiamondStoreSystem.DTO.EntitiesResponse.Order;
 using DiamondStoreSystem.Repository;
-using MailKit.Search;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace DiamondStoreSystem.Business.Service
 {
     public class OrderService : IOrderService
@@ -29,8 +24,8 @@ namespace DiamondStoreSystem.Business.Service
             _orderRepository = orderRepository;
             _serviceProvider = serviceProvider;
         }
-
-        private IOrderDetailService OrderDetailService => _serviceProvider.GetService<IOrderDetailService>();
+        private IAccountService _accountService => _serviceProvider.GetService<IAccountService>();
+        private IOrderDetailService _orderDetailService => _serviceProvider.GetService<IOrderDetailService>();
         public IDSSResult GetFull()
         {
             try
@@ -40,7 +35,7 @@ namespace DiamondStoreSystem.Business.Service
                 {
                     return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
                 }
-
+                
                 return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, result);
             }
             catch (Exception ex)
@@ -58,7 +53,7 @@ namespace DiamondStoreSystem.Business.Service
                     return result;
                 }
                 _orderRepository.HardDeleteByString(orderId);
-                OrderDetailService.HardDeleteRangeByOrderID(orderId);
+                _orderDetailService.HardDeleteRangeByOrderID(orderId);
                 var check = _orderRepository.Save();
                 if (check <= 0)
                 {
@@ -81,7 +76,9 @@ namespace DiamondStoreSystem.Business.Service
                 {
                     return result;
                 }
-                _orderRepository.Insert(_mapper.Map<Order>(OrderRequest));
+                var order = _mapper.Map<Order>(OrderRequest);
+                
+                _orderRepository.Insert(order);
                 var check = _orderRepository.Save();
                 if (check <= 0)
                 {
@@ -208,7 +205,7 @@ namespace DiamondStoreSystem.Business.Service
 
                 Order order = result.Data as Order;
 
-                var orderDetails = OrderDetailService.GetByOrderID(orderID);
+                var orderDetails = _orderDetailService.GetByOrderID(orderID);
 
                 if (orderDetails.Status <= 0)
                 {
@@ -264,7 +261,7 @@ namespace DiamondStoreSystem.Business.Service
                 IDSSResult check = new DSSResult();
                 (result.Data as List<OrderResponse>).ForEach(order =>
                 {
-                    check = OrderDetailService.HardDeleteRangeByOrderID(order.OrderID);
+                    check = _orderDetailService.HardDeleteRangeByOrderID(order.OrderID);
                     if (check.Status > 0)
                     {
                         check = HardDelete(order.OrderID);

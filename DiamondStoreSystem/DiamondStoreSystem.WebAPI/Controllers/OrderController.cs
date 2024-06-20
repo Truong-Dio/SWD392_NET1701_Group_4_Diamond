@@ -44,6 +44,10 @@ namespace DiamondStoreSystem.WebAPI.Controllers
         [HttpPost("Create")]
         public IActionResult CreateOrder([FromBody] OrderRequest request)
         {
+            var value = HttpContext.Session.Get("accId");
+            var userJson = Encoding.UTF8.GetString(value);
+            var user = JsonConvert.DeserializeObject<AccountLogin>(userJson);
+            request.AccountID = user.AccountID;
             return Ok(_orderService.Add(request));
         }
 

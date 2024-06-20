@@ -11,6 +11,7 @@ using System.Text;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
+using Newtonsoft.Json;
 
 namespace DiamondStoreSystem.WebAPI.Controllers
 {
@@ -34,7 +35,9 @@ namespace DiamondStoreSystem.WebAPI.Controllers
             var auth = _accountService.Login(account.Email, account.Password);
             if (auth.Status > 0)
             {
-                var tokenString = GenerateJSONWebToken(auth.Data as AccountLogin);
+                var user = auth.Data as AccountLogin;
+                HttpContext.Session.Set("accId", Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(user)));
+                var tokenString = GenerateJSONWebToken(user);
                 response = Ok(tokenString);
             }
             return response;
