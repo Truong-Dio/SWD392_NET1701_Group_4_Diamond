@@ -85,10 +85,16 @@ namespace DiamondStoreSystem.WebAPI
         }
     });
             });
-                services.AddAuthorization();
+            services.AddAuthorization();
             services.AddMvc(options => options.EnableEndpointRouting = false)
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
-
+            services.AddDistributedMemoryCache();
+            services.AddSession(options =>
+            {
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+                options.IdleTimeout = TimeSpan.FromMinutes(120);
+            });
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -108,7 +114,7 @@ namespace DiamondStoreSystem.WebAPI
             services.AddScoped<IDiamondService, DiamondService>();
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IOrderDetailService, OrderDetailService>();
-            services.AddScoped<DiamondStoreDbContext, DiamondStoreDbContext>();
+            services.AddScoped<DiamondStoreDbContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -128,7 +134,7 @@ namespace DiamondStoreSystem.WebAPI
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-
+            app.UseSession();
             app.UseMvc();
 
             app.UseEndpoints(endpoints =>

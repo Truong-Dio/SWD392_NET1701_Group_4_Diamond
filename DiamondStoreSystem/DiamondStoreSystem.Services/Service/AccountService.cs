@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -38,6 +39,7 @@ namespace DiamondStoreSystem.Business.Service
                 {
                     return new DSSResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
                 }
+                account.Password = Util.HashPassword(account.Password);
                 _repository.Insert(_mapper.Map<Account>(account));
                 int check = _repository.Save();
                 if (check == 0)
@@ -144,7 +146,7 @@ namespace DiamondStoreSystem.Business.Service
         {
             try
             {
-                var result = _repository.GetFirstOrDefault(x => x.Email == email && x.Password == password && !x.Block);
+                var result = _repository.GetFirstOrDefault(x => x.Email == email && x.Password == Util.HashPassword(password) && !x.Block);
                 
                 if (result == null)
                 {
@@ -152,9 +154,9 @@ namespace DiamondStoreSystem.Business.Service
                 }
                 return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, new AccountLogin
                 {
+                    AccountID = result.AccountID,
                     Role = result.Role.ToString(),
-                    Email = email,
-                    Password = password
+                    Email = email
                     });
             }
             catch (Exception ex)

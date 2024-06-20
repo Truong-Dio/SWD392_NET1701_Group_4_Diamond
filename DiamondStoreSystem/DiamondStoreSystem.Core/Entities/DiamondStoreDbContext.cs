@@ -11,6 +11,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DiamondStoreSystem.Common.Enum;
+using System.Security.Cryptography;
+using DiamondStoreSystem.Common;
 
 namespace DiamondStoreSystem.DTO.Entities
 {
@@ -29,7 +31,6 @@ namespace DiamondStoreSystem.DTO.Entities
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true).Build();
             optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
         }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -80,7 +81,7 @@ namespace DiamondStoreSystem.DTO.Entities
                 {
                     AccountID = "C001",
                     Email = "customer1@example.com",
-                    Password = "password",
+                    Password = Util.HashPassword("password"),
                     LastName = "Doe",
                     FirstName = "John",
                     Phone = 1234567890,
@@ -97,7 +98,7 @@ namespace DiamondStoreSystem.DTO.Entities
                 {
                     AccountID = "E001",
                     Email = "employee1@example.com",
-                    Password = "password",
+                    Password = Util.HashPassword("password"),
                     LastName = "Smith",
                     FirstName = "Jane",
                     Phone = 9876543210,
@@ -113,7 +114,7 @@ namespace DiamondStoreSystem.DTO.Entities
                 {
                     AccountID = "E002",
                     Email = "admin@example.com",
-                    Password = "string",
+                    Password = Util.HashPassword("password"),
                     LastName = "Smith",
                     FirstName = "Jane",
                     Phone = 9876543210,

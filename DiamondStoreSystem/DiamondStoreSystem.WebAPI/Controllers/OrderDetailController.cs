@@ -13,11 +13,9 @@ namespace DiamondStoreSystem.WebAPI.Controllers
     public class OrderDetailController : ControllerBase
     {
         private readonly IOrderDetailService _orderDetailService;
-        private readonly IMapper _mapper;
-        public OrderDetailController(IOrderDetailService orderDetailService, IMapper mapper)
+        public OrderDetailController(IOrderDetailService orderDetailService)
         {
             _orderDetailService = orderDetailService;
-            _mapper = mapper;
         }
 
         [HttpGet("GetAll")]

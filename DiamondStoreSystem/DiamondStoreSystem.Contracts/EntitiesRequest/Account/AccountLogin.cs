@@ -18,5 +18,7 @@ namespace DiamondStoreSystem.DTO.EntitiesRequest.Account
         public string Password { get; set; }
         [JsonIgnore]
         public string? Role { get; set; }
+        [JsonIgnore]
+        public string? AccountID {  get; set; }
     }
 }
