@@ -1,10 +1,14 @@
 ﻿using AutoMapper;
 using DiamondStoreSystem.Business.IService;
 using DiamondStoreSystem.Business.Service;
+using DiamondStoreSystem.DTO.EntitiesRequest.Account;
 using DiamondStoreSystem.DTO.EntitiesRequest.Order;
 using DiamondStoreSystem.DTO.EntitiesRequest.Product;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.Text;
+using System.Text.Json;
 
 namespace DiamondStoreSystem.WebAPI.Controllers
 {
@@ -13,11 +17,9 @@ namespace DiamondStoreSystem.WebAPI.Controllers
     public class OrderController : ControllerBase
     {
         private readonly IOrderService _orderService;
-        private readonly IMapper _mapper;
-        public OrderController(IOrderService orderService, IMapper mapper)
+        public OrderController(IOrderService orderService)
         {
             _orderService = orderService;
-            _mapper = mapper;
         }
 
         [HttpGet("GetAll")]

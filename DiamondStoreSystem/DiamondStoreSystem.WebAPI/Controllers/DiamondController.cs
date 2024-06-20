@@ -10,11 +10,9 @@ namespace DiamondStoreSystem.WebAPI.Controllers
     public class DiamondController : Controller
     {
         private readonly IDiamondService _diamondService;
-        private readonly IMapper _mapper;
-        public DiamondController(IDiamondService diamondService, IMapper mapper)
+        public DiamondController(IDiamondService diamondService)
         {
             _diamondService = diamondService;
-            _mapper = mapper;
         }
 
         [HttpGet("Diamonds")]

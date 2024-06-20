@@ -20,14 +20,13 @@ namespace DiamondStoreSystem.WebAPI.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IAccountService _accountService;
-        private readonly IMapper _mapper;
-        public AccountController(IAccountService accountService, IMapper mapper)
-        {
-            _mapper = mapper;
+        public AccountController(IAccountService accountService)
+        { 
             _accountService = accountService;
         }
 
         [HttpGet("GetAll")]
+        [Authorize(Roles = "Admin")]
         public IActionResult GetAllAccount()
         {
             var result = _accountService.Get();
@@ -35,34 +34,29 @@ namespace DiamondStoreSystem.WebAPI.Controllers
         }
 
         [HttpGet("Email")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles= "Customer,SalesStaff,Manager,Admin")]
         public IActionResult Get(string email)
         {
             var result = _accountService.GetByEmail(email);
             return Ok(result);
         }
-
-        //[HttpPost("Login")]
-        //public IActionResult Post(string email, string password)
-        //{
-        //    var result = _accountService.Login(email, password);
-        //    return Ok(result);
-        //}
         
         [HttpPut("UpdateByEmail")]
-        [Authorize(Roles = "1")]
+        [Authorize(Roles = "Customer,SalesStaff,Manager,Admin")]
         public async Task<IActionResult> UpdateAccountByClient(string email, [FromBody] AccountClient accountClient)
         {
             var result = await _accountService.UpdateByEmail(email, accountClient);
             return Ok(result);
         }
         [HttpPut("Update")]
+        [Authorize(Roles = "Admin")]
         public IActionResult UpdateByAdmin(string accountid, [FromBody]AccountAllField account)
         {
             account.AccountID = accountid;
             return Ok(_accountService.Update(account));
         }
         [HttpPost("Create")]
+        [Authorize(Roles = "Admin")]
         public IActionResult CreateNewAccount([FromBody] AccountRequest account)
         {
             var result = _accountService.Add(account);
@@ -70,13 +64,15 @@ namespace DiamondStoreSystem.WebAPI.Controllers
         }
 
         [HttpDelete("Delete")]
+        [Authorize(Roles = "Admin,Manager")]
         public IActionResult Delete(string id)
         {
-            var result = _accountService.HardDelete(id);
+            var result = _accountService.Delete(id);
             return Ok(result);
         }
 
         [HttpDelete("HardDelete")]
+        [Authorize(Roles = "Admin")]
         public IActionResult HardDelete(string id)
         {
             var result = _accountService.HardDelete(id);

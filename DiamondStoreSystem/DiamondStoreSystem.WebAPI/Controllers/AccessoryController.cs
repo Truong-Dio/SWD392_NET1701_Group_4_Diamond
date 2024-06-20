@@ -12,11 +12,9 @@ namespace DiamondStoreSystem.WebAPI.Controllers
     public class AccessoryController : ControllerBase
     {
         private readonly IAccessoryService _accessoryService;
-        private readonly IMapper _mapper;
-        public AccessoryController(IAccessoryService accessoryService, IMapper mapper)
+        public AccessoryController(IAccessoryService accessoryService)
         {
             _accessoryService = accessoryService;
-            _mapper = mapper;
         }
 
         [HttpGet("GetAll")]
