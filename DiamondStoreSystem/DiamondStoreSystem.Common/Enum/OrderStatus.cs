@@ -10,7 +10,7 @@ namespace DiamondStoreSystem.Common.Enum
     {
         Cancelled,
         Pending,
-        Confirmed,
+        Paid,
         Shipped
     }
 }

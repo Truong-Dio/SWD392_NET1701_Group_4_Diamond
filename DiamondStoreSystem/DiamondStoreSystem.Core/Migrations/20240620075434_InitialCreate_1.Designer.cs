@@ -4,14 +4,16 @@ using DiamondStoreSystem.DTO.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DiamondStoreSystem.Core.Migrations
 {
     [DbContext(typeof(DiamondStoreDbContext))]
-    partial class DiamondStoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240620075434_InitialCreate_1")]
+    partial class InitialCreate_1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -334,7 +336,7 @@ namespace DiamondStoreSystem.Core.Migrations
                             OrderID = "O001",
                             AccountID = "C001",
                             Block = false,
-                            DateOrdered = new DateTime(2024, 6, 26, 2, 55, 49, 857, DateTimeKind.Local).AddTicks(9955),
+                            DateOrdered = new DateTime(2024, 6, 20, 14, 54, 33, 973, DateTimeKind.Local).AddTicks(4144),
                             EmployeeAssignID = "E001",
                             OrderStatus = 1,
                             PayMethod = 2,
@@ -394,37 +396,6 @@ namespace DiamondStoreSystem.Core.Migrations
                             Price = 500.0,
                             Quantity = 1
                         });
-                });
-
-            modelBuilder.Entity("DiamondStoreSystem.DTO.Entities.VnPaymentResponse", b =>
-                {
-                    b.Property<string>("VnpOrderId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("OrderDescription")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PaymentId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PaymentMethod")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Success")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Token")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TransactionId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("VnPayResponseCode")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("VnpOrderId");
-
-                    b.ToTable("VnPaymentResponses");
                 });
 
             modelBuilder.Entity("DiamondStoreSystem.DTO.Entities.Order", b =>

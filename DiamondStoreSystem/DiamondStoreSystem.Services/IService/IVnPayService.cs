@@ -1,4 +1,6 @@
-﻿using DiamondStoreSystem.DTO.EntitiesRequest.Order;
+﻿using DiamondStoreSystem.Business.Interface;
+using DiamondStoreSystem.DTO.Entities;
+using DiamondStoreSystem.DTO.EntitiesRequest.Order;
 using DiamondStoreSystem.DTO.EntitiesResponse.Order;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -12,8 +14,8 @@ namespace DiamondStoreSystem.Business.IService
 {
     public interface IVnPayService
     {
-        string CreatePaymentUrl(HttpContext context, VnPaymentRequestModel model);
-        VnPaymentResponseModel PaymentExecute(IQueryCollection collections);
+        string CreatePaymentUrl(HttpContext context, VnPaymentRequest model);
+        IDSSResult PaymentExecute(IQueryCollection collections);
 
     }
 }

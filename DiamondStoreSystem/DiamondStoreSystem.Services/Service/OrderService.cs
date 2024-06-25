@@ -2,6 +2,7 @@
 using DiamondStoreSystem.Business.Interface;
 using DiamondStoreSystem.Business.IService;
 using DiamondStoreSystem.Common;
+using DiamondStoreSystem.Common.Enum;
 using DiamondStoreSystem.DTO.Entities;
 using DiamondStoreSystem.DTO.EntitiesRequest.Order;
 using DiamondStoreSystem.DTO.EntitiesResponse.Order;
@@ -274,6 +275,31 @@ namespace DiamondStoreSystem.Business.Service
                 }
 
                 return check;
+            }
+            catch (Exception ex)
+            {
+                return new DSSResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+        }
+
+        public IDSSResult UpdateStatus(string OrderId, OrderStatus status)
+        {
+            try
+            {
+                var result = GetByID(OrderId);
+                if (result.Status <= 0)
+                {
+                    return result;
+                }
+                var order = result.Data as Order;
+                order.OrderStatus = status;
+                _orderRepository.Update(order);
+                var check = _orderRepository.Save();
+                if (check < 0)
+                {
+                    return new DSSResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
+                }
+                return new DSSResult(Const.SUCCESS_UPDATE_CODE, Const.SUCCESS_UPDATE_MSG);
             }
             catch (Exception ex)
             {

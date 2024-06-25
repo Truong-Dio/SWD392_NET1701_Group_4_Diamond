@@ -1,4 +1,5 @@
 ﻿using DiamondStoreSystem.Business.Interface;
+using DiamondStoreSystem.Common.Enum;
 using DiamondStoreSystem.DTO.EntitiesRequest.Order;
 using System;
 using System.Collections.Generic;
@@ -19,5 +20,6 @@ namespace DiamondStoreSystem.Business.IService
         public IDSSResult GetByID(string OrderId);
         public IDSSResult UpdateTotalPrice(string OrderId);
         public IDSSResult HardDelete(string orderId);
+        public IDSSResult UpdateStatus(string OrderId, OrderStatus status);
     }
 }
