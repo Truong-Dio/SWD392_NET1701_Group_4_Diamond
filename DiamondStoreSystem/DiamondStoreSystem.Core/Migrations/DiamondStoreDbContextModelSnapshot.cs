@@ -144,7 +144,7 @@ namespace DiamondStoreSystem.Core.Migrations
                             JoinDate = new DateTime(2020, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Doe",
                             LoyaltyPoint = 100,
-                            Password = "password",
+                            Password = "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
                             Phone = 1234567890m,
                             Role = 0,
                             WorkingSchedule = 1
@@ -160,9 +160,25 @@ namespace DiamondStoreSystem.Core.Migrations
                             Gender = 0,
                             JoinDate = new DateTime(2019, 5, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Smith",
-                            Password = "password",
+                            Password = "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
                             Phone = 9876543210m,
                             Role = 1,
+                            WorkingSchedule = 2
+                        },
+                        new
+                        {
+                            AccountID = "E002",
+                            Address = "456 Elm St",
+                            Block = false,
+                            DOB = new DateTime(1985, 5, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "admin@example.com",
+                            FirstName = "Jane",
+                            Gender = 0,
+                            JoinDate = new DateTime(2019, 5, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            LastName = "Smith",
+                            Password = "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
+                            Phone = 9876543210m,
+                            Role = 3,
                             WorkingSchedule = 2
                         });
                 });
@@ -318,7 +334,7 @@ namespace DiamondStoreSystem.Core.Migrations
                             OrderID = "O001",
                             AccountID = "C001",
                             Block = false,
-                            DateOrdered = new DateTime(2024, 6, 17, 18, 52, 41, 757, DateTimeKind.Local).AddTicks(5114),
+                            DateOrdered = new DateTime(2024, 6, 26, 2, 55, 49, 857, DateTimeKind.Local).AddTicks(9955),
                             EmployeeAssignID = "E001",
                             OrderStatus = 1,
                             PayMethod = 2,
@@ -378,6 +394,37 @@ namespace DiamondStoreSystem.Core.Migrations
                             Price = 500.0,
                             Quantity = 1
                         });
+                });
+
+            modelBuilder.Entity("DiamondStoreSystem.DTO.Entities.VnPaymentResponse", b =>
+                {
+                    b.Property<string>("VnpOrderId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("OrderDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PaymentId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PaymentMethod")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Success")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Token")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TransactionId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VnPayResponseCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("VnpOrderId");
+
+                    b.ToTable("VnPaymentResponses");
                 });
 
             modelBuilder.Entity("DiamondStoreSystem.DTO.Entities.Order", b =>
