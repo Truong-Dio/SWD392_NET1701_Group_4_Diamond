@@ -114,6 +114,7 @@ namespace DiamondStoreSystem.WebAPI
             services.AddScoped<IDiamondService, DiamondService>();
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IOrderDetailService, OrderDetailService>();
+            services.AddScoped<IVnPayService, VnPayService>();
             services.AddScoped<DiamondStoreDbContext>();
         }
 

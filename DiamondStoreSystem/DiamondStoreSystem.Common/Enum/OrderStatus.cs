@@ -8,7 +8,6 @@ namespace DiamondStoreSystem.Common.Enum
 {
     public enum OrderStatus
     {
-
         Cancelled,
         Pending,
         Confirmed,
