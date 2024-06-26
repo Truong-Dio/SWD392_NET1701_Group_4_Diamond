@@ -5,6 +5,7 @@ using DiamondStoreSystem.DTO.Entities;
 using DiamondStoreSystem.DTO.EntitiesRequest.Account;
 using DiamondStoreSystem.DTO.EntitiesRequest.Order;
 using DiamondStoreSystem.DTO.EntitiesRequest.Product;
+using DiamondStoreSystem.DTO.EntitiesResponse.Order;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -31,26 +32,23 @@ namespace DiamondStoreSystem.WebAPI.Controllers
         [HttpPost("CreatePaymentUrl")]
         public IActionResult CreatePaymentUrl([FromBody] VnPaymentRequest model)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var paymentUrl = _vnPayService.CreatePaymentUrl(HttpContext, model);
 
-            using (var qrGenerator = new QRCodeGenerator())
-            using (var qrCodeData = qrGenerator.CreateQrCode(paymentUrl, QRCodeGenerator.ECCLevel.Q))
-                using(var qrCode = new QRCode(qrCodeData))
-                using(var qrCodeImage = qrCode.GetGraphic(20))
+            var result = _orderService.GetByID(model.OrderId);
+            if (result.Status <= 0)
             {
-                using (var ms = new MemoryStream())
-                {
-                    qrCodeImage.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
-                    var qrCodeBase64 = Convert.ToBase64String(ms.ToArray());
-                    var qrCodeImageUrl = $"data:image/png;base64;{qrCodeBase64}";
-
-                    return Ok(new { paymentUrl, qrCodeImageUrl });
-                }
+                return BadRequest(result);
             }
+
+            var order = result.Data as OrderResponse;
+            model.Amount = order.TotalPrice;
+            model.CreatedDate = DateTime.Now;
+            model.Description = "Thanh toan";
+            var paymentUrl = _vnPayService.CreatePaymentUrl(HttpContext, model);
+            return Ok(paymentUrl);
         }
 
         [HttpGet("PaymentExecute")]
@@ -60,18 +58,9 @@ namespace DiamondStoreSystem.WebAPI.Controllers
             var result = _vnPayService.PaymentExecute(queryCollection);
             if (result.Status <= 0)
             {
-                return Ok(result);
-            }
-            var vnp = result.Data as VnPaymentResponse;
-            if (vnp.Success)
-            {
-                _orderService.UpdateStatus(vnp.OrderDescription.Substring(vnp.OrderDescription.IndexOf(":") + 1), Common.Enum.OrderStatus.Paid);
-                return Ok(result);
-            }
-            else
-            {
                 return BadRequest(result);
             }
+            return Ok(result);
         }
 
         [HttpGet("GetAll")]

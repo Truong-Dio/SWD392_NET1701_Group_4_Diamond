@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DiamondStoreSystem.DTO.Entities
 {
@@ -20,5 +21,8 @@ namespace DiamondStoreSystem.DTO.Entities
         public ICollection<OrderDetail> OrderDetails { get; set; }
         public PayMethod PayMethod { get; set; }
         public bool Block { get; set; }
+
+        [ForeignKey("VnpOrderId")]
+        public VnPaymentResponse VnPaymentResponse { get; set; }
     }
 }

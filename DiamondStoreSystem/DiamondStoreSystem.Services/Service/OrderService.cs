@@ -180,7 +180,7 @@ namespace DiamondStoreSystem.Business.Service
                 }
                 Order order = _mapper.Map<Order>((OrderResponse)result.Data);
                 order.Block = true;
-                _orderRepository.Update(_mapper.Map<Order>(order));
+                _orderRepository.Update(order);
                 var check = _orderRepository.Save();
                 if (check <= 0)
                 {
@@ -291,9 +291,9 @@ namespace DiamondStoreSystem.Business.Service
                 {
                     return result;
                 }
-                var order = result.Data as Order;
-                order.OrderStatus = status;
-                _orderRepository.Update(order);
+                var order = result.Data as OrderResponse;
+                order.OrderStatus = status.ToString();
+                _orderRepository.UpdateByIdByString(_mapper.Map<Order>(order), order.OrderID);
                 var check = _orderRepository.Save();
                 if (check < 0)
                 {

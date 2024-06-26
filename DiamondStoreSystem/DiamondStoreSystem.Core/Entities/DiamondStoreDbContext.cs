@@ -167,7 +167,7 @@ namespace DiamondStoreSystem.DTO.Entities
                     DateReceived = null,
                     TotalPrice = 10500.0,
                     AccountID = "C001",
-                    PayMethod = PayMethod.CreditCard,
+                    PayMethod = PayMethod.Cash,
                     Block = false,
                     EmployeeAssignID = "E001"
                 }

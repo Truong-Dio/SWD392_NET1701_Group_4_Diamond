@@ -8,6 +8,6 @@ namespace DiamondStoreSystem.Common.Enum
 {
     public enum PayMethod
     {
-        Cash, Online, CreditCard
+        Cash, Online
     }
 }

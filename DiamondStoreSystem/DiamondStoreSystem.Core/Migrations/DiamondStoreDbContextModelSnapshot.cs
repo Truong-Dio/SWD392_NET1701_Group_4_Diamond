@@ -320,11 +320,18 @@ namespace DiamondStoreSystem.Core.Migrations
                     b.Property<double>("TotalPrice")
                         .HasColumnType("float");
 
+                    b.Property<string>("VnpOrderId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("OrderID");
 
                     b.HasIndex("AccountID");
 
                     b.HasIndex("EmployeeAssignID");
+
+                    b.HasIndex("VnpOrderId")
+                        .IsUnique()
+                        .HasFilter("[VnpOrderId] IS NOT NULL");
 
                     b.ToTable("Orders");
 
@@ -334,10 +341,10 @@ namespace DiamondStoreSystem.Core.Migrations
                             OrderID = "O001",
                             AccountID = "C001",
                             Block = false,
-                            DateOrdered = new DateTime(2024, 6, 26, 2, 55, 49, 857, DateTimeKind.Local).AddTicks(9955),
+                            DateOrdered = new DateTime(2024, 6, 26, 7, 53, 7, 48, DateTimeKind.Local).AddTicks(3263),
                             EmployeeAssignID = "E001",
                             OrderStatus = 1,
-                            PayMethod = 2,
+                            PayMethod = 0,
                             TotalPrice = 10500.0
                         });
                 });
@@ -404,6 +411,9 @@ namespace DiamondStoreSystem.Core.Migrations
                     b.Property<string>("OrderDescription")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("OrderId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("PaymentId")
                         .HasColumnType("nvarchar(max)");
 
@@ -424,6 +434,8 @@ namespace DiamondStoreSystem.Core.Migrations
 
                     b.HasKey("VnpOrderId");
 
+                    b.HasIndex("OrderId");
+
                     b.ToTable("VnPaymentResponses");
                 });
 
@@ -439,9 +451,15 @@ namespace DiamondStoreSystem.Core.Migrations
                         .HasForeignKey("EmployeeAssignID")
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    b.HasOne("DiamondStoreSystem.DTO.Entities.VnPaymentResponse", "VnPaymentResponse")
+                        .WithOne()
+                        .HasForeignKey("DiamondStoreSystem.DTO.Entities.Order", "VnpOrderId");
+
                     b.Navigation("Account");
 
                     b.Navigation("EmployeeAccount");
+
+                    b.Navigation("VnPaymentResponse");
                 });
 
             modelBuilder.Entity("DiamondStoreSystem.DTO.Entities.OrderDetail", b =>
@@ -461,6 +479,15 @@ namespace DiamondStoreSystem.Core.Migrations
                     b.Navigation("Accessory");
 
                     b.Navigation("Diamond");
+
+                    b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("DiamondStoreSystem.DTO.Entities.VnPaymentResponse", b =>
+                {
+                    b.HasOne("DiamondStoreSystem.DTO.Entities.Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId");
 
                     b.Navigation("Order");
                 });
