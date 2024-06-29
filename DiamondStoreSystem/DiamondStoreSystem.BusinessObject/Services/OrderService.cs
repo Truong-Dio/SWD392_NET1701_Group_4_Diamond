@@ -79,6 +79,27 @@ namespace DiamondStoreSystem.BusinessLayer.Services
             }
         }
 
+        public async Task<IDSSResult> UpdateStatus(string id, OrderStatus status)
+        {
+            try
+            {
+                var result = await IsExist(id);
+                if (result.Status <= 0) return result;
+
+                var order = result.Data as Order;
+
+                var check = await UpdateProperty(order, nameof(order.OrderStatus), status);
+
+                if (check.Status <= 0) return new DSSResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
+
+                return new DSSResult(Const.SUCCESS_UPDATE_CODE, Const.SUCCESS_UPDATE_MSG);
+            }
+            catch (Exception ex)
+            {
+                return new DSSResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+        }
+
         public async Task<IDSSResult> UpdateProperty(Order order, string propertyName, object value)
         {
             try

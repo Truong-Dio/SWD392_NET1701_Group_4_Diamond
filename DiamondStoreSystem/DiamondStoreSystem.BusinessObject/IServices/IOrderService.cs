@@ -22,5 +22,6 @@ namespace DiamondStoreSystem.BusinessLayer.IServices
         IDSSResult GetEnum();
         Task<IDSSResult> Delete(string id);
         Task<IDSSResult> GetCart(CartRequestModel model, HttpContext context);
+        Task<IDSSResult> UpdateStatus(string id, OrderStatus status);
     }
 }

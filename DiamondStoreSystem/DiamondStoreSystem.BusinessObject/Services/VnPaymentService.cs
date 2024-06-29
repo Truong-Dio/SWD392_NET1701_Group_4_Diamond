@@ -92,7 +92,7 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                     return new DSSResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
                 }
 
-                //_orderService.UpdateStatus(orderId, OrderStatus.Paid);
+                _orderService.UpdateStatus(orderId, OrderStatus.Paid);
                 return new DSSResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG, vnpayResponse);
             }
             catch (Exception ex)

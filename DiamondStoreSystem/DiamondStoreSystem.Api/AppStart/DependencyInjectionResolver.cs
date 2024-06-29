@@ -18,6 +18,8 @@ namespace DiamondStoreSystem.API.AppStart
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IAccessoryService, AccessoryService>();
             services.AddScoped<IDiamondService, DiamondService>();
+            services.AddScoped<IAuthService, AuthService>();
+
             services.AddScoped<IWarrantyRepository, WarrantyRepository>();
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
@@ -26,7 +28,6 @@ namespace DiamondStoreSystem.API.AppStart
             services.AddScoped<IAccessoryRepository, AccessoryRepository>();
             services.AddScoped<IDiamondRepository, DiamondRepository>();
             services.AddScoped<IVnPaymentRepository, VnPaymentRepository>();
-            services.AddScoped<IAuthService, AuthService>();
         }
     }
 }
