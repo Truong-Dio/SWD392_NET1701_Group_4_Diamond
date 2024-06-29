@@ -6,18 +6,10 @@ using DiamondStoreSystem.BusinessLayer.ResponseModels;
 using DiamondStoreSystem.BusinessLayer.ResquestModels;
 using DiamondStoreSystem.DataLayer.Models;
 using DiamondStoreSystem.Repositories.IRepositories;
-using DiamondStoreSystem.Repositories.Repositories;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace DiamondStoreSystem.BusinessLayer.Services
 {
@@ -25,16 +17,14 @@ namespace DiamondStoreSystem.BusinessLayer.Services
     {
         private readonly IOrderRepository _orderRepository;
         private readonly IWarrantyService _warrantyService;
-        private readonly IOrderService _orderService;
         private readonly IAccessoryService _accessoryService;
         private readonly IDiamondService _diamondService;
         private readonly IProductService _productService;
         private readonly IMapper _mapper;
 
-        public OrderService(IMapper mapper, IOrderRepository orderRepository, IAccessoryService accessoryService, IDiamondService diamondService, IOrderService orderService, IWarrantyService warrantyService, IProductService productService)
+        public OrderService(IMapper mapper, IOrderRepository orderRepository, IAccessoryService accessoryService, IDiamondService diamondService, IWarrantyService warrantyService, IProductService productService)
         {
             _warrantyService = warrantyService;
-            _orderService = orderService;
             _accessoryService = accessoryService;
             _diamondService = diamondService; 
             _productService = productService;
@@ -308,7 +298,7 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                 }
 
                 context.Session.TryGetValue("accId", out byte[] session);
-                result = await _orderService.Create(new OrderRequestModel()
+                result = await Create(new OrderRequestModel()
                 {
                     OrderID = orderID,
                     CustomerID = JsonConvert.DeserializeObject<AuthRequestModel>(Encoding.UTF8.GetString(session)).AccountID,
