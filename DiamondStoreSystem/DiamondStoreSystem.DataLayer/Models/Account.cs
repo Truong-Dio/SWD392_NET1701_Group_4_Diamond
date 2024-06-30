@@ -24,7 +24,7 @@ namespace DiamondStoreSystem.DataLayer.Models
         public bool Block { get; set; }
         public int Role { get; set; }
         public int WorkingSchedule { get; set; }
-
-        public ICollection<Order> Orders { get; set; }
+        public ICollection<Order> OrdersCustomer { get; set; }
+        public ICollection<Order> OrdersStaff { get; set; }
     }
 }

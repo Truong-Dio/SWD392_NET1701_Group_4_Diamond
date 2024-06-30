@@ -12,10 +12,10 @@ namespace DiamondStoreSystem.DataLayer.Models
     {
         [Key, ForeignKey("Diamond")]
         public string SubDiamondID { get; set; }
-        public string OrderID { get; set; }
+        public string ProductID { get; set; }
 
-        [ForeignKey("OrderID")]
-        public Order Order { get; set; }
+        [ForeignKey("ProductID")]
+        public Product Product { get; set; }
 
         public Diamond Diamond { get; set; }
     }

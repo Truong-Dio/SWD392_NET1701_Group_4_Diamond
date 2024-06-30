@@ -18,6 +18,8 @@ namespace DiamondStoreSystem.DataLayer.Models
         public double TotalPrice { get; set; }
         public string CustomerID { get; set; }
         public string EmployeeAssignID { get; set; }
+        public int PayMethod { get; set; }
+        public bool Block { get; set; }
 
         [ForeignKey("CustomerID")]
         public Account Customer { get; set; }
@@ -26,12 +28,6 @@ namespace DiamondStoreSystem.DataLayer.Models
         public Account EmployeeAccount { get; set; }
 
         public ICollection<Product> Products { get; set; }
-        public int PayMethod { get; set; }
-        public bool Block { get; set; }
-
-        public string? VnpOrderId { get; set; }
-
-        public VnPaymentResponse? VnPaymentResponse { get; set; }
     }
 
 }
