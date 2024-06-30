@@ -9,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
@@ -78,7 +79,6 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("adminOrManager", policy =>
     {
         policy.RequireRole("ADMIN", "MANAGER");
-
     });
     options.AddPolicy("customer", policy =>
     {
@@ -116,6 +116,9 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.MapControllers();
 
