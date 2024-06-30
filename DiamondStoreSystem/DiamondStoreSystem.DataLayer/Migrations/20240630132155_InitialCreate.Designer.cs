@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DiamondStoreSystem.DataLayer.Migrations
 {
     [DbContext(typeof(DiamondStoreSystemDBContext))]
-    [Migration("20240630081401_InitialCreate")]
+    [Migration("20240630132155_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
