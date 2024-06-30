@@ -25,7 +25,8 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                 var result = await GetById(model.ProductID);
                 if (result.Status > 0) return result;
                 _productRepository.Insert(_mapper.Map<Product>(model));
-                _productRepository.SaveChanges();
+                var check = _productRepository.SaveChanges();
+                if (check <= 0) return new DSSResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
                 return new DSSResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG);
             }
             catch (Exception ex)

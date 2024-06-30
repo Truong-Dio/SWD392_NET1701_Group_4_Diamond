@@ -18,7 +18,9 @@ namespace DiamondStoreSystem.BusinessLayer.ResponseModels
         public double TotalPrice { get; set; }
         public string CustomerID { get; set; }
         public AccountResponseModel Customer { get; set; }
+        public AccountResponseModel Employee { get; set; }
         public ICollection<ProductResponseModel> Products { get; set; }
         public string PayMethod { get; set; }
+        public string EmployeeAssignID { get; set; }
     }
 }

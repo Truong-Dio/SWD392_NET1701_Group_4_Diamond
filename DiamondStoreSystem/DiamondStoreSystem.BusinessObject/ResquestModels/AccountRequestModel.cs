@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace DiamondStoreSystem.BusinessLayer.ResquestModels
@@ -23,5 +24,7 @@ namespace DiamondStoreSystem.BusinessLayer.ResquestModels
         public int? LoyaltyPoint { get; set; }
         public Role Role { get; set; }
         public WorkingSchedule WorkingSchedule { get; set; }
+        [JsonIgnore]
+        public bool? Block { get; set; } = false;
     }
 }

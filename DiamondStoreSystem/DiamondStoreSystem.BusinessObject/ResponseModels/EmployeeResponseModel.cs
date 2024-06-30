@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DiamondStoreSystem.DataLayer.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,5 +21,6 @@ namespace DiamondStoreSystem.BusinessLayer.ResponseModels
         public DateTime JoinDate { get; set; }
         public string Role { get; set; }
         public string WorkingSchedule { get; set; }
+        public ICollection<OrderResponseModel> Orders { get; set; }
     }
 }

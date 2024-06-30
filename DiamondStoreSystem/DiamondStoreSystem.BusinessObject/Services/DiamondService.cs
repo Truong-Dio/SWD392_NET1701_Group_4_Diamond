@@ -35,7 +35,8 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                 var result = await GetById(model.DiamondID);
                 if (result.Status > 0) return result;
                 _diamondRepository.Insert(_mapper.Map<Diamond>(model));
-                _diamondRepository.SaveChanges();
+                var check = _diamondRepository.SaveChanges();
+                if (check <= 0) return new DSSResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
                 return new DSSResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG);
             }
             catch (Exception ex)

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace DiamondStoreSystem.BusinessLayer.ResquestModels
@@ -18,5 +19,7 @@ namespace DiamondStoreSystem.BusinessLayer.ResquestModels
         public double Price { get; set; }
         public int UnitInStock { get; set; }
         public string SKU { get; set; }
+        [JsonIgnore]
+        public bool Block { get; set; } = false;
     }
 }

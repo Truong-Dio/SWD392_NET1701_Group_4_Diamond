@@ -12,16 +12,12 @@ namespace DiamondStoreSystem.BusinessLayer.ResponseModels
     {
         public string ProductID { get; set; }
         public double Price { get; set; }
-        public bool Block { get; set; }
         public string AccessoryID { get; set; }
         public string WarrantyID { get; set; }
         public string OrderID { get; set; }
-        public Accessory Accessory { get; set; }
-        public Warranty Warranty { get; set; }
-        public string DiamondID { get; set; }
-        public Diamond MainDiamond { get; set; }
-        public Order Order { get; set; }
-
-        public ICollection<SubDiamond> SubDiamonds { get; set; }
+        public string MainDiamondID { get; set; }
+        public AccessoryResponseModel? Accessory { get; set; }
+        public DiamondResponseModel MainDiamond { get; set; }
+        public ICollection<DiamondResponseModel> SubDiamonds { get; set; }
     }
 }
