@@ -162,8 +162,9 @@ namespace DiamondStoreSystem.BusinessLayer.Services
         {
             Data = new List<Dictionary<int, string>>()
             {
-                SupportingFeature.Instance.GetEnumName<Material>(),
-                SupportingFeature.Instance.GetEnumName<Style>(),
+                SupportingFeature.Instance.GetEnumName<Role>(),
+                SupportingFeature.Instance.GetEnumName<WorkingSchedule>(),
+                SupportingFeature.Instance.GetEnumName<Gender>(),
             },
             Message = Const.SUCCESS_READ_MSG,
             Status = Const.SUCCESS_READ_CODE,

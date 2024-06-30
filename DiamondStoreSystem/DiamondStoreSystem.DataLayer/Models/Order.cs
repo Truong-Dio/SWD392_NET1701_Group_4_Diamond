@@ -17,21 +17,21 @@ namespace DiamondStoreSystem.DataLayer.Models
         public DateTime? DateReceived { get; set; }
         public double TotalPrice { get; set; }
         public string CustomerID { get; set; }
-        //public string EmployeeAssignID { get; set; }
+        public string EmployeeAssignID { get; set; }
 
         [ForeignKey("CustomerID")]
         public Account Customer { get; set; }
 
-        //[ForeignKey("EmployeeAssignID")]
-        //public Account EmployeeAccount { get; set; }
+        [ForeignKey("EmployeeAssignID")]
+        public Account EmployeeAccount { get; set; }
 
         public ICollection<Product> Products { get; set; }
         public int PayMethod { get; set; }
         public bool Block { get; set; }
 
-        public string VnpOrderId { get; set; }
+        public string? VnpOrderId { get; set; }
 
-        [ForeignKey("VnpOrderId")]
-        public VnPaymentResponse VnPaymentResponse { get; set; }
+        public VnPaymentResponse? VnPaymentResponse { get; set; }
     }
+
 }

@@ -16,7 +16,8 @@ namespace DiamondStoreSystem.DataLayer.Models
         public DateTime ExpiredDate { get; set; }
         public bool Block { get; set; }
         public string ProductID { get; set; }
-        [ForeignKey(nameof(Product.ProductID))]
+
+        [ForeignKey("ProductID")]
         public Product Product { get; set; }
     }
 }

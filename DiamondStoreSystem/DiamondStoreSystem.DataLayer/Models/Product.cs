@@ -15,19 +15,17 @@ namespace DiamondStoreSystem.DataLayer.Models
         public double Price { get; set; }
         public bool Block { get; set; }
         public string AccessoryID { get; set; }
-        public string WarrantyID { get; set; }
         public string OrderID { get; set; }
+        public string MainDiamondID { get; set; }
 
         [ForeignKey("AccessoryID")]
         public Accessory Accessory { get; set; }
 
-        public Warranty Warranty { get; set; }
-
-        [ForeignKey("DiamondID")]
-        public Diamond MainDiamond { get; set; }
-
         [ForeignKey("OrderID")]
         public Order Order { get; set; }
+
+        [ForeignKey("MainDiamondID")]
+        public Diamond MainDiamond { get; set; }
 
         public ICollection<SubDiamond> SubDiamonds { get; set; }
     }

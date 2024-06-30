@@ -187,8 +187,8 @@ namespace DiamondStoreSystem.BusinessLayer.Services
         {
             Data = new List<Dictionary<int, string>>()
             {
-                SupportingFeature.Instance.GetEnumName<Material>(),
-                SupportingFeature.Instance.GetEnumName<Style>(),
+                SupportingFeature.Instance.GetEnumName<PayMethod>(),
+                SupportingFeature.Instance.GetEnumName<OrderStatus>(),
             },
             Message = Const.SUCCESS_READ_MSG,
             Status = Const.SUCCESS_READ_CODE,
