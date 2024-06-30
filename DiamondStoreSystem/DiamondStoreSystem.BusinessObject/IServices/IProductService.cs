@@ -22,5 +22,6 @@ namespace DiamondStoreSystem.BusinessLayer.IServices
         Task<IDSSResult> Create(ProductRequestModel model);
         Task<IDSSResult> UpdateProperty(Product product, string propertyName, object value);
         Task<IDSSResult> Delete(string id);
+        Task<IDSSResult> UnBlock(string id);
     }
 }

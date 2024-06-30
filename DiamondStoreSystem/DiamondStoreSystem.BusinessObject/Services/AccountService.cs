@@ -28,6 +28,28 @@ namespace DiamondStoreSystem.BusinessLayer.Services
             _accountRepository = accountRepository;
             _mapper = mapper;
         }
+
+        public async Task<IDSSResult> UnBlock(string id)
+        {
+            try
+            {
+                var result = await IsExist(id);
+                if (result.Status <= 0) return result;
+
+                var account = result.Data as Account;
+
+                var check = await UpdateProperty(account, nameof(account.Block), false);
+
+                if (check.Status <= 0) return new DSSResult(Const.FAIL_DELETE_CODE, Const.FAIL_DELETE_MSG);
+
+                return new DSSResult(Const.SUCCESS_DELETE_CODE, Const.SUCCESS_DELETE_MSG);
+            }
+            catch (Exception ex)
+            {
+                return new DSSResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+        }
+
         public async Task<IDSSResult> Create(AccountRequestModel model)
         {
             try

@@ -36,6 +36,9 @@ namespace ProductStoreSystem.API.Controllers
         [HttpPut("Update/{id}")]
         public IActionResult Update([FromBody] ProductRequestModel model, string id) => Ok(_productService.Update(id, model).Result);
 
+        [HttpPut("Unblock/{id}")]
+        public IActionResult UnBlock(string id) => Ok(_productService.UnBlock(id).Result);
+
         [HttpDelete("Block/{id}")]
         public IActionResult Block(string id) => Ok(_productService.Block(id).Result);
 

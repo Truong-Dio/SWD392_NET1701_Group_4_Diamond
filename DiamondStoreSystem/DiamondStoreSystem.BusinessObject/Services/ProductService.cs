@@ -18,6 +18,28 @@ namespace DiamondStoreSystem.BusinessLayer.Services
             _productRepository = productRepository;
             _mapper = mapper;
         }
+
+        public async Task<IDSSResult> UnBlock(string id)
+        {
+            try
+            {
+                var result = await IsExist(id);
+                if (result.Status <= 0) return result;
+
+                var product = result.Data as Product;
+
+                var check = await UpdateProperty(product, nameof(product.Block), false);
+
+                if (check.Status <= 0) return new DSSResult(Const.FAIL_DELETE_CODE, Const.FAIL_DELETE_MSG);
+
+                return new DSSResult(Const.SUCCESS_DELETE_CODE, Const.SUCCESS_DELETE_MSG);
+            }
+            catch (Exception ex)
+            {
+                return new DSSResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+        }
+
         public async Task<IDSSResult> Create(ProductRequestModel model)
         {
             try

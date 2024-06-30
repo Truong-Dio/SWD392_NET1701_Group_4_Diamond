@@ -41,6 +41,9 @@ namespace DiamondStoreSystem.API.Controllers
         [HttpPut("Update/{id}")]
         public IActionResult Update([FromBody] DiamondRequestModel model, string id) => Ok(_diamondService.Update(id, model).Result);
 
+        [HttpPut("Unblock/{id}")]
+        public IActionResult UnBlock(string id) => Ok(_diamondService.UnBlock(id).Result);
+
         [HttpDelete("Block/{id}")]
         public IActionResult Block(string id) => Ok(_diamondService.Block(id).Result);
 

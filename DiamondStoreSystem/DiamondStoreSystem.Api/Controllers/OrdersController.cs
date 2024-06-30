@@ -42,6 +42,9 @@ namespace OrderStoreSystem.API.Controllers
         [HttpPut("Update/{id}")]
         public IActionResult Update([FromBody] OrderRequestModel model, string id) => Ok(_orderService.Update(id, model).Result);
 
+        [HttpPut("Unblock/{id}")]
+        public IActionResult UnBlock(string id) => Ok(_orderService.UnBlock(id).Result);
+
         [HttpDelete("Block/{id}")]
         public IActionResult Block(string id) => Ok(_orderService.Block(id).Result);
 

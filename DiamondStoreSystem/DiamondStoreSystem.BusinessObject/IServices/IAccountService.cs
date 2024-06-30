@@ -20,5 +20,6 @@ namespace DiamondStoreSystem.BusinessLayer.IServices
         Task<IDSSResult> Create(AccountRequestModel model);
         IDSSResult GetEnum();
         Task<IDSSResult> Delete(string id);
+        Task<IDSSResult> UnBlock(string id);
     }
 }

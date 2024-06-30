@@ -21,5 +21,6 @@ namespace DiamondStoreSystem.BusinessLayer.IServices
         IDSSResult GetEnum();
         Task<IDSSResult> Delete(string id);
         Task<IDSSResult> UpdateQuantity(string id, string change, int quantity);
+        Task<IDSSResult> UnBlock(string id);
     }
 }

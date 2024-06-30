@@ -23,5 +23,6 @@ namespace DiamondStoreSystem.BusinessLayer.IServices
         Task<IDSSResult> Delete(string id);
         Task<IDSSResult> GetCart(CartRequestModel model, HttpContext context);
         Task<IDSSResult> UpdateStatus(string id, OrderStatus status);
+        Task<IDSSResult> UnBlock(string id);
     }
 }
