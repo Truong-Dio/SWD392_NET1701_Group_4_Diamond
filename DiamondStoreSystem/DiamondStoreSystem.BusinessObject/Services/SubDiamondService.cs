@@ -129,7 +129,7 @@ namespace DiamondStoreSystem.BusinessLayer.Services
             try
             {
                 var result = await _subDiamondRepository.GetWhere(a => a.SubDiamondID == id);
-                if (result == null)
+                if (result.Count() <= 0)
                 {
                     return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
                 }

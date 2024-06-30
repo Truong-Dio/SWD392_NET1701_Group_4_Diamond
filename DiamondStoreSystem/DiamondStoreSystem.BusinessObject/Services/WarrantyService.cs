@@ -94,7 +94,7 @@ namespace DiamondStoreSystem.BusinessLayer.Services
             try
             {
                 var result = await _warrantyRepository.GetWhere(a => !a.Block);
-                if (result == null)
+                if (result.Count() <= 0)
                 {
                     return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
                 }
@@ -112,7 +112,7 @@ namespace DiamondStoreSystem.BusinessLayer.Services
             try
             {
                 var result = _warrantyRepository.GetAll();
-                if (result == null)
+                if (result.Count() <= 0)
                 {
                     return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
                 }
@@ -129,7 +129,7 @@ namespace DiamondStoreSystem.BusinessLayer.Services
             try
             {
                 var result = await _warrantyRepository.GetWhere(a => !a.Block && a.WarrantyID == id);
-                if (result == null)
+                if (result.Count() <= 0)
                 {
                     return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
                 }

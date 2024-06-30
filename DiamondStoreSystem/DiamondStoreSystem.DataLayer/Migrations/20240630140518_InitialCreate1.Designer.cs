@@ -4,6 +4,7 @@ using DiamondStoreSystem.DataLayer.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DiamondStoreSystem.DataLayer.Migrations
 {
     [DbContext(typeof(DiamondStoreSystemDBContext))]
-    partial class DiamondStoreSystemDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240630140518_InitialCreate1")]
+    partial class InitialCreate1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -357,6 +360,19 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                     b.HasIndex("EmployeeAssignID");
 
                     b.ToTable("Order");
+
+                    b.HasData(
+                        new
+                        {
+                            OrderID = "O1",
+                            Block = false,
+                            CustomerID = "C1",
+                            DateOrdered = new DateTime(2023, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EmployeeAssignID = "E2",
+                            OrderStatus = 1,
+                            PayMethod = 1,
+                            TotalPrice = 1000.0
+                        });
                 });
 
             modelBuilder.Entity("DiamondStoreSystem.DataLayer.Models.Product", b =>
@@ -393,6 +409,17 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                     b.HasIndex("OrderID");
 
                     b.ToTable("Products");
+
+                    b.HasData(
+                        new
+                        {
+                            ProductID = "P1",
+                            AccessoryID = "A1",
+                            Block = false,
+                            MainDiamondID = "D1",
+                            OrderID = "O1",
+                            Price = 5200.0
+                        });
                 });
 
             modelBuilder.Entity("DiamondStoreSystem.DataLayer.Models.SubDiamond", b =>
@@ -409,6 +436,13 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                     b.HasIndex("ProductID");
 
                     b.ToTable("SubDiamonds");
+
+                    b.HasData(
+                        new
+                        {
+                            SubDiamondID = "D2",
+                            ProductID = "P1"
+                        });
                 });
 
             modelBuilder.Entity("DiamondStoreSystem.DataLayer.Models.VnPaymentResponse", b =>
@@ -469,6 +503,16 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                     b.HasKey("WarrantyID");
 
                     b.ToTable("Warranties");
+
+                    b.HasData(
+                        new
+                        {
+                            WarrantyID = "W1",
+                            Block = false,
+                            ExpiredDate = new DateTime(2024, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IssueDate = new DateTime(2023, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ProductID = "P1"
+                        });
                 });
 
             modelBuilder.Entity("DiamondStoreSystem.DataLayer.Models.Order", b =>

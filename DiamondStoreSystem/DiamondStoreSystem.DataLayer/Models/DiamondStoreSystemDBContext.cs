@@ -238,55 +238,55 @@ namespace DiamondStoreSystem.DataLayer.Models
                 }
             );
 
-            // Seeding Orders
-            modelBuilder.Entity<Order>().HasData(
-                new Order
-                {
-                    OrderID = "O1",
-                    DateOrdered = new DateTime(2023, 3, 1),
-                    DateReceived = null,
-                    OrderStatus = 1,
-                    PayMethod = 1,
-                    TotalPrice = 1000.00,
-                    CustomerID = "C1",
-                    EmployeeAssignID = "E2",
-                    Block = false
-                }
-            );
+            //// Seeding Orders
+            //modelBuilder.Entity<Order>().HasData(
+            //    new Order
+            //    {
+            //        OrderID = "O1",
+            //        DateOrdered = new DateTime(2023, 3, 1),
+            //        DateReceived = null,
+            //        OrderStatus = 1,
+            //        PayMethod = 1,
+            //        TotalPrice = 1000.00,
+            //        CustomerID = "C1",
+            //        EmployeeAssignID = "E2",
+            //        Block = false
+            //    }
+            //);
 
-            // Seeding Products
-            modelBuilder.Entity<Product>().HasData(
-                new Product
-                {
-                    ProductID = "P1",
-                    Price = 5200.00,
-                    Block = false,
-                    AccessoryID = "A1",
-                    OrderID = "O1",
-                    MainDiamondID = "D1"
-                }
-            );
+            //// Seeding Products
+            //modelBuilder.Entity<Product>().HasData(
+            //    new Product
+            //    {
+            //        ProductID = "P1",
+            //        Price = 5200.00,
+            //        Block = false,
+            //        AccessoryID = "A1",
+            //        OrderID = "O1",
+            //        MainDiamondID = "D1"
+            //    }
+            //);
 
-            // Seeding SubDiamonds
-            modelBuilder.Entity<SubDiamond>().HasData(
-                new SubDiamond
-                {
-                    SubDiamondID = "D2",
-                    ProductID = "P1"
-                }
-            );
+            //// Seeding SubDiamonds
+            //modelBuilder.Entity<SubDiamond>().HasData(
+            //    new SubDiamond
+            //    {
+            //        SubDiamondID = "D2",
+            //        ProductID = "P1"
+            //    }
+            //);
 
-            // Seeding Warranties
-            modelBuilder.Entity<Warranty>().HasData(
-                new Warranty
-                {
-                    WarrantyID = "W1",
-                    IssueDate = new DateTime(2023, 3, 1),
-                    ExpiredDate = new DateTime(2024, 3, 1),
-                    Block = false,
-                    ProductID = "P1"
-                }
-            );
+            //// Seeding Warranties
+            //modelBuilder.Entity<Warranty>().HasData(
+            //    new Warranty
+            //    {
+            //        WarrantyID = "W1",
+            //        IssueDate = new DateTime(2023, 3, 1),
+            //        ExpiredDate = new DateTime(2024, 3, 1),
+            //        Block = false,
+            //        ProductID = "P1"
+            //    }
+            //);
         }
     }
 }

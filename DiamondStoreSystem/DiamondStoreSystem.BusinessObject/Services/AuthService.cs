@@ -29,7 +29,7 @@ namespace DiamondStoreSystem.BusinessLayer.Services
             try
             {
                 var accounts = await _accountRepository.GetWhere(x => x.Email == email);
-                if (accounts == null) return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
+                if (accounts.Count() <= 0) return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
 
                 return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, _mapper.Map<CustomerResponseModel>(accounts.FirstOrDefault(x => !x.Block)));
             }

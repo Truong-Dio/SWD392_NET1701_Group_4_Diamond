@@ -132,7 +132,7 @@ namespace DiamondStoreSystem.BusinessLayer.Services
             try
             {
                 var result = await _accessoryRepository.GetWhere(a => !a.Block);
-                if (result == null)
+                if (result.Count() <= 0)
                 {
                     return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
                 }
@@ -150,7 +150,7 @@ namespace DiamondStoreSystem.BusinessLayer.Services
             try
             {
                 var result = _accessoryRepository.GetAll();
-                if (result == null)
+                if (result.Count() <= 0 )
                 {
                     return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
                 }
@@ -167,7 +167,7 @@ namespace DiamondStoreSystem.BusinessLayer.Services
             try
             {
                 var result = await _accessoryRepository.GetWhere(a => !a.Block && a.AccessoryID == id);
-                if (result == null)
+                if (result.Count() <= 0)
                 {
                     return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
                 }
