@@ -22,7 +22,7 @@ namespace DiamondStoreSystem.BusinessLayer.IServices
         Task<IDSSResult> Create(OrderRequestModel model);
         IDSSResult GetEnum();
         Task<IDSSResult> Delete(string id);
-        Task<IDSSResult> GetCart(CartRequestModel model, HttpContext context);
+        Task<string> GetCart(CartRequestModel model, HttpContext context);
         Task<IDSSResult> UpdateStatus(string id, OrderStatus status);
         Task<IDSSResult> UnBlock(string id);
         string CreatePaymentUrl(HttpContext context, VnPaymentRequestModel model);

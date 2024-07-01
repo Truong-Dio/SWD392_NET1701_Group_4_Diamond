@@ -10,6 +10,8 @@ using DiamondStoreSystem.Repositories.IRepositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
+using System.Text;
 
 namespace DiamondStoreSystem.BusinessLayer.Services
 {
@@ -310,29 +312,37 @@ namespace DiamondStoreSystem.BusinessLayer.Services
             }
         }
 
+        public async Task<string> GetCart(CartRequestModel model, HttpContext context)
+        {
+            var result = CreateCart(model, context);
+            if (result.Status <= 0)
+            {
+                return "Payment failed "+result.Message;
+            }
+            return result.Data as string;
+        }
 
-        public async Task<IDSSResult> GetCart(CartRequestModel model, HttpContext context)
+        public IDSSResult CreateCart(CartRequestModel model, HttpContext context)
         {
             try
             {
                 IDSSResult result = new DSSResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
-                var orderID = "O" + DateTime.Now.Ticks.ToString();
+                string orderID = "O" + DateTime.Now.Ticks;
                 double productPrice = 0;
                 double totalPrice = 0;
                 ICollection<Product> products = new List<Product>();
 
-                #region Customer
+                // Retrieve customer ID from session or hardcode
                 context.Session.TryGetValue("accId", out byte[] session);
-                //var customerID = JsonConvert.DeserializeObject<AuthRequestModel>(Encoding.UTF8.GetString(session)).AccountID;
-                var customerID = "C001";
+                string customerID = session != null ? JsonConvert.DeserializeObject<AuthRequestModel>(Encoding.UTF8.GetString(session)).AccountID : "C001";
 
-                result = await _accountService.IsExist(customerID);
+                // Verify customer existence
+                result = _accountService.IsExist(customerID).Result;
                 if (result.Status <= 0) return result;
                 var customer = result.Data as Account;
-                #endregion
 
-                #region Order
-                result = await Create(new OrderRequestModel()
+                // Create order
+                var orderRequest = new OrderRequestModel
                 {
                     OrderID = orderID,
                     EmployeeAssignID = "S002",
@@ -342,114 +352,96 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                     OrderStatus = OrderStatus.Pending,
                     PayMethod = PayMethod.Online,
                     TotalPrice = totalPrice
-                });
+                };
+
+                result = Create(orderRequest).Result;
                 if (result.Status <= 0) return result;
-                #endregion
 
-                #region Products
-
+                // Process each product in the cart
                 foreach (var productTemp in model.Cart)
                 {
-                    var mainDiamondID = productTemp.MainDiamondID;
-                    var subDiamond = productTemp.SubDiamondID;
-                    var accessoryID = productTemp.AccessoryID;
-                    Accessory accessory = null;
+                    productPrice = 0;
 
-                    if (!accessoryID.IsNullOrEmpty())
+                    // Update accessory quantity if accessory exists
+                    if (!string.IsNullOrEmpty(productTemp.AccessoryID))
                     {
-                        #region Accessory
-                        result = await _accessoryService.UpdateQuantity(accessoryID, "decrease", 1);
+                        result = _accessoryService.UpdateQuantity(productTemp.AccessoryID, "decrease", 1).Result;
                         if (result.Status <= 0) return result;
-                        accessory = result.Data as Accessory;
-                        #endregion
+                        var accessory = result.Data as Accessory;
                         productPrice += accessory.Price;
                     }
 
-                    if (accessoryID.IsNullOrEmpty()) accessoryID = "0000";
-
-                    var productID = "P" + mainDiamondID.Substring(1) + accessoryID.Substring(1);
-
-                    var warrantyID = "W" + productID.Substring(1);
-
-                    #region Main Diamond
-                    result = await _diamondService.Block(mainDiamondID);
+                    // Block main diamond and update price
+                    result = _diamondService.Block(productTemp.MainDiamondID).Result;
                     if (result.Status <= 0) return result;
                     var diamond = result.Data as Diamond;
-                    #endregion
-
                     productPrice += diamond.Price;
 
-                    #region Product
-                    var product = new ProductRequestModel
+                    // Create product record
+                    string accessoryID = productTemp.AccessoryID;
+                    if (productTemp.AccessoryID.IsNullOrEmpty()) accessoryID = "0000"; 
+                    string productID = "P" + productTemp.MainDiamondID.Substring(1) + accessoryID.Substring(1);
+                    var productRequest = new ProductRequestModel
                     {
                         ProductID = productID,
-                        AccessoryID = productTemp.AccessoryID.IsNullOrEmpty() ? null : accessoryID,
+                        AccessoryID = string.IsNullOrEmpty(productTemp.AccessoryID) ? null : productTemp.AccessoryID,
                         OrderID = orderID,
                         Price = productPrice,
-                        WarrantyID = warrantyID,
-                        MainDiamondID = mainDiamondID,
+                        MainDiamondID = productTemp.MainDiamondID
                     };
-                    result = await _productService.Create(product);
-                    if (result.Status <= 0) return result;
-                    #endregion
 
-                    #region Sub Diamonds
-                    foreach (var item in subDiamond)
+                    result = _productService.Create(productRequest).Result;
+                    if (result.Status <= 0) return result;
+
+                    // Process sub-diamonds and update price
+                    foreach (var subDiamondID in productTemp.SubDiamondID)
                     {
-                        if (!item.IsNullOrEmpty())
+                        if (!string.IsNullOrEmpty(subDiamondID))
                         {
-                            result = await _subDiamondService.Create(new SubDiamondRequestModel()
-                            {
-                                ProductID = productID,
-                                SubDiamondID = item
-                            });
+                            result = _subDiamondService.Create(new SubDiamondRequestModel { ProductID = productID, SubDiamondID = subDiamondID }).Result;
                             if (result.Status <= 0) return result;
-                            //result = await _diamondService.Block(item);
-                            //if (result.Status <= 0) return result;
-                            diamond = result.Data as Diamond;
-                            productPrice += diamond.Price;
+
+                            result = _diamondService.Block(subDiamondID).Result;
+                            if (result.Status <= 0) return result;
+                            var subDiamond = result.Data as Diamond;
+                            productPrice += subDiamond.Price;
                         }
                     }
-                    #endregion
 
-                    product.Price = productPrice;
-
-                    result = await _productService.Update(productID, product);
-                    if (result.Status <= 0) return result;
-
-                    #endregion
-
-                    products.Add(_mapper.Map<Product>(product));
-
-                    result = await _warrantyService.Create(new WarrantyRequestModel
+                    // Update product price if necessary
+                    if (productRequest.Price != productPrice)
                     {
-                        WarrantyID = warrantyID,
-                        ExpiredDate = DateTime.Now.Date.AddYears(2),
-                        IssueDate = DateTime.Now.Date,
-                        ProductID = productID
-                    });
+                        productRequest.Price = productPrice;
+                        result = _productService.Update(productID, productRequest).Result;
+                        if (result.Status <= 0) return result;
+                    }
+
+                    // Create warranty record
+                    string warrantyID = "W" + productID.Substring(1);
+                    result = _warrantyService.Create(new WarrantyRequestModel { WarrantyID = warrantyID, ExpiredDate = DateTime.Now.AddYears(2), IssueDate = DateTime.Now, ProductID = productID }).Result;
                     if (result.Status <= 0) return result;
 
+                    products.Add(_mapper.Map<Product>(productRequest));
                     totalPrice += productPrice;
-                    productPrice = 0;
                 }
 
-                result = await UpdatePriceOrder(orderID, totalPrice);
+                // Update order total price
+                result = UpdatePriceOrder(orderID, totalPrice).Result;
                 if (result.Status <= 0) return result;
 
-                var paymentUrl = CreatePaymentUrl(context, new VnPaymentRequestModel()
+                // Create payment URL
+                var paymentRequest = new VnPaymentRequestModel
                 {
                     Amount = totalPrice,
-                    CreatedDate = DateTime.Now.Date,
+                    CreatedDate = DateTime.Now,
                     Description = "Thanh toan",
-                    FullName = customer.FirstName + " " + customer.LastName,
-                    OrderId = orderID,
-                });
-
-                return new DSSResult()
-                {
-                    Data = paymentUrl
+                    FullName = $"{customer.FirstName} {customer.LastName}",
+                    OrderId = orderID
                 };
+
+                var paymentUrl = CreatePaymentUrl(context, paymentRequest);
+
+                return new DSSResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG, paymentUrl);
             }
             catch (Exception ex)
             {

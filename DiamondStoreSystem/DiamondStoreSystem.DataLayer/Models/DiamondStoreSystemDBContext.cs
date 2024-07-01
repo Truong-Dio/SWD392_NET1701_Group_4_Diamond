@@ -79,12 +79,6 @@ namespace DiamondStoreSystem.DataLayer.Models
                 .HasForeignKey<Product>(p => p.MainDiamondID)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<Product>()
-                .HasOne(p => p.Accessory)
-                .WithOne()
-                .HasForeignKey<Product>(p => p.AccessoryID)
-                .OnDelete(DeleteBehavior.Restrict);
-
             // Set up relationships for SubDiamond
             modelBuilder.Entity<SubDiamond>()
                 .HasOne(sd => sd.Product)

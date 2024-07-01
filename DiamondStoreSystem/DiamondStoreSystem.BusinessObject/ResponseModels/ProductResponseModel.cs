@@ -13,7 +13,6 @@ namespace DiamondStoreSystem.BusinessLayer.ResponseModels
         public string ProductID { get; set; }
         public double Price { get; set; }
         public string AccessoryID { get; set; }
-        public string WarrantyID { get; set; }
         public string OrderID { get; set; }
         public string MainDiamondID { get; set; }
         public AccessoryResponseModel? Accessory { get; set; }

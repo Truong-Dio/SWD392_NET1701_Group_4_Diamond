@@ -141,7 +141,7 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                             Email = "admin@example.com",
                             FirstName = "Super",
                             Gender = 1,
-                            JoinDate = new DateTime(2024, 7, 1, 9, 39, 24, 325, DateTimeKind.Local).AddTicks(2108),
+                            JoinDate = new DateTime(2024, 7, 2, 3, 19, 38, 170, DateTimeKind.Local).AddTicks(5465),
                             LastName = "Admin",
                             LoyaltyPoint = 0,
                             Password = "473287f8298dba7163a897908958f7c0eae733e25d2e027992ea2edc9bed2fa8",
@@ -158,7 +158,7 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                             Email = "staff1@example.com",
                             FirstName = "Super",
                             Gender = 1,
-                            JoinDate = new DateTime(2024, 7, 1, 9, 39, 24, 325, DateTimeKind.Local).AddTicks(2148),
+                            JoinDate = new DateTime(2024, 7, 2, 3, 19, 38, 170, DateTimeKind.Local).AddTicks(5512),
                             LastName = "Admin",
                             LoyaltyPoint = 0,
                             Password = "473287f8298dba7163a897908958f7c0eae733e25d2e027992ea2edc9bed2fa8",
@@ -175,7 +175,7 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                             Email = "customer@example.com",
                             FirstName = "Regular",
                             Gender = 0,
-                            JoinDate = new DateTime(2024, 7, 1, 9, 39, 24, 325, DateTimeKind.Local).AddTicks(2167),
+                            JoinDate = new DateTime(2024, 7, 2, 3, 19, 38, 170, DateTimeKind.Local).AddTicks(5533),
                             LastName = "Customer",
                             LoyaltyPoint = 100,
                             Password = "473287f8298dba7163a897908958f7c0eae733e25d2e027992ea2edc9bed2fa8",
@@ -388,9 +388,7 @@ namespace DiamondStoreSystem.DataLayer.Migrations
 
                     b.HasKey("ProductID");
 
-                    b.HasIndex("AccessoryID")
-                        .IsUnique()
-                        .HasFilter("[AccessoryID] IS NOT NULL");
+                    b.HasIndex("AccessoryID");
 
                     b.HasIndex("MainDiamondID")
                         .IsUnique();
@@ -504,9 +502,8 @@ namespace DiamondStoreSystem.DataLayer.Migrations
             modelBuilder.Entity("DiamondStoreSystem.DataLayer.Models.Product", b =>
                 {
                     b.HasOne("DiamondStoreSystem.DataLayer.Models.Accessory", "Accessory")
-                        .WithOne()
-                        .HasForeignKey("DiamondStoreSystem.DataLayer.Models.Product", "AccessoryID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .WithMany()
+                        .HasForeignKey("AccessoryID");
 
                     b.HasOne("DiamondStoreSystem.DataLayer.Models.Diamond", "MainDiamond")
                         .WithOne()

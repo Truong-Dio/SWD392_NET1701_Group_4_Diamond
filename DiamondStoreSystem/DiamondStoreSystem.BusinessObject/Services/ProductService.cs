@@ -49,7 +49,7 @@ namespace DiamondStoreSystem.BusinessLayer.Services
         {
             try
             {
-                var result = await GetById(model.ProductID);
+                var result = await IsExist(model.ProductID);
                 if (result.Status > 0) return result;
                 _productRepository.Insert(_mapper.Map<Product>(model));
                 var check = _productRepository.SaveChanges();
@@ -162,8 +162,8 @@ namespace DiamondStoreSystem.BusinessLayer.Services
         {
             try
             {
-                var product = await _productRepository.GetById(id);
-                if (product == null)
+                var products = await _productRepository.GetWhere(p => p.ProductID == id);
+                if (products.Count() <= 0)
                 {
                     return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
                 }
@@ -171,6 +171,7 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                 var result = _subDiamondService.GetAllWithAllField();
                 if (result.Status <= 0) return result;
                 var subdiamonds = (result.Data as List<SubDiamond>);
+                var product = products.First();
                 product.SubDiamonds = subdiamonds.Where(s => s.ProductID == id).ToList();
 
                 result = await _warrantyService.IsExist("W" + id.Substring(1));

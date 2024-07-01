@@ -34,5 +34,6 @@ namespace DiamondStoreSystem.BusinessLayer.ResquestModels
         public string SKU { get; set; }
         [JsonIgnore]
         public bool? Block { get; set; } = false;
+        public string ImageURL { get; set; }
     }
 }

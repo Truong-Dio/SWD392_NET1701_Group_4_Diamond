@@ -30,5 +30,6 @@ namespace DiamondStoreSystem.BusinessLayer.ResponseModels
         public double Price { get; set; }
         public bool Block { get; set; }
         public string SKU { get; set; }
+        public string? ImageURL { get; set; }
     }
 }

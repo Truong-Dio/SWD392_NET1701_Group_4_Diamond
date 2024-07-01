@@ -85,7 +85,7 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                         currentUnitInStock = accessory.UnitInStock - quantity;
                         if (accessory.UnitInStock < 0)
                         {
-                            return new DSSResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
+                            return new DSSResult(Const.FAIL_UPDATE_CODE, "This accessory in stock is not enough.");
                         }
                         break;
                     default:

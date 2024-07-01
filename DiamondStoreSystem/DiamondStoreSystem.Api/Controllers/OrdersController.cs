@@ -51,7 +51,7 @@ namespace OrderStoreSystem.API.Controllers
         public IActionResult Delete(string id) => Ok(_orderService.Delete(id).Result);
 
         [HttpPost("Cart")]
-        public IActionResult GetCart([FromBody] CartRequestModel model) => Ok(_orderService.GetCart(model, HttpContext));
+        public IActionResult GetCart([FromBody] CartRequestModel model) => Ok(_orderService.GetCart(model, HttpContext).Result);
 
         [HttpPost("CreatePaymentUrl")]
         public async Task<IActionResult> CreatePaymentUrl([FromBody] VnPaymentRequestModel model)
