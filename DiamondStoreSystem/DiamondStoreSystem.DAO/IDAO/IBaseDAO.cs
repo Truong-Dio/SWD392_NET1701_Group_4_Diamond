@@ -24,6 +24,7 @@ namespace DiamondStoreSystem.DAO.IDAO
         public Task InsertAsync(TEntity entity);
         public void Insert(TEntity entity);
         public void InsertRangeAsync(IQueryable<TEntity> entities);
+        public void Update(TEntity entity);
         public Task UpdateById(TEntity entity, string id);
         public Task UpdateGuid(TEntity entity, Guid id);
         public void UpdateRange(IQueryable<TEntity> entities);

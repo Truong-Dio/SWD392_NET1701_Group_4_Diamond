@@ -333,6 +333,17 @@ namespace DiamondStoreSystem.Repositories.Repositories
                 throw new Exception(ex.Message);
             }
         }
+        public void Update(TEntity entity)
+        {
+            try
+            {
+                BaseDAO<TEntity>.Instance.Update(entity);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
 
         public async Task InsertAsync(TEntity entity)
         {

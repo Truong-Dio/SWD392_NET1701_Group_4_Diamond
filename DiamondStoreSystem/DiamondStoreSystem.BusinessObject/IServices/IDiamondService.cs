@@ -11,6 +11,7 @@ namespace DiamondStoreSystem.BusinessLayer.IServices
 {
     public interface IDiamondService
     {
+        Task<IDSSResult> GetCertificate(string id);
         Task<IDSSResult> GetById(string id);
         Task<IDSSResult> GetAll();
         IDSSResult GetAllWithAllField();

@@ -158,6 +158,11 @@ namespace DiamondStoreSystem.DAO.DAO
             await Table.AddAsync(entity);
         }
 
+        public void Update(TEntity entity)
+        {
+            Table.Update(entity);
+        }
+
         public async void InsertRangeAsync(IQueryable<TEntity> entities)
         {
             await Table.AddRangeAsync(entities);

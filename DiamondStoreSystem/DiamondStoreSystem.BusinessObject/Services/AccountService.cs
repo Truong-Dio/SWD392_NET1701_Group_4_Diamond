@@ -40,9 +40,10 @@ namespace DiamondStoreSystem.BusinessLayer.Services
 
                 var check = await UpdateProperty(account, nameof(account.Block), false);
 
-                if (check.Status <= 0) return new DSSResult(Const.FAIL_DELETE_CODE, Const.FAIL_DELETE_MSG);
 
-                return new DSSResult(Const.SUCCESS_DELETE_CODE, Const.SUCCESS_DELETE_MSG);
+                if (check.Status <= 0) return new DSSResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
+
+                return new DSSResult(Const.SUCCESS_UPDATE_CODE, Const.SUCCESS_UPDATE_MSG);
             }
             catch (Exception ex)
             {
@@ -55,7 +56,10 @@ namespace DiamondStoreSystem.BusinessLayer.Services
             try
             {
                 var result = await GetById(model.AccountID);
-                if (result.Status > 0) return result;
+                if (result.Status > 0) return result; 
+                result = await GetByEmail(model.Email);
+                if (result.Status > 0) return new DSSResult(Const.FAIL_CREATE_CODE, "This email is already used.");
+                model.Password = Util.HashPassword(model.Password);
                 _accountRepository.Insert(_mapper.Map<Account>(model));
                 var check = _accountRepository.SaveChanges();
                 if (check <= 0) return new DSSResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
@@ -110,7 +114,6 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                 return new DSSResult(Const.ERROR_EXCEPTION, ex.Message);
             }
         }
-
 
         public async Task<IDSSResult> GetAll()
         {
@@ -200,6 +203,7 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                 var result = await GetById(id);
                 if (result.Status <= 0) return result;
 
+                model.Password = Util.HashPassword(model.Password);
                 await _accountRepository.UpdateById(_mapper.Map<Account>(model), id);
 
                 var check = _accountRepository.SaveChanges();
@@ -228,6 +232,23 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                 if (check <= 0) return new DSSResult(Const.FAIL_DELETE_CODE, Const.FAIL_DELETE_MSG);
 
                 return new DSSResult(Const.SUCCESS_DELETE_CODE, Const.SUCCESS_DELETE_MSG);
+            }
+            catch (Exception ex)
+            {
+                return new DSSResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+        }
+
+        public async Task<IDSSResult> GetByEmail(string email)
+        {
+            try
+            {
+                var result = await _accountRepository.GetWhere(a => !a.Block);
+                if (result.Count() <= 0)
+                {
+                    return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
+                }
+                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, _mapper.Map<AccountResponseModel>(result.FirstOrDefault(r => r.Email == email)));
             }
             catch (Exception ex)
             {

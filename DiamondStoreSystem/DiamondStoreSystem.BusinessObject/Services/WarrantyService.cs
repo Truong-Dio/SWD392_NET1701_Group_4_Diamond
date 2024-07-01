@@ -40,9 +40,9 @@ namespace DiamondStoreSystem.BusinessLayer.Services
 
                 var check = await UpdateProperty(warranty, nameof(warranty.Block), false);
 
-                if (check.Status <= 0) return new DSSResult(Const.FAIL_DELETE_CODE, Const.FAIL_DELETE_MSG);
+                if (check.Status <= 0) return new DSSResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
 
-                return new DSSResult(Const.SUCCESS_DELETE_CODE, Const.SUCCESS_DELETE_MSG);
+                return new DSSResult(Const.SUCCESS_UPDATE_CODE, Const.SUCCESS_UPDATE_MSG);
             }
             catch (Exception ex)
             {
@@ -164,6 +164,24 @@ namespace DiamondStoreSystem.BusinessLayer.Services
             }
         }
 
+        public async Task<IDSSResult> GetByProp(string id, string prop)
+        {
+            try
+            {
+                var result = await _warrantyRepository.GetAll().ToListAsync();
+                if (result == null)
+                {
+                    return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
+                }
+                var warranty = result.Find(a => a.GetPropertyValue(prop) == id);
+                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, warranty);
+            }
+            catch (Exception ex)
+            {
+                return new DSSResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+        }
+
         public async Task<IDSSResult> IsExist(string id)
         {
             try
@@ -196,7 +214,7 @@ namespace DiamondStoreSystem.BusinessLayer.Services
         {
             try
             {
-                var result = await GetById(id);
+                var result = await IsExist(id);
                 if (result.Status <= 0) return result;
 
                 await _warrantyRepository.UpdateById(_mapper.Map<Warranty>(model), id);
@@ -213,14 +231,17 @@ namespace DiamondStoreSystem.BusinessLayer.Services
             }
         }
 
-        public async Task<IDSSResult> Delete(string id)
+        public async Task<IDSSResult> Delete(string id, string propertyName)
         {
             try
             {
-                var result = await IsExist(id);
-                if (result.Status <= 0) return result;
+                var result = _warrantyRepository.GetAll();
 
-                _warrantyRepository.Delete(result.Data as Warranty);
+                if (result == null) return new DSSResult(Const.FAIL_DELETE_CODE, Const.FAIL_DELETE_MSG);
+
+                var warranty = result.FirstOrDefault(p => p.ProductID == id);
+
+                _warrantyRepository.Delete(warranty);
 
                 var check = _warrantyRepository.SaveChanges();
 

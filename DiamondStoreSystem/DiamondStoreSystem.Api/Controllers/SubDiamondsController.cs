@@ -40,6 +40,6 @@ namespace SubDiamondStoreSystem.API.Controllers
         public IActionResult Update([FromBody] SubDiamondRequestModel model, string id) => Ok(_subDiamondService.Update(id, model).Result);
 
         [HttpDelete("Delete/{id}")]
-        public IActionResult Delete(string id) => Ok(_subDiamondService.Delete(id).Result);
+        public IActionResult Delete(string id) => Ok(_subDiamondService.Delete(id, "SubDiamondID").Result);
     }
 }

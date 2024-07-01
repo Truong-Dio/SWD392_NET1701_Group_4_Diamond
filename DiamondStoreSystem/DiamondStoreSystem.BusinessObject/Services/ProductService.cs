@@ -5,6 +5,7 @@ using DiamondStoreSystem.BusinessLayer.ResponseModels;
 using DiamondStoreSystem.BusinessLayer.ResquestModels;
 using DiamondStoreSystem.DataLayer.Models;
 using DiamondStoreSystem.Repositories.IRepositories;
+using System.Linq;
 
 namespace DiamondStoreSystem.BusinessLayer.Services
 {
@@ -12,9 +13,13 @@ namespace DiamondStoreSystem.BusinessLayer.Services
     {
         private readonly IMapper _mapper;
         private readonly IProductRepository _productRepository;
+        private readonly IWarrantyService _warrantyService;
+        private readonly ISubDiamondService _subDiamondService;
 
-        public ProductService(IMapper mapper, IProductRepository productRepository)
+        public ProductService(IMapper mapper, IProductRepository productRepository, ISubDiamondService subDiamondService, IWarrantyService warrantyService)
         {
+            _warrantyService = warrantyService;
+            _subDiamondService = subDiamondService;
             _productRepository = productRepository;
             _mapper = mapper;
         }
@@ -30,9 +35,9 @@ namespace DiamondStoreSystem.BusinessLayer.Services
 
                 var check = await UpdateProperty(product, nameof(product.Block), false);
 
-                if (check.Status <= 0) return new DSSResult(Const.FAIL_DELETE_CODE, Const.FAIL_DELETE_MSG);
+                if (check.Status <= 0) return new DSSResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
 
-                return new DSSResult(Const.SUCCESS_DELETE_CODE, Const.SUCCESS_DELETE_MSG);
+                return new DSSResult(Const.SUCCESS_UPDATE_CODE, Const.SUCCESS_UPDATE_MSG);
             }
             catch (Exception ex)
             {
@@ -157,12 +162,22 @@ namespace DiamondStoreSystem.BusinessLayer.Services
         {
             try
             {
-                var result = await _productRepository.GetById(id);
-                if (result == null)
+                var product = await _productRepository.GetById(id);
+                if (product == null)
                 {
                     return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
                 }
-                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, result);
+
+                var result = _subDiamondService.GetAllWithAllField();
+                if (result.Status <= 0) return result;
+                var subdiamonds = (result.Data as List<SubDiamond>);
+                product.SubDiamonds = subdiamonds.Where(s => s.ProductID == id).ToList();
+
+                result = await _warrantyService.IsExist("W" + id.Substring(1));
+                if (result.Status <= 0) return result;
+                product.Warranty = result.Data as Warranty;
+
+                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, product);
             }
             catch (Exception ex)
             {
@@ -197,8 +212,18 @@ namespace DiamondStoreSystem.BusinessLayer.Services
             {
                 var result = await IsExist(id);
                 if (result.Status <= 0) return result;
+                var product = result.Data as Product;
 
-                _productRepository.Delete(result.Data as Product);
+                foreach (var subdiamond in product.SubDiamonds)
+                {
+                    result = await _subDiamondService.Delete(subdiamond.ProductID, nameof(subdiamond.ProductID));
+                    if (result.Status <= 0) return result;
+                }
+
+                result = await _warrantyService.Delete(product.ProductID, nameof(product.Warranty.ProductID));
+                if (result.Status <= 0) return result;
+
+                _productRepository.Delete(product);
 
                 var check = _productRepository.SaveChanges();
 

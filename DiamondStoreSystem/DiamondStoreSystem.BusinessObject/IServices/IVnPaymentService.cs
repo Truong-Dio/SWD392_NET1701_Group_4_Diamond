@@ -1,5 +1,6 @@
 ﻿using DiamondStoreSystem.BusinessLayer.Commons;
 using DiamondStoreSystem.BusinessLayer.ResquestModels;
+using DiamondStoreSystem.DataLayer.Models;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -13,5 +14,7 @@ namespace DiamondStoreSystem.BusinessLayer.IServices
     {
         string CreatePaymentUrl(HttpContext context, VnPaymentRequestModel model);
         IDSSResult PaymentExecute(IQueryCollection collections);
+        public IDSSResult CreateTemporary(VnPaymentResponse vnPaymentResponse);
+        public IDSSResult UpdatePayment(IQueryCollection collections);
     }
 }

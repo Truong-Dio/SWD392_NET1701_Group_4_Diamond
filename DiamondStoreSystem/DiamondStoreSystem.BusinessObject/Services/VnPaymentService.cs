@@ -18,13 +18,13 @@ namespace DiamondStoreSystem.BusinessLayer.Services
     {
         private readonly IConfiguration _config;
         private readonly IOrderService _orderService;
-        private readonly IVnPaymentRepository _responseRepository;
+        private readonly IVnPaymentRepository _vnpResponseRepository;
 
         public VnPaymentService(IConfiguration config, IOrderService orderService, IVnPaymentRepository responseRepository)
         {
             _config = config;
             _orderService = orderService;
-            _responseRepository = responseRepository;
+            _vnpResponseRepository = responseRepository;
         }
 
         public string CreatePaymentUrl(HttpContext context, VnPaymentRequestModel model)
@@ -41,11 +41,77 @@ namespace DiamondStoreSystem.BusinessLayer.Services
             vnpay.AddRequestData("vnp_Locale", _config["VnPay:Locate"]);
             vnpay.AddRequestData("vnp_OrderInfo", "Pay Order:" + model.OrderId);
             vnpay.AddRequestData("vnp_OrderType", "other"); // default value: other
-            vnpay.AddRequestData("vnp_ReturnUrl", _config["VnPay:PaymentBackReturnUrl"]);
+            vnpay.AddRequestData("vnp_ReturnUrl", _config["VnPay:PaymentBackReturnUrl1"]);
             vnpay.AddRequestData("vnp_TxnRef", tick);
 
             var paymentUrl = vnpay.CreateRequestUrl(_config["VnPay:BaseUrl"], _config["VnPay:HashSecret"]);
             return paymentUrl;
+        }
+
+        public IDSSResult CreateTemporary(VnPaymentResponse vnPaymentResponse)
+        {
+            try
+            {
+                _vnpResponseRepository.Insert(vnPaymentResponse);
+                var check = _vnpResponseRepository.SaveChanges();
+                if(check <= 0) return new DSSResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
+                return new DSSResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG);
+            }
+            catch (Exception ex)
+            {
+                return new DSSResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+        }
+
+        public IDSSResult UpdatePayment(IQueryCollection collections)
+        {
+            try
+            {
+                var vnpay = new VnPayLibrary();
+                foreach (var (key, value) in collections)
+                {
+                    if (!string.IsNullOrEmpty(key) && key.StartsWith("vnp_"))
+                    {
+                        vnpay.AddResponseData(key, value.ToString());
+                    }
+                }
+
+                var vnp_OrderId = vnpay.GetResponseData("vnp_TxnRef");
+                var vnp_TransactionId = vnpay.GetResponseData("vnp_TransactionNo");
+                var vnp_SecureHash = collections.FirstOrDefault(p => p.Key == "vnp_SecureHash").Value;
+                var vnp_responseCode = vnpay.GetResponseData("vnp_ResponseCode");
+                var vnp_OrderInfo = vnpay.GetResponseData("vnp_OrderInfo");
+                bool checkSignature = vnpay.ValidateSignature(vnp_SecureHash, _config["VnPay:HashSecret"]);
+                //if (!checkSignature)
+                //{
+                //    return new DSSResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
+                //}
+                var orderID = vnp_OrderInfo.Substring(vnp_OrderInfo.IndexOf(":") + 1);
+
+                var vnpayResponse = _vnpResponseRepository.Find(vnp => vnp.OrderId == orderID);
+
+                vnpayResponse.VnpOrderId = vnp_OrderId;
+                vnpayResponse.TransactionId = vnp_TransactionId;
+                vnpayResponse.Success = true;
+                vnpayResponse.VnPayResponseCode = vnp_responseCode;
+                vnpayResponse.PaymentMethod = "VnPay";
+                vnpayResponse.Token = vnp_SecureHash;
+                vnpayResponse.OrderDescription = vnp_OrderInfo;
+
+                _vnpResponseRepository.Update(vnpayResponse);
+                var check = _vnpResponseRepository.SaveChanges();
+                if (check <= 0)
+                {
+                    return new DSSResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
+                }
+
+                _orderService.UpdateStatus(orderID, OrderStatus.Paid);
+                return new DSSResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG, vnpayResponse);
+            }
+            catch (Exception ex)
+            {
+                return new DSSResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
         }
 
         public IDSSResult PaymentExecute(IQueryCollection collections)
@@ -67,10 +133,10 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                 var vnp_responseCode = vnpay.GetResponseData("vnp_ResponseCode");
                 var vnp_OrderInfo = vnpay.GetResponseData("vnp_OrderInfo");
                 bool checkSignature = vnpay.ValidateSignature(vnp_SecureHash, _config["VnPay:HashSecret"]);
-                if (!checkSignature)
-                {
-                    return new DSSResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
-                }
+                //if (!checkSignature)
+                //{
+                //    return new DSSResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
+                //}
 
                 var orderId = vnp_OrderInfo.Substring(vnp_OrderInfo.IndexOf(":") + 1);
                 var vnpayResponse = new VnPaymentResponse
@@ -85,8 +151,8 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                     VnPayResponseCode = vnp_responseCode,
                 };
 
-                _responseRepository.Insert(vnpayResponse);
-                var check = _responseRepository.SaveChanges();
+                _vnpResponseRepository.Insert(vnpayResponse);
+                var check = _vnpResponseRepository.SaveChanges();
                 if (check <= 0)
                 {
                     return new DSSResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);

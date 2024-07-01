@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DiamondStoreSystem.DataLayer.Migrations
 {
     [DbContext(typeof(DiamondStoreSystemDBContext))]
-    [Migration("20240630140518_InitialCreate1")]
-    partial class InitialCreate1
+    [Migration("20240701084522_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -68,14 +68,14 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                     b.HasData(
                         new
                         {
-                            AccessoryID = "A1",
-                            AccessoryName = "Gold Ring",
+                            AccessoryID = "A001",
+                            AccessoryName = "Gold Chain",
                             Block = false,
-                            Brand = "GoldBrand",
-                            Description = "18K gold ring",
+                            Brand = "LuxuryBrand",
+                            Description = "18k gold chain",
                             Material = 1,
-                            Price = 200.0,
-                            SKU = "R123",
+                            Price = 500.0,
+                            SKU = "GC001",
                             Style = 1,
                             UnitInStock = 10
                         });
@@ -127,7 +127,7 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                     b.Property<int>("Role")
                         .HasColumnType("int");
 
-                    b.Property<int>("WorkingSchedule")
+                    b.Property<int?>("WorkingSchedule")
                         .HasColumnType("int");
 
                     b.HasKey("AccountID");
@@ -137,33 +137,16 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                     b.HasData(
                         new
                         {
-                            AccountID = "C1",
-                            Address = "123 Main St",
-                            Block = false,
-                            DOB = new DateTime(1980, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "john.doe@example.com",
-                            FirstName = "John",
-                            Gender = 1,
-                            JoinDate = new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            LastName = "Doe",
-                            LoyaltyPoint = 100,
-                            Password = "741f67765bef6f01f37bf5cb1724509a83409324efa6ad2586d27f4e3edea296",
-                            Phone = 1234567890m,
-                            Role = 0,
-                            WorkingSchedule = 1
-                        },
-                        new
-                        {
-                            AccountID = "E1",
-                            Address = "123 Main St",
+                            AccountID = "S001",
+                            Address = "123 Admin St.",
                             Block = false,
                             DOB = new DateTime(1980, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "admin@example.com",
-                            FirstName = "John",
+                            FirstName = "Super",
                             Gender = 1,
-                            JoinDate = new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            LastName = "Doe",
-                            LoyaltyPoint = 100,
+                            JoinDate = new DateTime(2024, 7, 1, 15, 45, 21, 762, DateTimeKind.Local).AddTicks(9829),
+                            LastName = "Admin",
+                            LoyaltyPoint = 0,
                             Password = "473287f8298dba7163a897908958f7c0eae733e25d2e027992ea2edc9bed2fa8",
                             Phone = 1234567890m,
                             Role = 3,
@@ -171,20 +154,37 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                         },
                         new
                         {
-                            AccountID = "E2",
-                            Address = "123 Main St",
+                            AccountID = "S002",
+                            Address = "123 Admin St.",
                             Block = false,
                             DOB = new DateTime(1980, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "johnny.dang@example.com",
-                            FirstName = "John",
+                            Email = "staff1@example.com",
+                            FirstName = "Super",
                             Gender = 1,
-                            JoinDate = new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            LastName = "Doe",
-                            LoyaltyPoint = 100,
+                            JoinDate = new DateTime(2024, 7, 1, 15, 45, 21, 762, DateTimeKind.Local).AddTicks(9869),
+                            LastName = "Admin",
+                            LoyaltyPoint = 0,
                             Password = "473287f8298dba7163a897908958f7c0eae733e25d2e027992ea2edc9bed2fa8",
                             Phone = 1234567890m,
                             Role = 1,
                             WorkingSchedule = 1
+                        },
+                        new
+                        {
+                            AccountID = "C001",
+                            Address = "456 Customer Ave.",
+                            Block = false,
+                            DOB = new DateTime(1990, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "customer@example.com",
+                            FirstName = "Regular",
+                            Gender = 0,
+                            JoinDate = new DateTime(2024, 7, 1, 15, 45, 21, 762, DateTimeKind.Local).AddTicks(9888),
+                            LastName = "Customer",
+                            LoyaltyPoint = 100,
+                            Password = "473287f8298dba7163a897908958f7c0eae733e25d2e027992ea2edc9bed2fa8",
+                            Phone = 9876543210m,
+                            Role = 0,
+                            WorkingSchedule = 0
                         });
                 });
 
@@ -270,55 +270,55 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                     b.HasData(
                         new
                         {
-                            DiamondID = "D1",
+                            DiamondID = "D001",
                             Block = false,
-                            CaratWeight = 1.2,
+                            CaratWeight = 1.0,
                             ClarityGrade = 1,
                             ColorGrade = 1,
                             CutGrade = 1,
-                            DepthPercent = 62.299999999999997,
-                            Description = "A beautiful diamond",
-                            FluoresceneGrade = 0,
+                            DepthPercent = 62.0,
+                            Description = "Brilliant cut diamond",
+                            FluoresceneGrade = 1,
                             GIAReportNumber = 123456,
-                            Height = 3.5,
-                            Inscription = "GIA123456",
-                            IssueDate = new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Height = 4.0,
+                            Inscription = "GIA12345446",
+                            IssueDate = new DateTime(2020, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LabCreated = 0,
-                            Length = 4.0,
-                            Origin = "South Africa",
+                            Length = 6.0,
+                            Origin = "Africa",
                             PolishGrade = 1,
-                            Price = 5000.0,
-                            SKU = "D123",
+                            Price = 500.0,
+                            SKU = "DIA001",
                             Shape = 1,
                             SymmetryGrade = 1,
                             TablePercent = 57.5,
-                            Width = 4.0
+                            Width = 6.0
                         },
                         new
                         {
-                            DiamondID = "D2",
+                            DiamondID = "D002",
                             Block = false,
-                            CaratWeight = 1.5,
-                            ClarityGrade = 2,
-                            ColorGrade = 2,
-                            CutGrade = 2,
-                            DepthPercent = 61.799999999999997,
-                            Description = "Another beautiful diamond",
+                            CaratWeight = 1.0,
+                            ClarityGrade = 1,
+                            ColorGrade = 1,
+                            CutGrade = 1,
+                            DepthPercent = 62.0,
+                            Description = "Brilliant cut diamond",
                             FluoresceneGrade = 1,
-                            GIAReportNumber = 789012,
-                            Height = 3.7999999999999998,
-                            Inscription = "GIA789012",
-                            IssueDate = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            LabCreated = 1,
-                            Length = 4.5,
-                            Origin = "Botswana",
-                            PolishGrade = 2,
-                            Price = 6000.0,
-                            SKU = "D456",
+                            GIAReportNumber = 123456,
+                            Height = 4.0,
+                            Inscription = "GIA12345446",
+                            IssueDate = new DateTime(2020, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            LabCreated = 0,
+                            Length = 6.0,
+                            Origin = "Africa",
+                            PolishGrade = 1,
+                            Price = 500.0,
+                            SKU = "DIA001",
                             Shape = 1,
-                            SymmetryGrade = 2,
-                            TablePercent = 56.0,
-                            Width = 4.5
+                            SymmetryGrade = 1,
+                            TablePercent = 57.5,
+                            Width = 6.0
                         });
                 });
 
@@ -360,19 +360,6 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                     b.HasIndex("EmployeeAssignID");
 
                     b.ToTable("Order");
-
-                    b.HasData(
-                        new
-                        {
-                            OrderID = "O1",
-                            Block = false,
-                            CustomerID = "C1",
-                            DateOrdered = new DateTime(2023, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EmployeeAssignID = "E2",
-                            OrderStatus = 1,
-                            PayMethod = 1,
-                            TotalPrice = 1000.0
-                        });
                 });
 
             modelBuilder.Entity("DiamondStoreSystem.DataLayer.Models.Product", b =>
@@ -381,7 +368,6 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("AccessoryID")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<bool>("Block")
@@ -401,7 +387,8 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                     b.HasKey("ProductID");
 
                     b.HasIndex("AccessoryID")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[AccessoryID] IS NOT NULL");
 
                     b.HasIndex("MainDiamondID")
                         .IsUnique();
@@ -409,17 +396,6 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                     b.HasIndex("OrderID");
 
                     b.ToTable("Products");
-
-                    b.HasData(
-                        new
-                        {
-                            ProductID = "P1",
-                            AccessoryID = "A1",
-                            Block = false,
-                            MainDiamondID = "D1",
-                            OrderID = "O1",
-                            Price = 5200.0
-                        });
                 });
 
             modelBuilder.Entity("DiamondStoreSystem.DataLayer.Models.SubDiamond", b =>
@@ -436,13 +412,6 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                     b.HasIndex("ProductID");
 
                     b.ToTable("SubDiamonds");
-
-                    b.HasData(
-                        new
-                        {
-                            SubDiamondID = "D2",
-                            ProductID = "P1"
-                        });
                 });
 
             modelBuilder.Entity("DiamondStoreSystem.DataLayer.Models.VnPaymentResponse", b =>
@@ -455,8 +424,7 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("OrderId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("PaymentMethod")
                         .IsRequired()
@@ -479,6 +447,10 @@ namespace DiamondStoreSystem.DataLayer.Migrations
 
                     b.HasKey("VnpOrderId");
 
+                    b.HasIndex("OrderId")
+                        .IsUnique()
+                        .HasFilter("[OrderId] IS NOT NULL");
+
                     b.ToTable("VnPaymentResponses");
                 });
 
@@ -498,21 +470,14 @@ namespace DiamondStoreSystem.DataLayer.Migrations
 
                     b.Property<string>("ProductID")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("WarrantyID");
 
-                    b.ToTable("Warranties");
+                    b.HasIndex("ProductID")
+                        .IsUnique();
 
-                    b.HasData(
-                        new
-                        {
-                            WarrantyID = "W1",
-                            Block = false,
-                            ExpiredDate = new DateTime(2024, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IssueDate = new DateTime(2023, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductID = "P1"
-                        });
+                    b.ToTable("Warranties");
                 });
 
             modelBuilder.Entity("DiamondStoreSystem.DataLayer.Models.Order", b =>
@@ -529,12 +494,6 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("DiamondStoreSystem.DataLayer.Models.VnPaymentResponse", null)
-                        .WithOne("Order")
-                        .HasForeignKey("DiamondStoreSystem.DataLayer.Models.Order", "OrderID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.Navigation("Customer");
 
                     b.Navigation("EmployeeAccount");
@@ -545,8 +504,7 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                     b.HasOne("DiamondStoreSystem.DataLayer.Models.Accessory", "Accessory")
                         .WithOne()
                         .HasForeignKey("DiamondStoreSystem.DataLayer.Models.Product", "AccessoryID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("DiamondStoreSystem.DataLayer.Models.Diamond", "MainDiamond")
                         .WithOne()
@@ -557,12 +515,6 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                     b.HasOne("DiamondStoreSystem.DataLayer.Models.Order", "Order")
                         .WithMany("Products")
                         .HasForeignKey("OrderID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("DiamondStoreSystem.DataLayer.Models.Warranty", null)
-                        .WithOne("Product")
-                        .HasForeignKey("DiamondStoreSystem.DataLayer.Models.Product", "ProductID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -592,6 +544,27 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("DiamondStoreSystem.DataLayer.Models.VnPaymentResponse", b =>
+                {
+                    b.HasOne("DiamondStoreSystem.DataLayer.Models.Order", "Order")
+                        .WithOne("VnPaymentResponse")
+                        .HasForeignKey("DiamondStoreSystem.DataLayer.Models.VnPaymentResponse", "OrderId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("DiamondStoreSystem.DataLayer.Models.Warranty", b =>
+                {
+                    b.HasOne("DiamondStoreSystem.DataLayer.Models.Product", "Product")
+                        .WithOne("Warranty")
+                        .HasForeignKey("DiamondStoreSystem.DataLayer.Models.Warranty", "ProductID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("DiamondStoreSystem.DataLayer.Models.Account", b =>
                 {
                     b.Navigation("OrdersCustomer");
@@ -602,23 +575,15 @@ namespace DiamondStoreSystem.DataLayer.Migrations
             modelBuilder.Entity("DiamondStoreSystem.DataLayer.Models.Order", b =>
                 {
                     b.Navigation("Products");
+
+                    b.Navigation("VnPaymentResponse");
                 });
 
             modelBuilder.Entity("DiamondStoreSystem.DataLayer.Models.Product", b =>
                 {
                     b.Navigation("SubDiamonds");
-                });
 
-            modelBuilder.Entity("DiamondStoreSystem.DataLayer.Models.VnPaymentResponse", b =>
-                {
-                    b.Navigation("Order")
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("DiamondStoreSystem.DataLayer.Models.Warranty", b =>
-                {
-                    b.Navigation("Product")
-                        .IsRequired();
+                    b.Navigation("Warranty");
                 });
 #pragma warning restore 612, 618
         }

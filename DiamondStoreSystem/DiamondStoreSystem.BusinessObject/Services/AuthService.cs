@@ -43,7 +43,7 @@ namespace DiamondStoreSystem.BusinessLayer.Services
         {
             try
             {
-                var result = _accountRepository.GetFirstOrDefault(x => x.Email == email && x.Password == DiamondStoreSystemDBContext.HashPassword(password) && !x.Block);
+                var result = _accountRepository.GetFirstOrDefault(x => x.Email == email && x.Password == Util.HashPassword(password) && !x.Block);
 
                 if (result == null)
                 {

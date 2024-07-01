@@ -18,6 +18,6 @@ namespace DiamondStoreSystem.BusinessLayer.IServices
         Task<IDSSResult> Update(string id, SubDiamondRequestModel model);
         Task<IDSSResult> Create(SubDiamondRequestModel model);
         IDSSResult GetEnum();
-        Task<IDSSResult> Delete(string id);
+        Task<IDSSResult> Delete(string id, string propertyName);
     }
 }

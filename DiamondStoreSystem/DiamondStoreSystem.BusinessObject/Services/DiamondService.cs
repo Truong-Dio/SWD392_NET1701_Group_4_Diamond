@@ -28,6 +28,29 @@ namespace DiamondStoreSystem.BusinessLayer.Services
             _diamondRepository = diamondRepository;
             _mapper = mapper;
         }
+
+        public async Task<IDSSResult> UnBlock(string id)
+        {
+            try
+            {
+                var result = await IsExist(id);
+                if (result.Status <= 0) return result;
+
+                var diamond = result.Data as Diamond;
+
+                var check = await UpdateProperty(diamond, nameof(diamond.Block), false);
+
+
+                if (check.Status <= 0) return new DSSResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
+
+                return new DSSResult(Const.SUCCESS_UPDATE_CODE, Const.SUCCESS_UPDATE_MSG);
+            }
+            catch (Exception ex)
+            {
+                return new DSSResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+        }
+
         public async Task<IDSSResult> Create(DiamondRequestModel model)
         {
             try
@@ -208,6 +231,23 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                 if (check <= 0) return new DSSResult(Const.FAIL_DELETE_CODE, Const.FAIL_DELETE_MSG);
 
                 return new DSSResult(Const.SUCCESS_DELETE_CODE, Const.SUCCESS_DELETE_MSG);
+            }
+            catch (Exception ex)
+            {
+                return new DSSResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+        }
+
+        public async Task<IDSSResult> GetCertificate(string id)
+        {
+            try
+            {
+                var result = await _diamondRepository.GetWhere(a => !a.Block);
+                if (result.Count() <= 0)
+                {
+                    return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
+                }
+                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, _mapper.Map<CertificateResponseModel>(result.FirstOrDefault(a => a.DiamondID == id)));
             }
             catch (Exception ex)
             {

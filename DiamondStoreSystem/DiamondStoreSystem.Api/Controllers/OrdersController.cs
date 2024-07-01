@@ -5,6 +5,7 @@ using DiamondStoreSystem.BusinessLayer.IServices;
 using DiamondStoreSystem.BusinessLayer.ResquestModels;
 using DiamondStoreSystem.BusinessLayer.Services;
 using DiamondStoreSystem.BusinessLayer.ResponseModels;
+using DiamondStoreSystem.DataLayer.Models;
 
 namespace OrderStoreSystem.API.Controllers
 {

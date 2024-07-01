@@ -23,8 +23,8 @@ namespace DiamondStoreSystem.DataLayer.Models
         public int? LoyaltyPoint { get; set; }
         public bool Block { get; set; }
         public int Role { get; set; }
-        public int WorkingSchedule { get; set; }
-        public ICollection<Order> OrdersCustomer { get; set; }
-        public ICollection<Order> OrdersStaff { get; set; }
+        public int? WorkingSchedule { get; set; }
+        public ICollection<Order>? OrdersCustomer { get; set; }
+        public ICollection<Order>? OrdersStaff { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using DiamondStoreSystem.BusinessLayer.Commons;
 using DiamondStoreSystem.BusinessLayer.ResponseModels;
 using DiamondStoreSystem.BusinessLayer.ResquestModels;
+using DiamondStoreSystem.DataLayer.Models;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;

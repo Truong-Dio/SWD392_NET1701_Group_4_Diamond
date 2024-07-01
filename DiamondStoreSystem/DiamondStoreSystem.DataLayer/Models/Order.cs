@@ -26,7 +26,7 @@ namespace DiamondStoreSystem.DataLayer.Models
 
         [ForeignKey("EmployeeAssignID")]
         public Account EmployeeAccount { get; set; }
-
+        public VnPaymentResponse? VnPaymentResponse { get; set; }
         public ICollection<Product> Products { get; set; }
     }
 

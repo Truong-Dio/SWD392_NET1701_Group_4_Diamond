@@ -14,6 +14,7 @@ namespace DiamondStoreSystem.BusinessLayer.IServices
         Task<IDSSResult> GetById(string id);
         Task<IDSSResult> GetAll();
         IDSSResult GetAllWithAllField();
+        Task<IDSSResult> GetByEmail(string email);
         Task<IDSSResult> IsExist(string id);
         Task<IDSSResult> Update(string id, AccountRequestModel model);
         Task<IDSSResult> Block(string id);

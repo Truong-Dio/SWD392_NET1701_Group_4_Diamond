@@ -48,6 +48,6 @@ namespace DiamondStoreSystem.API.Controllers
         public IActionResult Block(string id) => Ok(_warrantyService.Block(id).Result);
 
         [HttpDelete("Delete/{id}")]
-        public IActionResult Delete(string id) => Ok(_warrantyService.Delete(id).Result);
+        public IActionResult Delete(string id) => Ok(_warrantyService.Delete(id, "WarrantyID").Result);
     }
 }

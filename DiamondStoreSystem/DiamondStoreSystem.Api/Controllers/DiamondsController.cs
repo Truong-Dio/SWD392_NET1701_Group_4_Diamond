@@ -23,6 +23,9 @@ namespace DiamondStoreSystem.API.Controllers
         [HttpGet("Enum")]
         public IActionResult GetEnum() => Ok(_diamondService.GetEnum());
 
+        [HttpGet("GetCertificate/{id}")]
+        public IActionResult GetCertificate(string id) => Ok(_diamondService.GetCertificate(id).Result);
+
         [HttpGet("GetAllWithAllField")]
         public IActionResult GetAllWithAllField() => Ok(_diamondService.GetAllWithAllField());
 

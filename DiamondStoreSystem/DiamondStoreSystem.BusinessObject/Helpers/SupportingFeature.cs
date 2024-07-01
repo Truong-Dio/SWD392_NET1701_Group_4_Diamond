@@ -1,11 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace DiamondStoreSystem.BusinessLayer.Helpers
 {
+    public static class ReflectionExtensions
+    {
+        public static object GetPropertyValue(this object obj, string propertyName)
+        {
+            if (obj == null) throw new ArgumentNullException(nameof(obj));
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+
+            PropertyInfo propInfo = obj.GetType().GetProperty(propertyName);
+            if (propInfo == null) throw new ArgumentException($"Property '{propertyName}' not found on '{obj.GetType().Name}'");
+
+            return propInfo.GetValue(obj);
+        }
+    }
     public class SupportingFeature
     {
         private static SupportingFeature instance = null;
@@ -24,6 +38,7 @@ namespace DiamondStoreSystem.BusinessLayer.Helpers
                 }
             }
         }
+
         public Dictionary<int, string> GetEnumName<TEnum>()
         {
             Dictionary<int, string> enumValues = new Dictionary<int, string>();

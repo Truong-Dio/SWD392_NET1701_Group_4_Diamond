@@ -19,7 +19,8 @@ namespace DiamondStoreSystem.BusinessLayer.IServices
         Task<IDSSResult> Block(string id);
         Task<IDSSResult> Create(WarrantyRequestModel model);
         IDSSResult GetEnum();
-        Task<IDSSResult> Delete(string id);
+        Task<IDSSResult> Delete(string id, string propertyName);
         Task<IDSSResult> UnBlock(string id);
+        Task<IDSSResult> GetByProp(string id, string prop);
     }
 }

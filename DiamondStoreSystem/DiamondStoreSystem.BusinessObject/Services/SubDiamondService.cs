@@ -21,12 +21,14 @@ namespace DiamondStoreSystem.BusinessLayer.Services
     public class SubDiamondService : ISubDiamondService
     {
         private readonly ISubDiamondRepository _subDiamondRepository;
+        private readonly IDiamondService _diamondService;
         private readonly IMapper _mapper;
 
-        public SubDiamondService(IMapper mapper, ISubDiamondRepository subDiamondRepository)
+        public SubDiamondService(IMapper mapper, ISubDiamondRepository subDiamondRepository, IDiamondService diamondService)
         {
             _subDiamondRepository = subDiamondRepository;
             _mapper = mapper;
+            _diamondService = diamondService;
         }
         public async Task<IDSSResult> Create(SubDiamondRequestModel model)
         {
@@ -34,10 +36,15 @@ namespace DiamondStoreSystem.BusinessLayer.Services
             {
                 var result = await GetById(model.SubDiamondID);
                 if (result.Status > 0) return result;
+
                 _subDiamondRepository.Insert(_mapper.Map<SubDiamond>(model));
                 var check = _subDiamondRepository.SaveChanges();
                 if (check <= 0) return new DSSResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
-                return new DSSResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG);
+
+               result = await _diamondService.Block(model.SubDiamondID);
+                if (result.Status <= 0) return new DSSResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
+
+                return new DSSResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG, result.Data as Diamond);
             }
             catch (Exception ex)
             {
@@ -117,7 +124,7 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                 {
                     return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
                 }
-                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, result);
+                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, result.ToList());
             }
             catch (Exception ex)
             {
@@ -191,14 +198,17 @@ namespace DiamondStoreSystem.BusinessLayer.Services
             }
         }
 
-        public async Task<IDSSResult> Delete(string id)
+        public async Task<IDSSResult> Delete(string id, string propertyName)
         {
             try
             {
-                var result = await IsExist(id);
+                var result = GetAllWithAllField();
                 if (result.Status <= 0) return result;
 
-                _subDiamondRepository.Delete(result.Data as SubDiamond);
+                var subDiamonds = result.Data as IEnumerable<SubDiamond>;
+                var subDiamond = subDiamonds.FirstOrDefault(s => s.GetPropertyValue(propertyName) == id);
+
+                _subDiamondRepository.Delete(subDiamond);
 
                 var check = _subDiamondRepository.SaveChanges();
 

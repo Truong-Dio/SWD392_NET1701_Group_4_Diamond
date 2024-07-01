@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace DiamondStoreSystem.DataLayer.Migrations
 {
     /// <inheritdoc />
@@ -48,7 +50,7 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                     LoyaltyPoint = table.Column<int>(type: "int", nullable: true),
                     Block = table.Column<bool>(type: "bit", nullable: false),
                     Role = table.Column<int>(type: "int", nullable: false),
-                    WorkingSchedule = table.Column<int>(type: "int", nullable: false)
+                    WorkingSchedule = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -89,39 +91,6 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "VnPaymentResponses",
-                columns: table => new
-                {
-                    VnpOrderId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Success = table.Column<bool>(type: "bit", nullable: false),
-                    PaymentMethod = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    OrderDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TransactionId = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Token = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    VnPayResponseCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    OrderId = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_VnPaymentResponses", x => x.VnpOrderId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Warranties",
-                columns: table => new
-                {
-                    WarrantyID = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    IssueDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ExpiredDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Block = table.Column<bool>(type: "bit", nullable: false),
-                    ProductID = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Warranties", x => x.WarrantyID);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Order",
                 columns: table => new
                 {
@@ -150,12 +119,6 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                         principalTable: "Accounts",
                         principalColumn: "AccountID",
                         onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Order_VnPaymentResponses_OrderID",
-                        column: x => x.OrderID,
-                        principalTable: "VnPaymentResponses",
-                        principalColumn: "VnpOrderId",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -165,7 +128,7 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                     ProductID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Price = table.Column<double>(type: "float", nullable: false),
                     Block = table.Column<bool>(type: "bit", nullable: false),
-                    AccessoryID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    AccessoryID = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     OrderID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     MainDiamondID = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
@@ -190,11 +153,29 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                         principalTable: "Order",
                         principalColumn: "OrderID",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "VnPaymentResponses",
+                columns: table => new
+                {
+                    VnpOrderId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Success = table.Column<bool>(type: "bit", nullable: false),
+                    PaymentMethod = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    OrderDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TransactionId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Token = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    VnPayResponseCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    OrderId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_VnPaymentResponses", x => x.VnpOrderId);
                     table.ForeignKey(
-                        name: "FK_Products_Warranties_ProductID",
-                        column: x => x.ProductID,
-                        principalTable: "Warranties",
-                        principalColumn: "WarrantyID",
+                        name: "FK_VnPaymentResponses_Order_OrderId",
+                        column: x => x.OrderId,
+                        principalTable: "Order",
+                        principalColumn: "OrderID",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -222,6 +203,51 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Warranties",
+                columns: table => new
+                {
+                    WarrantyID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    IssueDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ExpiredDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Block = table.Column<bool>(type: "bit", nullable: false),
+                    ProductID = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Warranties", x => x.WarrantyID);
+                    table.ForeignKey(
+                        name: "FK_Warranties_Products_ProductID",
+                        column: x => x.ProductID,
+                        principalTable: "Products",
+                        principalColumn: "ProductID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Accessories",
+                columns: new[] { "AccessoryID", "AccessoryName", "Block", "Brand", "Description", "Material", "Price", "SKU", "Style", "UnitInStock" },
+                values: new object[] { "A001", "Gold Chain", false, "LuxuryBrand", "18k gold chain", 1, 500.0, "GC001", 1, 10 });
+
+            migrationBuilder.InsertData(
+                table: "Accounts",
+                columns: new[] { "AccountID", "Address", "Block", "DOB", "Email", "FirstName", "Gender", "JoinDate", "LastName", "LoyaltyPoint", "Password", "Phone", "Role", "WorkingSchedule" },
+                values: new object[,]
+                {
+                    { "C001", "456 Customer Ave.", false, new DateTime(1990, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "customer@example.com", "Regular", 0, new DateTime(2024, 7, 1, 15, 45, 21, 762, DateTimeKind.Local).AddTicks(9888), "Customer", 100, "473287f8298dba7163a897908958f7c0eae733e25d2e027992ea2edc9bed2fa8", 9876543210m, 0, 0 },
+                    { "S001", "123 Admin St.", false, new DateTime(1980, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "admin@example.com", "Super", 1, new DateTime(2024, 7, 1, 15, 45, 21, 762, DateTimeKind.Local).AddTicks(9829), "Admin", 0, "473287f8298dba7163a897908958f7c0eae733e25d2e027992ea2edc9bed2fa8", 1234567890m, 3, 1 },
+                    { "S002", "123 Admin St.", false, new DateTime(1980, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "staff1@example.com", "Super", 1, new DateTime(2024, 7, 1, 15, 45, 21, 762, DateTimeKind.Local).AddTicks(9869), "Admin", 0, "473287f8298dba7163a897908958f7c0eae733e25d2e027992ea2edc9bed2fa8", 1234567890m, 1, 1 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Diamond",
+                columns: new[] { "DiamondID", "Block", "CaratWeight", "ClarityGrade", "ColorGrade", "CutGrade", "DepthPercent", "Description", "FluoresceneGrade", "GIAReportNumber", "Height", "Inscription", "IssueDate", "LabCreated", "Length", "Origin", "PolishGrade", "Price", "SKU", "Shape", "SymmetryGrade", "TablePercent", "Width" },
+                values: new object[,]
+                {
+                    { "D001", false, 1.0, 1, 1, 1, 62.0, "Brilliant cut diamond", 1, 123456, 4.0, "GIA12345446", new DateTime(2020, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 0, 6.0, "Africa", 1, 500.0, "DIA001", 1, 1, 57.5, 6.0 },
+                    { "D002", false, 1.0, 1, 1, 1, 62.0, "Brilliant cut diamond", 1, 123456, 4.0, "GIA12345446", new DateTime(2020, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 0, 6.0, "Africa", 1, 500.0, "DIA001", 1, 1, 57.5, 6.0 }
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Order_CustomerID",
                 table: "Order",
@@ -236,7 +262,8 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                 name: "IX_Products_AccessoryID",
                 table: "Products",
                 column: "AccessoryID",
-                unique: true);
+                unique: true,
+                filter: "[AccessoryID] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_MainDiamondID",
@@ -253,6 +280,19 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                 name: "IX_SubDiamonds_ProductID",
                 table: "SubDiamonds",
                 column: "ProductID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VnPaymentResponses_OrderId",
+                table: "VnPaymentResponses",
+                column: "OrderId",
+                unique: true,
+                filter: "[OrderId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Warranties_ProductID",
+                table: "Warranties",
+                column: "ProductID",
+                unique: true);
         }
 
         /// <inheritdoc />
@@ -260,6 +300,12 @@ namespace DiamondStoreSystem.DataLayer.Migrations
         {
             migrationBuilder.DropTable(
                 name: "SubDiamonds");
+
+            migrationBuilder.DropTable(
+                name: "VnPaymentResponses");
+
+            migrationBuilder.DropTable(
+                name: "Warranties");
 
             migrationBuilder.DropTable(
                 name: "Products");
@@ -274,13 +320,7 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                 name: "Order");
 
             migrationBuilder.DropTable(
-                name: "Warranties");
-
-            migrationBuilder.DropTable(
                 name: "Accounts");
-
-            migrationBuilder.DropTable(
-                name: "VnPaymentResponses");
         }
     }
 }

@@ -40,6 +40,7 @@ namespace DiamondStoreSystem.API.AppStart
                 .ReverseMap();
             #endregion
 
+            #region Diamond
             CreateMap<Diamond, DiamondResponseModel>()
                 .ForMember(dest => dest.LabCreated, opt => opt.MapFrom(src => src.LabCreated.ToString()))
                 .ForMember(dest => dest.Shape, opt => opt.MapFrom(src => src.Shape.ToString()))
@@ -52,13 +53,16 @@ namespace DiamondStoreSystem.API.AppStart
                 .ReverseMap();
             CreateMap<Diamond, DiamondRequestModel>().ReverseMap();
             CreateMap<DiamondRequestModel, DiamondResponseModel>().ReverseMap();
+            #endregion
 
+            #region Order
             CreateMap<Order, OrderResponseModel>()
            .ForMember(dest => dest.OrderStatus, opt => opt.MapFrom(src => src.OrderStatus.ToString()))
            .ForMember(dest => dest.PayMethod, opt => opt.MapFrom(src => src.PayMethod.ToString()))
            .ReverseMap();
             CreateMap<Order, OrderRequestModel>().ReverseMap();
             CreateMap<OrderRequestModel, OrderResponseModel>().ReverseMap();
+            #endregion
 
             CreateMap<Product, ProductResponseModel>().ReverseMap();
             CreateMap<Product, ProductRequestModel>().ReverseMap();
@@ -80,6 +84,12 @@ namespace DiamondStoreSystem.API.AppStart
                 .ForMember(dest => dest.PolishGrade, opt => opt.MapFrom(src => src.PolishGrade.ToString()))
                 .ForMember(dest => dest.SymmetryGrade, opt => opt.MapFrom(src => src.SymmetryGrade.ToString()))
                 .ForMember(dest => dest.FluoresceneGrade, opt => opt.MapFrom(src => src.FluoresceneGrade.ToString())).ReverseMap();
+
+            CreateMap<Warranty, WarrantyResponseModel>().ReverseMap();
+            CreateMap<Warranty, WarrantyRequestModel>().ReverseMap();
+
+            CreateMap<SubDiamond, SubDiamondResponseModel>().ReverseMap();
+            CreateMap<SubDiamond, SubDiamondRequestModel>().ReverseMap();
         }
     }
 }

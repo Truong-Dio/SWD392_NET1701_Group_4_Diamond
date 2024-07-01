@@ -18,9 +18,9 @@ namespace DiamondStoreSystem.DataLayer.Models
         public string TransactionId { get; set; }
         public string Token { get; set; }
         public string VnPayResponseCode { get; set; }
-        public string OrderId { get; set; }
+        public string? OrderId { get; set; }
 
         [ForeignKey("OrderId")]
-        public Order Order { get; set; }
+        public Order? Order { get; set; }
     }
 }
