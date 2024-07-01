@@ -1,22 +1,23 @@
 ﻿using AutoMapper;
 using DiamondStoreSystem.BusinessLayer.Commons;
+using DiamondStoreSystem.BusinessLayer.Helper;
 using DiamondStoreSystem.BusinessLayer.Helpers;
 using DiamondStoreSystem.BusinessLayer.IServices;
 using DiamondStoreSystem.BusinessLayer.ResponseModels;
 using DiamondStoreSystem.BusinessLayer.ResquestModels;
 using DiamondStoreSystem.DataLayer.Models;
 using DiamondStoreSystem.Repositories.IRepositories;
-using DiamondStoreSystem.Repositories.Repositories;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
-using System.Text;
 
 namespace DiamondStoreSystem.BusinessLayer.Services
 {
     public class OrderService : IOrderService
     {
         private readonly IOrderRepository _orderRepository;
+        private readonly IVnPaymentRepository _vnPaymentRepository;
+        private readonly IConfiguration _config;
         private readonly ISubDiamondService _subDiamondService;
         private readonly IWarrantyService _warrantyService;
         private readonly IAccessoryService _accessoryService;
@@ -25,15 +26,17 @@ namespace DiamondStoreSystem.BusinessLayer.Services
         private readonly IAccountService _accountService;
         private readonly IMapper _mapper;
 
-        public OrderService(IMapper mapper, IOrderRepository orderRepository, IAccessoryService accessoryService, IDiamondService diamondService, IWarrantyService warrantyService, IProductService productService, IAccountService accountService, ISubDiamondService subDiamondService)
+        public OrderService(IMapper mapper, IOrderRepository orderRepository, IAccessoryService accessoryService, IDiamondService diamondService, IWarrantyService warrantyService, IProductService productService, IAccountService accountService, ISubDiamondService subDiamondService, IConfiguration configuration, IVnPaymentRepository vnPaymentRepository)
         {
+            _config = configuration;
             _subDiamondService = subDiamondService;
             _warrantyService = warrantyService;
             _accessoryService = accessoryService;
-            _diamondService = diamondService; 
+            _diamondService = diamondService;
             _productService = productService;
             _accountService = accountService;
             _orderRepository = orderRepository;
+            _vnPaymentRepository = vnPaymentRepository;
             _mapper = mapper;
 
         }
@@ -84,11 +87,11 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                 //order.Products = products;
 
                 _orderRepository.Insert(order);
-                
+
                 var check = _orderRepository.SaveChanges();
-                
+
                 if (check <= 0) return new DSSResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
-                
+
                 return new DSSResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG);
             }
             catch (Exception ex)
@@ -118,7 +121,7 @@ namespace DiamondStoreSystem.BusinessLayer.Services
             }
         }
 
-        public async Task<IDSSResult> UpdatePrice(string id, double totalPrice, ICollection<Product> products)
+        public async Task<IDSSResult> UpdatePriceOrder(string id, double totalPrice)
         {
             try
             {
@@ -126,10 +129,9 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                 if (result.Status <= 0) return result;
 
                 var order = result.Data as Order;
+                order.TotalPrice = totalPrice;
 
-                order.Products = products;
-
-                var check = await UpdateProperty(order, nameof(order.TotalPrice), totalPrice);
+                var check = await Update(order.OrderID, _mapper.Map<OrderRequestModel>(order));
 
                 if (check.Status <= 0) return new DSSResult(Const.FAIL_DELETE_CODE, Const.FAIL_DELETE_MSG);
 
@@ -381,7 +383,7 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                     var product = new ProductRequestModel
                     {
                         ProductID = productID,
-                        AccessoryID = productTemp.AccessoryID,
+                        AccessoryID = productTemp.AccessoryID.IsNullOrEmpty() ? null : accessoryID,
                         OrderID = orderID,
                         Price = productPrice,
                         WarrantyID = warrantyID,
@@ -432,7 +434,10 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                     productPrice = 0;
                 }
 
-/*                var paymentUrl = _vnPaymentService.CreatePaymentUrl(context, new VnPaymentRequestModel()
+                result = await UpdatePriceOrder(orderID, totalPrice);
+                if (result.Status <= 0) return result;
+
+                var paymentUrl = CreatePaymentUrl(context, new VnPaymentRequestModel()
                 {
                     Amount = totalPrice,
                     CreatedDate = DateTime.Now.Date,
@@ -441,23 +446,90 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                     OrderId = orderID,
                 });
 
-                result = _vnPaymentService.CreateTemporary(new VnPaymentResponse()
+                return new DSSResult()
                 {
-                    OrderDescription = string.Empty,
-                    OrderId = orderID,
-                    PaymentMethod = string.Empty,
-                    Success = false,
-                    Token = string.Empty,
-                    TransactionId = string.Empty,
-                    VnPayResponseCode = string.Empty,
-                    VnpOrderId = string.Empty,
-                });
-*/
+                    Data = paymentUrl
+                };
+            }
+            catch (Exception ex)
+            {
+                return new DSSResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+        }
 
-                result = await UpdatePrice(orderID, productPrice, products);
-                if (result.Status <= 0) return result;
+        public string CreatePaymentUrl(HttpContext context, VnPaymentRequestModel model)
+        {
+            try
+            {
+                var tick = DateTime.Now.Ticks.ToString();
+                var vnpay = new VnPayLibrary();
+                vnpay.AddRequestData("vnp_Version", _config["VnPay:Version"]);
+                vnpay.AddRequestData("vnp_Command", _config["VnPay:Command"]);
+                vnpay.AddRequestData("vnp_TmnCode", _config["VnPay:TmnCode"]);
+                vnpay.AddRequestData("vnp_Amount", (model.Amount * 100).ToString());
+                vnpay.AddRequestData("vnp_CreateDate", model.CreatedDate.ToString("yyyyMMddHHmmss"));
+                vnpay.AddRequestData("vnp_CurrCode", _config["VnPay:CurrCode"]);
+                vnpay.AddRequestData("vnp_IpAddr", Utils.GetIpAddress(context));
+                vnpay.AddRequestData("vnp_Locale", _config["VnPay:Locate"]);
+                vnpay.AddRequestData("vnp_OrderInfo", "Pay Order:" + model.OrderId);
+                vnpay.AddRequestData("vnp_OrderType", "other"); // default value: other
+                vnpay.AddRequestData("vnp_ReturnUrl", _config["VnPay:PaymentBackReturnUrl1"]);
+                vnpay.AddRequestData("vnp_TxnRef", tick);
 
-                return result;
+                var paymentUrl = vnpay.CreateRequestUrl(_config["VnPay:BaseUrl"], _config["VnPay:HashSecret"]);
+                return paymentUrl;
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+        }
+
+        public IDSSResult PaymentExecute(IQueryCollection collections)
+        {
+            try
+            {
+                var vnpay = new VnPayLibrary();
+                foreach (var (key, value) in collections)
+                {
+                    if (!string.IsNullOrEmpty(key) && key.StartsWith("vnp_"))
+                    {
+                        vnpay.AddResponseData(key, value.ToString());
+                    }
+                }
+
+                var vnp_OrderId = vnpay.GetResponseData("vnp_TxnRef");
+                var vnp_TransactionId = vnpay.GetResponseData("vnp_TransactionNo");
+                var vnp_SecureHash = collections.FirstOrDefault(p => p.Key == "vnp_SecureHash").Value;
+                var vnp_responseCode = vnpay.GetResponseData("vnp_ResponseCode");
+                var vnp_OrderInfo = vnpay.GetResponseData("vnp_OrderInfo");
+                bool checkSignature = vnpay.ValidateSignature(vnp_SecureHash, _config["VnPay:HashSecret"]);
+                //if (!checkSignature)
+                //{
+                //    return new DSSResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
+                //}
+
+                var orderId = vnp_OrderInfo.Substring(vnp_OrderInfo.IndexOf(":") + 1);
+                var vnpayResponse = new VnPaymentResponse
+                {
+                    OrderId = orderId,
+                    Success = true,
+                    PaymentMethod = "VnPay",
+                    OrderDescription = vnp_OrderInfo,
+                    VnpOrderId = vnp_OrderId,
+                    TransactionId = vnp_TransactionId,
+                    Token = vnp_SecureHash,
+                    VnPayResponseCode = vnp_responseCode,
+                };
+
+                _vnPaymentRepository.Insert(vnpayResponse);
+                var check = _vnPaymentRepository.SaveChanges();
+                if (check <= 0)
+                {
+                    return new DSSResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
+                }
+
+                return new DSSResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG, vnpayResponse);
             }
             catch (Exception ex)
             {

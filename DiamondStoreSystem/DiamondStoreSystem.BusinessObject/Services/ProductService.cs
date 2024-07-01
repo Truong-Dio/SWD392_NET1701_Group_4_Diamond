@@ -214,10 +214,13 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                 if (result.Status <= 0) return result;
                 var product = result.Data as Product;
 
-                foreach (var subdiamond in product.SubDiamonds)
+                if (product.SubDiamonds != null)
                 {
-                    result = await _subDiamondService.Delete(subdiamond.ProductID, nameof(subdiamond.ProductID));
-                    if (result.Status <= 0) return result;
+                    foreach (var subdiamond in product.SubDiamonds)
+                    {
+                        result = await _subDiamondService.Delete(subdiamond.ProductID, nameof(subdiamond.ProductID));
+                        if (result.Status <= 0) return result;
+                    }
                 }
 
                 result = await _warrantyService.Delete(product.ProductID, nameof(product.Warranty.ProductID));

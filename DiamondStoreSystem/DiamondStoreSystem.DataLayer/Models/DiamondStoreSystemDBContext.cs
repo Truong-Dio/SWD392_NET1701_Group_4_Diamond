@@ -203,7 +203,8 @@ namespace DiamondStoreSystem.DataLayer.Models
                 Length = 6.0,
                 Price = 500.0,
                 Block = false,
-                SKU = "DIA001"
+                SKU = "DIA001",
+                ImageURL = "https://th.bing.com/th/id/R.f570735ea23fb999beba0f0ab75776bf?rik=CmY%2bEAjezLt7Fw&riu=http%3a%2f%2fftwg.org%2fwp-content%2fuploads%2f2018%2f09%2fAdobeStock_103498617-1140x458.jpeg&ehk=j4i4O38TXR1VIDNSDUiMnV9aUME6dlkf0GM6BpnbKbk%3d&risl=&pid=ImgRaw&r=0"
             },
             new Diamond
             {
@@ -229,7 +230,8 @@ namespace DiamondStoreSystem.DataLayer.Models
                 Length = 6.0,
                 Price = 500.0,
                 Block = false,
-                SKU = "DIA001"
+                SKU = "DIA001",
+                ImageURL = "https://assets.entrepreneur.com/content/3x2/2000/20160305000536-diamond.jpeg"
             });
         }
     }

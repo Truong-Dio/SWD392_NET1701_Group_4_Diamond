@@ -15,11 +15,9 @@ namespace OrderStoreSystem.API.Controllers
     public class OrdersController : ControllerBase
     {
         private readonly IOrderService _orderService;
-        private readonly IVnPaymentService _vpnPaymentService;
-        public OrdersController(IOrderService orderService, IVnPaymentService vpnPaymentService)
+        public OrdersController(IOrderService orderService)
         {
             _orderService = orderService;
-            _vpnPaymentService = vpnPaymentService;
         }
 
         [HttpGet("Enum")]
@@ -73,7 +71,7 @@ namespace OrderStoreSystem.API.Controllers
             model.Amount = order.TotalPrice;
             model.CreatedDate = DateTime.Now;
             model.Description = "Thanh toan";
-            var paymentUrl = _vpnPaymentService.CreatePaymentUrl(HttpContext, model);
+            var paymentUrl = _orderService.CreatePaymentUrl(HttpContext, model);
             return Ok(paymentUrl);
         }
 
@@ -81,11 +79,19 @@ namespace OrderStoreSystem.API.Controllers
         public IActionResult PaymentExecute()
         {
             var queryCollection = HttpContext.Request.Query;
-            var result = _vpnPaymentService.PaymentExecute(queryCollection);
-            if (result.Status <= 0)
-            {
-                return BadRequest(result);
-            }
+
+            var result = _orderService.PaymentExecute(queryCollection);
+
+            if (result.Status <= 0) return BadRequest(result);
+            
+            var vnpResponse = result.Data as VnPaymentResponse;
+            
+            string orderID = vnpResponse.OrderId;
+            
+            _orderService.UpdateStatus(orderID, DiamondStoreSystem.BusinessLayer.Commons.OrderStatus.Paid);
+            
+            if(result.Status <= 0) return BadRequest(result);
+            
             return Ok(result);
         }
 

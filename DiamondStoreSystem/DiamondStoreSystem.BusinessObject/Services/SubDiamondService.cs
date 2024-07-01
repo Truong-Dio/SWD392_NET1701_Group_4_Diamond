@@ -202,11 +202,11 @@ namespace DiamondStoreSystem.BusinessLayer.Services
         {
             try
             {
-                var result = GetAllWithAllField();
-                if (result.Status <= 0) return result;
+                var result = _subDiamondRepository.GetAll().ToList();
 
-                var subDiamonds = result.Data as IEnumerable<SubDiamond>;
-                var subDiamond = subDiamonds.FirstOrDefault(s => s.GetPropertyValue(propertyName) == id);
+                var subDiamond = result.FirstOrDefault(s => s.GetPropertyValue(propertyName).Equals(id));
+
+                if (subDiamond == null) return new DSSResult(Const.SUCCESS_DELETE_CODE, Const.SUCCESS_DELETE_MSG);
 
                 _subDiamondRepository.Delete(subDiamond);
 

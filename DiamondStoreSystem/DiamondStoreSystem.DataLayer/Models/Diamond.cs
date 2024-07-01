@@ -33,5 +33,6 @@ namespace DiamondStoreSystem.DataLayer.Models
         public double Price { get; set; }
         public bool Block { get; set; }
         public string SKU { get; set; }
+        public string? ImageURL { get; set; }
     }
 }

@@ -6,15 +6,6 @@ using DiamondStoreSystem.BusinessLayer.ResponseModels;
 using DiamondStoreSystem.BusinessLayer.ResquestModels;
 using DiamondStoreSystem.DataLayer.Models;
 using DiamondStoreSystem.Repositories.IRepositories;
-using DiamondStoreSystem.Repositories.Repositories;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace DiamondStoreSystem.BusinessLayer.Services
 {
@@ -248,6 +239,28 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                     return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
                 }
                 return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, _mapper.Map<CertificateResponseModel>(result.FirstOrDefault(a => a.DiamondID == id)));
+            }
+            catch (Exception ex)
+            {
+                return new DSSResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+        }
+
+        public async Task<IDSSResult> GetByProp(string keyword, string propertyName)
+        {
+            try
+            {
+                var result = await _diamondRepository.GetWhere(a => !a.Block);
+                if (result.Count() <= 0)
+                {
+                    return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
+                }
+                List<DiamondResponseModel> diamonds = new List<DiamondResponseModel>();
+                result.ToList().ForEach(d =>
+                {
+                    if (d.GetPropertyValue(propertyName).Equals(keyword)) diamonds.Add(_mapper.Map<DiamondResponseModel>(d));
+                });
+                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, diamonds);
             }
             catch (Exception ex)
             {

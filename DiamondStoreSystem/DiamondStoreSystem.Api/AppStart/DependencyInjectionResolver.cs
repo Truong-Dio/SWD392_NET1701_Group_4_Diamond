@@ -10,7 +10,6 @@ namespace DiamondStoreSystem.API.AppStart
         public static void ConfigDI(this IServiceCollection services)
         {
             services.AddSingleton(typeof(IBaseRepository<>), typeof(BaseRepository<>));
-            services.AddScoped<IVnPaymentService, VnPaymentService>();
             services.AddScoped<IWarrantyService, WarrantyService>();
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IOrderService, OrderService>();

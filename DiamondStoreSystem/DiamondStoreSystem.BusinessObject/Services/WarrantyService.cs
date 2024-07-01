@@ -168,13 +168,12 @@ namespace DiamondStoreSystem.BusinessLayer.Services
         {
             try
             {
-                var result = await _warrantyRepository.GetAll().ToListAsync();
+                var result = await _warrantyRepository.FirstOrDefaultAsync(p => p.ProductID.Equals(id));
                 if (result == null)
                 {
                     return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
                 }
-                var warranty = result.Find(a => a.GetPropertyValue(prop) == id);
-                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, warranty);
+                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, result);
             }
             catch (Exception ex)
             {
@@ -235,11 +234,11 @@ namespace DiamondStoreSystem.BusinessLayer.Services
         {
             try
             {
-                var result = _warrantyRepository.GetAll();
+                var result = _warrantyRepository.GetAll().ToList();
 
-                if (result == null) return new DSSResult(Const.FAIL_DELETE_CODE, Const.FAIL_DELETE_MSG);
+                var warranty = result.SingleOrDefault(p => p.GetPropertyValue(propertyName).Equals(id));
 
-                var warranty = result.FirstOrDefault(p => p.ProductID == id);
+                if (warranty == null) return new DSSResult(Const.SUCCESS_DELETE_CODE, Const.SUCCESS_DELETE_MSG);
 
                 _warrantyRepository.Delete(warranty);
 

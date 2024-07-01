@@ -11,7 +11,7 @@ namespace DiamondStoreSystem.BusinessLayer.ResquestModels
     {
         public string OrderId { get; set; }
         public string Description { get; set; } = string.Empty;
-        [JsonIgnore]
+        //[JsonIgnore]
         public string FullName { get; set; }
         [JsonIgnore]
         public double Amount { get; set; }

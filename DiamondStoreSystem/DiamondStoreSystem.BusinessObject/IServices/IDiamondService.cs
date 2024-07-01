@@ -22,5 +22,6 @@ namespace DiamondStoreSystem.BusinessLayer.IServices
         IDSSResult GetEnum();
         Task<IDSSResult> Delete(string id);
         Task<IDSSResult> UnBlock(string id);
+        Task<IDSSResult> GetByProp(string keyword, string propertyName);
     }
 }
