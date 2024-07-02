@@ -271,7 +271,7 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                 return new DSSResult(Const.ERROR_EXCEPTION, ex.Message);
             }
         }
-        private bool TryParseJsonArray(string jsonString, out List<double> values)
+        private bool TryParseJsonArrayGrades(string jsonString, out List<double> values)
         {
             try
             {
@@ -284,7 +284,19 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                 return false;
             }
         }
-
+        private bool TryParseJsonArrayDatetimes(string jsonString, out List<DateTime> values)
+        {
+            try
+            {
+                values = JsonConvert.DeserializeObject<List<DateTime>>(jsonString);
+                return values != null;
+            }
+            catch
+            {
+                values = null;
+                return false;
+            }
+        }
         public IDSSResult GetByCategory(Dictionary<string, object> categories)
         {
             try
@@ -295,13 +307,26 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                 {
                     if (int.TryParse(category.Value.ToString(), out int grade))
                         {
-                        diamonds = diamonds.Where(d => int.TryParse(d.GetPropertyValue(category.Key).ToString(), out int value) &&
+                        diamonds = diamonds.Where(d => int.TryParse(d.GetPropertyValue(category.Key).ToString(), out var value) &&
                                                        value == grade).ToList();
                     }
-                    else if (TryParseJsonArray(category.Value.ToString(), out List<double> range))
+                    else if (TryParseJsonArrayGrades(category.Value.ToString(), out List<double> range))
                     {
-                        diamonds = diamonds.Where(d => double.TryParse(d.GetPropertyValue(category.Key).ToString(), out double value) &&
+                        diamonds = diamonds.Where(d => double.TryParse(d.GetPropertyValue(category.Key).ToString(), out var value) &&
                                                        range[0] <= value && value <= range[1]).ToList();
+                    }
+                    else if (TryParseJsonArrayDatetimes(category.Value.ToString(), out List<DateTime> datetimes))
+                    {
+                        diamonds = diamonds.Where(d =>
+                        {
+                            if(DateTime.TryParse(d.GetPropertyValue(category.Key).ToString(), out var value))
+                            {
+                                var before = value.CompareTo(datetimes[0]);
+                                var after = value.CompareTo(datetimes[1]);
+                                return before >= 0 && after <= 0;
+                            }
+                            return false;
+                        }).ToList();
                     }
                     else
                     {
