@@ -6,16 +6,6 @@ using DiamondStoreSystem.BusinessLayer.ResponseModels;
 using DiamondStoreSystem.BusinessLayer.ResquestModels;
 using DiamondStoreSystem.DataLayer.Models;
 using DiamondStoreSystem.Repositories.IRepositories;
-using DiamondStoreSystem.Repositories.Repositories;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.Contracts;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace DiamondStoreSystem.BusinessLayer.Services
 {
@@ -85,6 +75,8 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                         currentUnitInStock = accessory.UnitInStock - quantity;
                         if (accessory.UnitInStock < 0)
                         {
+                            result = await Block(id);
+                            if(result.Status <= 0) return result;
                             return new DSSResult(Const.FAIL_UPDATE_CODE, "This accessory in stock is not enough.");
                         }
                         break;
@@ -270,5 +262,49 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                 return new DSSResult(Const.ERROR_EXCEPTION, ex.Message);
             }
         }
+        public IDSSResult GetByCategory(Dictionary<string, object> categories)
+        {
+            try
+            {
+                var allAccessories = _accessoryRepository.GetAll();
+                var accessories = allAccessories.Where(d => !d.Block).ToList();
+                foreach (var category in categories)
+                {
+                    if (int.TryParse(category.Value.ToString(), out int grade))
+                    {
+                        accessories = accessories.Where(d => int.TryParse(d.GetPropertyValue(category.Key).ToString(), out var value) &&
+                                                       value == grade).ToList();
+                    }
+
+                    else if (SupportingFeature.Instance.TryParseJsonArrayGrades(category.Value.ToString(), out List<double> range))
+                    {
+                        accessories = accessories.Where(d => double.TryParse(d.GetPropertyValue(category.Key).ToString(), out var value) && range[0] <= value && value <= range[1]
+                        ).ToList();
+                    }
+
+                    else if (SupportingFeature.Instance.TryParseJsonArrayDatetimes(category.Value.ToString(), out List<DateTime> datetimes))
+                    {
+                        accessories = accessories.Where(d => DateTime.TryParse(d.GetPropertyValue(category.Key).ToString(), out var value) && value.CompareTo(datetimes[0]) >= 0 && value.CompareTo(datetimes[1]) <= 0
+                        ).ToList();
+                    }
+
+                    else
+                    {
+                        accessories = accessories.Where(d => d.GetPropertyValue(category.Key).ToString().Trim().ToUpper()
+                                                                .Contains(category.Value.ToString().Trim().ToUpper())).ToList();
+                    }
+                }
+                if (accessories.Count() <= 0)
+                {
+                    return new DSSResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
+                }
+                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, accessories.Select(_mapper.Map<AccessoryResponseModel>));
+            }
+            catch (Exception ex)
+            {
+                return new DSSResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+        }
+
     }
 }

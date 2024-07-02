@@ -22,5 +22,6 @@ namespace DiamondStoreSystem.BusinessLayer.IServices
         Task<IDSSResult> Delete(string id);
         Task<IDSSResult> UpdateQuantity(string id, string change, int quantity);
         Task<IDSSResult> UnBlock(string id);
+        IDSSResult GetByCategory(Dictionary<string, object> categories);
     }
 }

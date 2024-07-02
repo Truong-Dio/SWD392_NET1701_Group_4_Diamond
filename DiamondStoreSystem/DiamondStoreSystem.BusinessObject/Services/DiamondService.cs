@@ -271,32 +271,7 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                 return new DSSResult(Const.ERROR_EXCEPTION, ex.Message);
             }
         }
-        private bool TryParseJsonArrayGrades(string jsonString, out List<double> values)
-        {
-            try
-            {
-                values = JsonConvert.DeserializeObject<List<double>>(jsonString);
-                return values != null;
-            }
-            catch
-            {
-                values = null;
-                return false;
-            }
-        }
-        private bool TryParseJsonArrayDatetimes(string jsonString, out List<DateTime> values)
-        {
-            try
-            {
-                values = JsonConvert.DeserializeObject<List<DateTime>>(jsonString);
-                return values != null;
-            }
-            catch
-            {
-                values = null;
-                return false;
-            }
-        }
+        
         public IDSSResult GetByCategory(Dictionary<string, object> categories)
         {
             try
@@ -310,12 +285,14 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                         diamonds = diamonds.Where(d => int.TryParse(d.GetPropertyValue(category.Key).ToString(), out var value) &&
                                                        value == grade).ToList();
                     }
-                    else if (TryParseJsonArrayGrades(category.Value.ToString(), out List<double> range))
+
+                    else if (SupportingFeature.Instance.TryParseJsonArrayGrades(category.Value.ToString(), out List<double> range))
                     {
                         diamonds = diamonds.Where(d => double.TryParse(d.GetPropertyValue(category.Key).ToString(), out var value) &&
                                                        range[0] <= value && value <= range[1]).ToList();
                     }
-                    else if (TryParseJsonArrayDatetimes(category.Value.ToString(), out List<DateTime> datetimes))
+
+                    else if (SupportingFeature.Instance.TryParseJsonArrayDatetimes(category.Value.ToString(), out List<DateTime> datetimes))
                     {
                         diamonds = diamonds.Where(d =>
                         {
@@ -328,6 +305,7 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                             return false;
                         }).ToList();
                     }
+
                     else
                     {
                         diamonds = diamonds.Where(d => d.GetPropertyValue(category.Key).ToString().Trim().ToUpper()

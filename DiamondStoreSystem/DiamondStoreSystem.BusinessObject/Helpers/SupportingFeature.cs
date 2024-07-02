@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -38,7 +39,32 @@ namespace DiamondStoreSystem.BusinessLayer.Helpers
                 }
             }
         }
-
+        public bool TryParseJsonArrayGrades(string jsonString, out List<double> values)
+        {
+            try
+            {
+                values = JsonConvert.DeserializeObject<List<double>>(jsonString);
+                return values != null;
+            }
+            catch
+            {
+                values = null;
+                return false;
+            }
+        }
+        public bool TryParseJsonArrayDatetimes(string jsonString, out List<DateTime> values)
+        {
+            try
+            {
+                values = JsonConvert.DeserializeObject<List<DateTime>>(jsonString);
+                return values != null;
+            }
+            catch
+            {
+                values = null;
+                return false;
+            }
+        }
         public Dictionary<int, string> GetEnumName<TEnum>()
         {
             Dictionary<int, string> enumValues = new Dictionary<int, string>();
