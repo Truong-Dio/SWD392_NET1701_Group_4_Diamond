@@ -18,6 +18,7 @@ namespace DiamondStoreSystem.API.AppStart
             services.AddScoped<IAccessoryService, AccessoryService>();
             services.AddScoped<IDiamondService, DiamondService>();
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IMailService, MailService>();
 
             services.AddScoped<IWarrantyRepository, WarrantyRepository>();
             services.AddScoped<IAccountRepository, AccountRepository>();

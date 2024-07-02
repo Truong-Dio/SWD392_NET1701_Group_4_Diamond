@@ -1,10 +1,13 @@
-﻿using Newtonsoft.Json;
+﻿using DiamondStoreSystem.BusinessLayer.ResquestModels;
+using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.WebRequestMethods;
 
 namespace DiamondStoreSystem.BusinessLayer.Helpers
 {
@@ -39,6 +42,18 @@ namespace DiamondStoreSystem.BusinessLayer.Helpers
                 }
             }
         }
+
+        public object GetValueFromSession(string key, HttpContext context)
+        {
+            context.Session.TryGetValue(key, out byte[] o);
+            return JsonConvert.DeserializeObject(Encoding.UTF8.GetString(o));
+        }
+
+        public void SetValueToSession(string key, object value, HttpContext context)
+        {
+            context.Session.Set(key, Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(value)));
+        }
+
         public bool TryParseJsonArrayGrades(string jsonString, out List<double> values)
         {
             try

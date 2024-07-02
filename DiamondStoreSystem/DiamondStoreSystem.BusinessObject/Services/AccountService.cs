@@ -55,9 +55,7 @@ namespace DiamondStoreSystem.BusinessLayer.Services
         {
             try
             {
-                var result = await GetById(model.AccountID);
-                if (result.Status > 0) return result; 
-                result = await GetByEmail(model.Email);
+                var result = await GetByEmail(model.Email);
                 if (result.Status > 0) return new DSSResult(Const.FAIL_CREATE_CODE, "This email is already used.");
                 model.Password = Util.HashPassword(model.Password);
                 _accountRepository.Insert(_mapper.Map<Account>(model));
@@ -200,7 +198,7 @@ namespace DiamondStoreSystem.BusinessLayer.Services
         {
             try
             {
-                var result = await GetById(id);
+                var result = await IsExist(id);
                 if (result.Status <= 0) return result;
 
                 model.Password = Util.HashPassword(model.Password);
@@ -243,12 +241,13 @@ namespace DiamondStoreSystem.BusinessLayer.Services
         {
             try
             {
-                var result = await _accountRepository.GetWhere(a => !a.Block);
-                if (result.Count() <= 0)
+                var result = _accountRepository.GetAll().ToList();
+                var account = result.FirstOrDefault(r => r.Email.Equals(email));
+                if (account == null)
                 {
                     return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
                 }
-                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, _mapper.Map<AccountResponseModel>(result.FirstOrDefault(r => r.Email == email)));
+                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, _mapper.Map<AccountResponseModel>(account));
             }
             catch (Exception ex)
             {

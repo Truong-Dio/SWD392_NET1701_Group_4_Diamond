@@ -465,7 +465,7 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                 vnpay.AddRequestData("vnp_Locale", _config["VnPay:Locate"]);
                 vnpay.AddRequestData("vnp_OrderInfo", "Pay Order:" + model.OrderId);
                 vnpay.AddRequestData("vnp_OrderType", "other"); // default value: other
-                vnpay.AddRequestData("vnp_ReturnUrl", _config["VnPay:PaymentBackReturnUrl1"]);
+                vnpay.AddRequestData("vnp_ReturnUrl", _config["VnPay:PaymentBackReturnUrl"]);
                 vnpay.AddRequestData("vnp_TxnRef", tick);
 
                 var paymentUrl = vnpay.CreateRequestUrl(_config["VnPay:BaseUrl"], _config["VnPay:HashSecret"]);

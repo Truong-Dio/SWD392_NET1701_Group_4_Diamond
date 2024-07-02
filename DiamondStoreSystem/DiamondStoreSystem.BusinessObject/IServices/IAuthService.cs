@@ -1,5 +1,6 @@
 ﻿using DiamondStoreSystem.BusinessLayer.Commons;
 using DiamondStoreSystem.BusinessLayer.ResquestModels;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace DiamondStoreSystem.BusinessLayer.IServices
     {
         Task<IDSSResult> Login(string email, string password);
         Task<IDSSResult> GetByEmail(string email);
-        Task<IDSSResult> Register(AccountRequestModel accountRequestModel);
+        Task<IDSSResult> Register(AccountRequestModel accountRequestModel, string confirmingCode, HttpContext context);
+        Task<IDSSResult> ConfirmEmail(string email, HttpContext context);
     }
 }

@@ -1,4 +1,6 @@
-﻿using DiamondStoreSystem.BusinessLayer.IServices;
+﻿using DiamondStoreSystem.BusinessLayer.Helpers;
+using DiamondStoreSystem.BusinessLayer.IServices;
+using DiamondStoreSystem.BusinessLayer.ResponseModels;
 using DiamondStoreSystem.BusinessLayer.ResquestModels;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
@@ -33,7 +35,7 @@ namespace DiamondStoreSystem.API.Controllers
             if (auth.Status > 0)
             {
                 var user = auth.Data as AuthRequestModel;
-                HttpContext.Session.Set("accId", Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(user)));
+                SupportingFeature.Instance.SetValueToSession("accId", user, HttpContext);
                 var tokenString = GenerateJSONWebToken(user);
                 response = Ok(tokenString);
             }
@@ -61,5 +63,11 @@ namespace DiamondStoreSystem.API.Controllers
                 throw;
             }
         }
+
+        [HttpPost("ConfirmEmail/{email}")]
+        public async Task<IActionResult> ConfirmEmail(string email) => Ok(await _authService.ConfirmEmail(email, HttpContext));
+
+        [HttpPost("Register/{otp}")]
+        public async Task<IActionResult> Register(string otp, [FromBody] AccountRequestModel account) => Ok(await _authService.Register(account, otp, HttpContext));
     }
 }
