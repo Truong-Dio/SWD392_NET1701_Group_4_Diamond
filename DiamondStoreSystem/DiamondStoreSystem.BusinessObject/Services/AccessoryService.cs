@@ -204,7 +204,7 @@ namespace DiamondStoreSystem.BusinessLayer.Services
         {
             try
             {
-                var result = await GetById(id);
+                var result = await IsExist(id);
                 if (result.Status <= 0) return result;
 
                 await _accessoryRepository.UpdateById(_mapper.Map<Accessory>(model), id);

@@ -1,4 +1,5 @@
 ﻿using DiamondStoreSystem.BusinessLayer.Commons;
+using DiamondStoreSystem.BusinessLayer.ResquestModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,6 @@ namespace DiamondStoreSystem.BusinessLayer.IServices
     {
         Task<IDSSResult> Login(string email, string password);
         Task<IDSSResult> GetByEmail(string email);
+        Task<IDSSResult> Register(AccountRequestModel accountRequestModel);
     }
 }

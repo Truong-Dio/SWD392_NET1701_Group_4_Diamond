@@ -16,11 +16,13 @@ namespace DiamondStoreSystem.BusinessLayer.Services
 {
     public class AuthService : IAuthService
     {
+        private readonly IAccountService _accountService;
         private readonly IMapper _mapper;
         private readonly IAccountRepository _accountRepository;
 
-        public AuthService(IMapper mapper, IAccountRepository accountRepository)
+        public AuthService(IMapper mapper, IAccountRepository accountRepository, IAccountService accountService)
         {
+            _accountService = accountService;
             _mapper = mapper;
             _accountRepository = accountRepository;
         }
@@ -60,6 +62,20 @@ namespace DiamondStoreSystem.BusinessLayer.Services
             {
                 return new DSSResult(Const.ERROR_EXCEPTION, ex.Message);
             }
+        }
+
+        public Task<IDSSResult> Register(AccountRequestModel accountRequestModel)
+        {
+            throw new Exception();
+            //try
+            //{
+            //    var result = _accountService.Create(accountRequestModel);
+            //}
+            //catch (Exception)
+            //{
+
+            //    throw;
+            //}
         }
     }
 }

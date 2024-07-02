@@ -1,5 +1,6 @@
 ﻿using DiamondStoreSystem.BusinessLayer.IServices;
 using DiamondStoreSystem.BusinessLayer.ResquestModels;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -10,6 +11,7 @@ using System.Text;
 
 namespace DiamondStoreSystem.API.Controllers
 {
+    [EnableCors("AllowAnyOrigins")]
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
