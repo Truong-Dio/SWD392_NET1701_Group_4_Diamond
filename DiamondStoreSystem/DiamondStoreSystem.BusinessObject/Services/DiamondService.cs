@@ -6,6 +6,10 @@ using DiamondStoreSystem.BusinessLayer.ResponseModels;
 using DiamondStoreSystem.BusinessLayer.ResquestModels;
 using DiamondStoreSystem.DataLayer.Models;
 using DiamondStoreSystem.Repositories.IRepositories;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System.Collections;
 
 namespace DiamondStoreSystem.BusinessLayer.Services
 {
@@ -233,12 +237,12 @@ namespace DiamondStoreSystem.BusinessLayer.Services
         {
             try
             {
-                var result = await _diamondRepository.GetWhere(a => !a.Block);
-                if (result.Count() <= 0)
+                var result = await GetById(id);
+                if (result.Status <= 0)
                 {
-                    return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
+                    return new DSSResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
                 }
-                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, _mapper.Map<CertificateResponseModel>(result.FirstOrDefault(a => a.DiamondID == id)));
+                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, _mapper.Map<CertificateResponseModel>(result.Data as DiamondResponseModel));
             }
             catch (Exception ex)
             {
@@ -258,9 +262,58 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                 List<DiamondResponseModel> diamonds = new List<DiamondResponseModel>();
                 result.ToList().ForEach(d =>
                 {
-                    if (d.GetPropertyValue(propertyName).Equals(keyword)) diamonds.Add(_mapper.Map<DiamondResponseModel>(d));
+                    if (d.GetPropertyValue(propertyName).ToString().Trim().ToUpper().Contains(keyword.ToString().Trim().ToUpper())) diamonds.Add(_mapper.Map<DiamondResponseModel>(d));
                 });
                 return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, diamonds);
+            }
+            catch (Exception ex)
+            {
+                return new DSSResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+        }
+        private bool TryParseJsonArray(string jsonString, out List<double> values)
+        {
+            try
+            {
+                values = JsonConvert.DeserializeObject<List<double>>(jsonString);
+                return values != null;
+            }
+            catch
+            {
+                values = null;
+                return false;
+            }
+        }
+
+        public IDSSResult GetByCategory(Dictionary<string, object> categories)
+        {
+            try
+            {
+                var allDiamonds = _diamondRepository.GetAll();
+                var diamonds = allDiamonds.Where(d => !d.Block).ToList();
+                foreach (var category in categories)
+                {
+                    if (int.TryParse(category.Value.ToString(), out int grade))
+                        {
+                        diamonds = diamonds.Where(d => int.TryParse(d.GetPropertyValue(category.Key).ToString(), out int value) &&
+                                                       value == grade).ToList();
+                    }
+                    else if (TryParseJsonArray(category.Value.ToString(), out List<double> range))
+                    {
+                        diamonds = diamonds.Where(d => double.TryParse(d.GetPropertyValue(category.Key).ToString(), out double value) &&
+                                                       range[0] <= value && value <= range[1]).ToList();
+                    }
+                    else
+                    {
+                        diamonds = diamonds.Where(d => d.GetPropertyValue(category.Key).ToString().Trim().ToUpper()
+                                                                .Contains(category.Value.ToString().Trim().ToUpper())).ToList();
+                    }
+                }
+                if (diamonds.Count() <= 0)
+                {
+                    return new DSSResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
+                }
+                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, diamonds.Select(_mapper.Map<DiamondResponseModel>));
             }
             catch (Exception ex)
             {

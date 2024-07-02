@@ -23,6 +23,9 @@ namespace DiamondStoreSystem.API.Controllers
         [HttpGet("Enum")]
         public IActionResult GetEnum() => Ok(_diamondService.GetEnum());
 
+        [HttpPost("SearchByCategory")]
+        public IActionResult GetByOrigin([FromBody] Dictionary<string, object> grades) => Ok(_diamondService.GetByCategory(grades));
+
         [HttpGet("GetCertificate/{id}")]
         public IActionResult GetCertificate(string id) => Ok(_diamondService.GetCertificate(id).Result);
 

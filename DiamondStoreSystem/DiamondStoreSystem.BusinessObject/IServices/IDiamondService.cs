@@ -23,5 +23,6 @@ namespace DiamondStoreSystem.BusinessLayer.IServices
         Task<IDSSResult> Delete(string id);
         Task<IDSSResult> UnBlock(string id);
         Task<IDSSResult> GetByProp(string keyword, string propertyName);
+        IDSSResult GetByCategory(Dictionary<string, object> categories);
     }
 }

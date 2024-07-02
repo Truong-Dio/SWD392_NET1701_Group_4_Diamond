@@ -21,5 +21,6 @@ namespace DiamondStoreSystem.BusinessLayer.ResponseModels
         public string PolishGrade { get; set; }
         public string SymmetryGrade { get; set; }
         public string FluoresceneGrade { get; set; }
+        public DateTime IssueDate { get; set; }
     }
 }
