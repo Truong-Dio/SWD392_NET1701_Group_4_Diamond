@@ -1,11 +1,15 @@
 ﻿using AutoMapper;
 using DiamondStoreSystem.BusinessLayer.Commons;
+using DiamondStoreSystem.BusinessLayer.Helpers;
 using DiamondStoreSystem.BusinessLayer.IServices;
 using DiamondStoreSystem.BusinessLayer.ResponseModels;
 using DiamondStoreSystem.BusinessLayer.ResquestModels;
 using DiamondStoreSystem.DataLayer.Models;
 using DiamondStoreSystem.Repositories.IRepositories;
+using DiamondStoreSystem.Repositories.Repositories;
+using Microsoft.Identity.Client;
 using System.Linq;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace DiamondStoreSystem.BusinessLayer.Services
 {
@@ -13,11 +17,15 @@ namespace DiamondStoreSystem.BusinessLayer.Services
     {
         private readonly IMapper _mapper;
         private readonly IProductRepository _productRepository;
+        private readonly IDiamondService _diamondService;
+        private readonly IAccessoryService _accessoryServie;
         private readonly IWarrantyService _warrantyService;
         private readonly ISubDiamondService _subDiamondService;
 
-        public ProductService(IMapper mapper, IProductRepository productRepository, ISubDiamondService subDiamondService, IWarrantyService warrantyService)
+        public ProductService(IMapper mapper, IProductRepository productRepository, ISubDiamondService subDiamondService, IWarrantyService warrantyService, IAccessoryService accessoryService, IDiamondService diamondService)
         {
+            _diamondService = diamondService;
+            _accessoryServie = accessoryService;
             _warrantyService = warrantyService;
             _subDiamondService = subDiamondService;
             _productRepository = productRepository;
@@ -115,8 +123,18 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                 {
                     return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
                 }
-                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, result.Select(_mapper.Map<ProductResponseModel>)
-                    .ToList());
+                List<ProductResponseModel> products = result.Select(_mapper.Map<ProductResponseModel>).ToList();
+                products.ToList().ForEach(prodct =>
+                {
+                    prodct.Accessory = _mapper.Map<AccessoryResponseModel>(AssignAccessory(prodct.AccessoryID).Result);
+
+                    prodct.MainDiamond = _mapper.Map<DiamondResponseModel>(AssignDiamond(prodct.MainDiamondID).Result);
+
+                    prodct.Warranty = _mapper.Map<WarrantyResponseModel>(AssignWarranty("W" + prodct.ProductID.Substring(1)).Result);
+
+                    prodct.SubDiamonds = AssignSubDIamond(prodct.ProductID).Select(_mapper.Map<DiamondResponseModel>).ToList();
+                });
+                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, products.ToList());
             }
             catch (Exception ex)
             {
@@ -124,20 +142,90 @@ namespace DiamondStoreSystem.BusinessLayer.Services
             }
         }
 
-        public IDSSResult GetAllWithAllField()
+        public async Task<IDSSResult> GetAllWithAllField()
         {
             try
             {
-                var result = _productRepository.GetAll();
-                if (result == null)
+                var products = _productRepository.GetAll();
+                if (products == null)
                 {
                     return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
                 }
-                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, result);
+
+                foreach (var product in products.ToList())
+                {   
+                    product.MainDiamond = AssignDiamond(product.MainDiamondID).Result;
+                    
+                    product.Accessory = AssignAccessory(product.AccessoryID).Result;
+
+                    product.SubDiamonds = AssignSubDIamond(product.ProductID);
+
+                    product.Warranty = AssignWarranty("W" + product.ProductID.Substring(1)).Result;
+                }
+
+                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, products.ToList());
             }
             catch (Exception ex)
             {
                 return new DSSResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+        }
+
+        private async Task<Accessory> AssignAccessory(string id)
+        {
+            try
+            {
+                var result = await _accessoryServie.IsExist(id);
+                return result.Status <= 0 ? null : result.Data as Accessory;
+            }
+            catch (Exception)
+            {
+                return null;
+                throw;
+            }
+        }
+
+        private async Task<Warranty> AssignWarranty(string id)
+        {
+            try
+            {
+                var result = await _warrantyService.IsExist(id);
+                return result.Status <= 0 ? null : result.Data as Warranty;
+            }
+            catch (Exception)
+            {
+                return null;
+                throw;
+            }
+        }
+
+        private async Task<Diamond> AssignDiamond(string id)
+        {
+            try
+            {
+                var result = await _diamondService.IsExist(id);
+                return result.Status <= 0 ? null : result.Data as Diamond;
+            }
+            catch (Exception)
+            {
+                return null;
+                throw;
+            }
+        }
+
+        private List<SubDiamond> AssignSubDIamond(string productID)
+        {
+            try
+            {
+                var result = _subDiamondService.GetAllWithAllField();
+                if (result.Status <= 0) return new List<SubDiamond>();
+                var subdiamonds = (result.Data as List<SubDiamond>).ToList();
+                return subdiamonds.Where(s => s.ProductID.Equals(productID)).ToList();
+            }
+            catch (Exception)
+            {
+                return new List<SubDiamond>();
+                throw;
             }
         }
 
@@ -145,12 +233,15 @@ namespace DiamondStoreSystem.BusinessLayer.Services
         {
             try
             {
-                var result = await _productRepository.GetWhere(a => !a.Block);
-                if (result.Count() <= 0)
-                {
-                    return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
-                }
-                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, _mapper.Map<ProductResponseModel>(result.FirstOrDefault(r => !r.Block)));
+                var result = await GetAll();
+                
+                if (result.Status <= 0) return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
+
+                var product = (result.Data as List<ProductResponseModel>).ToList().FirstOrDefault(p => p.ProductID.Equals(id));
+                
+                if (product == null) return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
+
+                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, product);
             }
             catch (Exception ex)
             {
@@ -162,21 +253,13 @@ namespace DiamondStoreSystem.BusinessLayer.Services
         {
             try
             {
-                var products = await _productRepository.GetWhere(p => p.ProductID == id);
-                if (products.Count() <= 0)
-                {
-                    return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
-                }
+                var result = await GetAllWithAllField();
 
-                var result = _subDiamondService.GetAllWithAllField();
-                if (result.Status <= 0) return result;
-                var subdiamonds = (result.Data as List<SubDiamond>);
-                var product = products.First();
-                product.SubDiamonds = subdiamonds.Where(s => s.ProductID == id).ToList();
+                if (result.Status <= 0) return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
 
-                result = await _warrantyService.IsExist("W" + id.Substring(1));
-                if (result.Status <= 0) return result;
-                product.Warranty = result.Data as Warranty;
+                var product = (result.Data as List<Product>).ToList().FirstOrDefault(p => p.ProductID.Equals(id));
+
+                if (product == null) return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
 
                 return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, product);
             }
@@ -215,25 +298,75 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                 if (result.Status <= 0) return result;
                 var product = result.Data as Product;
 
+                //var context = _productRepository.
+
+                //using (var transaction = await )
+                //{
+                #region Delete SubDiamond
                 if (product.SubDiamonds != null)
                 {
                     foreach (var subdiamond in product.SubDiamonds)
                     {
+                        result = await _diamondService.UnBlock(subdiamond.SubDiamondID);
+                        if (result.Status <= 0) return result;
+
                         result = await _subDiamondService.Delete(subdiamond.ProductID, nameof(subdiamond.ProductID));
                         if (result.Status <= 0) return result;
                     }
                 }
+                #endregion
 
+                #region Unblock Diamond
+                if (product.MainDiamondID != null)
+                {
+                    result = await _diamondService.UnBlock(product.MainDiamondID);
+                    if (result.Status <= 0) return result;
+                }
+                #endregion
+
+                #region Restock Accessory
+                if (product.AccessoryID != null)
+                {
+                    result = await _accessoryServie.UpdateQuantity(product.AccessoryID, "+", 1);
+                    if (result.Status <= 0) return result;
+                }
+                #endregion
+
+                #region Delete Warranty
                 result = await _warrantyService.Delete(product.ProductID, nameof(product.Warranty.ProductID));
                 if (result.Status <= 0) return result;
+                #endregion
 
-                _productRepository.Delete(product);
+                await _productRepository.HardDelete(product.ProductID);
 
                 var check = _productRepository.SaveChanges();
 
                 if (check <= 0) return new DSSResult(Const.FAIL_DELETE_CODE, Const.FAIL_DELETE_MSG);
 
                 return new DSSResult(Const.SUCCESS_DELETE_CODE, Const.SUCCESS_DELETE_MSG);
+                //}
+            }
+            catch (Exception ex)
+            {
+                return new DSSResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+        }
+
+        public async Task<IDSSResult> FilterList(Dictionary<string, object> filters)
+        {
+            try
+            {
+                var all = _productRepository.GetAll();
+                var products = all.Where(d => !d.Block).ToList();
+                if (filters != null && filters.Count > 0)
+                {
+                    products = SupportingFeature.Instance.FilterModel(products, filters);
+                    if (products.Count() <= 0)
+                    {
+                        return new DSSResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
+                    }
+                }
+                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, products.Select(_mapper.Map<ProductResponseModel>));
             }
             catch (Exception ex)
             {

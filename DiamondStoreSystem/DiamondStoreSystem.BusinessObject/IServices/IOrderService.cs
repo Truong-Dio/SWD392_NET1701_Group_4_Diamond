@@ -13,6 +13,7 @@ namespace DiamondStoreSystem.BusinessLayer.IServices
 {
     public interface IOrderService
     {
+        Task<IDSSResult> FilterSearch(Dictionary<string, object> searchParams);
         Task<IDSSResult> GetById(string id);
         Task<IDSSResult> GetAll();
         IDSSResult GetAllWithAllField();

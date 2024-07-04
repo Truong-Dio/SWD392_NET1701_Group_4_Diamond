@@ -23,8 +23,8 @@ namespace DiamondStoreSystem.BusinessLayer.Services
         {
             try
             {
-                var result = await GetById(model.AccessoryID);
-                if (result.Status > 0 ) return result;
+                var result = await IsExist(model.AccessoryID);
+                if (result.Status > 0) return result;
                 _accessoryRepository.Insert(_mapper.Map<Accessory>(model));
                 var check = _accessoryRepository.SaveChanges();
                 if (check <= 0) return new DSSResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
@@ -66,27 +66,40 @@ namespace DiamondStoreSystem.BusinessLayer.Services
 
                 var accessory = result.Data as Accessory;
                 int currentUnitInStock = accessory.UnitInStock;
+                string message = Const.SUCCESS_UPDATE_MSG;
+
                 switch (change)
                 {
-                    case "increase":
+                    case "+":
                         currentUnitInStock = accessory.UnitInStock + quantity;
                         break;
-                    case "decrease":
+
+                    case "-":
                         currentUnitInStock = accessory.UnitInStock - quantity;
-                        if (accessory.UnitInStock < 0)
-                        {
-                            result = await Block(id);
-                            if(result.Status <= 0) return result;
-                            return new DSSResult(Const.FAIL_UPDATE_CODE, "This accessory in stock is not enough.");
-                        }
                         break;
+
                     default:
                         return new DSSResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
                 }
 
-                var check = await UpdateProperty(accessory, nameof(accessory.UnitInStock), currentUnitInStock);
+                if (currentUnitInStock == 0)
+                {
+                    accessory.Block = true;
+                }
+                else if(currentUnitInStock < 0)
+                {
+                    return new DSSResult(Const.FAIL_UPDATE_CODE, "This accessory in stock is not enough.");
+                }
+                else
+                {
+                    accessory.Block = false;
+                }
 
-                if (check.Status <= 0) return new DSSResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
+                accessory.UnitInStock = currentUnitInStock;
+
+                result = await Update(id, _mapper.Map<AccessoryRequestModel>(accessory));
+                
+                if (result.Status <= 0) return new DSSResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
 
                 return new DSSResult(Const.SUCCESS_UPDATE_CODE, Const.SUCCESS_UPDATE_MSG, accessory);
             }
@@ -99,7 +112,7 @@ namespace DiamondStoreSystem.BusinessLayer.Services
         public async Task<IDSSResult> UpdateProperty(Accessory accessory, string propertyName, object value)
         {
             try
-            {   
+            {
                 var propertyInfo = accessory.GetType().GetProperty(propertyName);
                 if (propertyInfo == null)
                     return new DSSResult(Const.FAIL_READ_CODE, $"Property '{propertyName}' not found.");
@@ -143,7 +156,7 @@ namespace DiamondStoreSystem.BusinessLayer.Services
             try
             {
                 var result = _accessoryRepository.GetAll();
-                if (result.Count() <= 0 )
+                if (result.Count() <= 0)
                 {
                     return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
                 }
@@ -262,41 +275,19 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                 return new DSSResult(Const.ERROR_EXCEPTION, ex.Message);
             }
         }
-        public IDSSResult GetByCategory(Dictionary<string, object> categories)
+        public IDSSResult GetByCategory(Dictionary<string, object>? categories)
         {
             try
             {
                 var allAccessories = _accessoryRepository.GetAll();
                 var accessories = allAccessories.Where(d => !d.Block).ToList();
-                foreach (var category in categories)
+                if(categories!= null && categories.Count>0)
                 {
-                    if (int.TryParse(category.Value.ToString(), out int grade))
+                    accessories = SupportingFeature.Instance.FilterModel(accessories, categories);
+                    if (accessories.Count() <= 0)
                     {
-                        accessories = accessories.Where(d => int.TryParse(d.GetPropertyValue(category.Key).ToString(), out var value) &&
-                                                       value == grade).ToList();
+                        return new DSSResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
                     }
-
-                    else if (SupportingFeature.Instance.TryParseJsonArrayGrades(category.Value.ToString(), out List<double> range))
-                    {
-                        accessories = accessories.Where(d => double.TryParse(d.GetPropertyValue(category.Key).ToString(), out var value) && range[0] <= value && value <= range[1]
-                        ).ToList();
-                    }
-
-                    else if (SupportingFeature.Instance.TryParseJsonArrayDatetimes(category.Value.ToString(), out List<DateTime> datetimes))
-                    {
-                        accessories = accessories.Where(d => DateTime.TryParse(d.GetPropertyValue(category.Key).ToString(), out var value) && value.CompareTo(datetimes[0]) >= 0 && value.CompareTo(datetimes[1]) <= 0
-                        ).ToList();
-                    }
-
-                    else
-                    {
-                        accessories = accessories.Where(d => d.GetPropertyValue(category.Key).ToString().Trim().ToUpper()
-                                                                .Contains(category.Value.ToString().Trim().ToUpper())).ToList();
-                    }
-                }
-                if (accessories.Count() <= 0)
-                {
-                    return new DSSResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
                 }
                 return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, accessories.Select(_mapper.Map<AccessoryResponseModel>));
             }
@@ -305,6 +296,5 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                 return new DSSResult(Const.ERROR_EXCEPTION, ex.Message);
             }
         }
-
     }
 }

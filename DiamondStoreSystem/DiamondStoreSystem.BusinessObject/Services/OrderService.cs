@@ -391,7 +391,7 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                     // Update accessory quantity if accessory exists
                     if (!string.IsNullOrEmpty(productTemp.AccessoryID))
                     {
-                        result = _accessoryService.UpdateQuantity(productTemp.AccessoryID, "decrease", 1).Result;
+                        result = _accessoryService.UpdateQuantity(productTemp.AccessoryID, "-", 1).Result;
                         if (result.Status <= 0) return result;
                         var accessory = result.Data as Accessory;
                         productPrice += accessory.Price;
@@ -548,6 +548,26 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                 }
 
                 return new DSSResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG, vnpayResponse);
+            }
+            catch (Exception ex)
+            {
+                return new DSSResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+        }
+
+        public async Task<IDSSResult> FilterSearch(Dictionary<string, object> searchParams)
+        {
+            try
+            {
+                var result = await GetAll();
+                if (result.Status <= 0) return result;
+                var orders = result.Data as List<OrderResponseModel>;
+                if (searchParams!=null && searchParams.Count>0)
+                {
+                    orders = SupportingFeature.Instance.FilterModel(orders, searchParams);
+                    if (orders.Count == 0) return new DSSResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
+                }
+                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, orders);
             }
             catch (Exception ex)
             {

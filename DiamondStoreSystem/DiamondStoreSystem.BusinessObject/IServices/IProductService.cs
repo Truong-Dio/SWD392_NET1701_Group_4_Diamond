@@ -13,9 +13,10 @@ namespace DiamondStoreSystem.BusinessLayer.IServices
 {
     public interface IProductService
     {
+        Task<IDSSResult> FilterList(Dictionary<string, object> filters);
         Task<IDSSResult> GetById(string id);
         Task<IDSSResult> GetAll();
-        IDSSResult GetAllWithAllField();
+        Task<IDSSResult> GetAllWithAllField();
         Task<IDSSResult> IsExist(string id);
         Task<IDSSResult> Update(string id, ProductRequestModel model);
         Task<IDSSResult> Block(string id);

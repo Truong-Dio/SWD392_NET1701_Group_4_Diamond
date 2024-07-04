@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using DiamondStoreSystem.BusinessLayer.IServices;
 using DiamondStoreSystem.BusinessLayer.ResquestModels;
+using DiamondStoreSystem.BusinessLayer.Services;
 
 namespace ProductStoreSystem.API.Controllers
 {
@@ -18,8 +19,11 @@ namespace ProductStoreSystem.API.Controllers
             _productService = productService;
         }
 
+        [HttpPost("SearchByCategory")]
+        public IActionResult GetByOrigin([FromBody] Dictionary<string, object> grades) => Ok(_productService.FilterList(grades));
+
         [HttpGet("GetAllWithAllField")]
-        public IActionResult GetAllWithAllField() => Ok(_productService.GetAllWithAllField());
+        public IActionResult GetAllWithAllField() => Ok(_productService.GetAllWithAllField().Result);
 
         [HttpGet("GetAll")]
         public IActionResult GetAll() => Ok(_productService.GetAll().Result);

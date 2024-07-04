@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 using static System.Net.WebRequestMethods;
@@ -67,6 +68,41 @@ namespace DiamondStoreSystem.BusinessLayer.Helpers
                 return false;
             }
         }
+
+        public List<T> FilterModel<T>(List<T> list, Dictionary<string, object> categories)
+        {
+            if(categories.Count == 0) return list;
+            foreach (var category in categories)
+            {
+                if (!list.Any()) return list;
+                var accessory = list.FirstOrDefault();
+                var type = accessory.GetPropertyValue(category.Key).GetType();
+                switch (type.Name)
+                {
+                    case "Int":
+                        if (int.TryParse(category.Value.ToString(), out int grade))
+                            list = list.Where(d => int.TryParse(d.GetPropertyValue(category.Key).ToString(), out var value) &&
+                                                           value == grade).ToList();
+                        break;
+                    case "Double":
+                        if (TryParseJsonArrayGrades(category.Value.ToString(), out List<double> range))
+                            list = list.Where(d => double.TryParse(d.GetPropertyValue(category.Key).ToString(), out var value) && range[0] <= value && value <= range[1]).ToList();
+                        break;
+                    case "Datetime":
+                        if (TryParseJsonArrayDatetimes(category.Value.ToString(), out List<DateTime> datetimes))
+                        {
+                            list = list.Where(d => DateTime.TryParse(d.GetPropertyValue(category.Key).ToString(), out var value) && value.CompareTo(datetimes[0]) >= 0 && value.CompareTo(datetimes[1]) <= 0).ToList();
+                        }
+                        break;
+                    default:
+                        list = list.Where(d => d.GetPropertyValue(category.Key).ToString().Trim().ToUpper()
+                                                            .Contains(category.Value.ToString().Trim().ToUpper())).ToList();
+                        break;
+                }
+            }
+            return list;
+        } 
+
         public bool TryParseJsonArrayDatetimes(string jsonString, out List<DateTime> values)
         {
             try

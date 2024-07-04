@@ -54,7 +54,7 @@ namespace DiamondStoreSystem.BusinessLayer.Services
         {
             try
             {
-                var result = await GetById(model.WarrantyID);
+                var result = await IsExist(model.WarrantyID);
                 if (result.Status > 0) return result;
                 _warrantyRepository.Insert(_mapper.Map<Warranty>(model));
                 var check = _warrantyRepository.SaveChanges();
