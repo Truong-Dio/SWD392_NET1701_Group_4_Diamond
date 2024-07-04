@@ -57,8 +57,8 @@ namespace DiamondStoreSystem.BusinessLayer.Services
         {
             try
             {
-                var result = await IsExist(model.ProductID);
-                if (result.Status > 0) return result;
+                var result = await _productRepository.GetById(model.ProductID);
+                if (result != null) return new DSSResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
                 _productRepository.Insert(_mapper.Map<Product>(model));
                 var check = _productRepository.SaveChanges();
                 if (check <= 0) return new DSSResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
@@ -273,14 +273,14 @@ namespace DiamondStoreSystem.BusinessLayer.Services
         {
             try
             {
-                var result = await GetById(id);
-                if (result.Status <= 0) return result;
-
+                var result = await _productRepository.GetById(id);
+                //if (result <= 0) return result;
+                if (result == null) return new DSSResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
                 await _productRepository.UpdateById(_mapper.Map<Product>(model), id);
 
-                var check = _productRepository.SaveChanges();
+                //var check = _productRepository.SaveChanges();
 
-                if (check <= 0) return new DSSResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
+                //if (check <= 0) return new DSSResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
 
                 return new DSSResult(Const.SUCCESS_UPDATE_CODE, Const.SUCCESS_UPDATE_MSG);
             }

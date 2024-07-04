@@ -6,15 +6,6 @@ using DiamondStoreSystem.BusinessLayer.ResponseModels;
 using DiamondStoreSystem.BusinessLayer.ResquestModels;
 using DiamondStoreSystem.DataLayer.Models;
 using DiamondStoreSystem.Repositories.IRepositories;
-using DiamondStoreSystem.Repositories.Repositories;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace DiamondStoreSystem.BusinessLayer.Services
 {
@@ -56,6 +47,7 @@ namespace DiamondStoreSystem.BusinessLayer.Services
             {
                 var result = await IsExist(model.WarrantyID);
                 if (result.Status > 0) return result;
+
                 _warrantyRepository.Insert(_mapper.Map<Warranty>(model));
                 var check = _warrantyRepository.SaveChanges();
                 if (check <= 0) return new DSSResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);

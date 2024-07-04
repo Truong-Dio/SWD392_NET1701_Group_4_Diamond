@@ -443,6 +443,18 @@ namespace DiamondStoreSystem.Repositories.Repositories
             }
         }
 
+        public async Task<int> SaveChangesAsync()
+        {
+            try
+            {
+                return await BaseDAO<TEntity>.Instance.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
         public async Task UpdateById(TEntity entity, string id)
         {
             try

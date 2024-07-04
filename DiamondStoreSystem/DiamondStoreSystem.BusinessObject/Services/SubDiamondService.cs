@@ -42,10 +42,10 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                 var check = _subDiamondRepository.SaveChanges();
                 if (check <= 0) return new DSSResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
 
-               result = await _diamondService.Block(model.SubDiamondID);
+                result = await _diamondService.Block(model.SubDiamondID);
                 if (result.Status <= 0) return new DSSResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
 
-                return new DSSResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG, result.Data as Diamond);
+                return new DSSResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG, result.Data);
             }
             catch (Exception ex)
             {

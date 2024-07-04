@@ -172,6 +172,8 @@ namespace DiamondStoreSystem.DAO.DAO
 
         public int SaveChanges() => _context.SaveChanges();
 
+        public async Task<int> SaveChangesAsync() => await _context.SaveChangesAsync();
+
         public async Task UpdateById(TEntity entity, string id)
         {
             var existedEntity = await GetById(id);

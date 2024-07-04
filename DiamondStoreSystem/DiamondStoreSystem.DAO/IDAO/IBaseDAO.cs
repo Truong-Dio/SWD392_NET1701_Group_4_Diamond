@@ -42,6 +42,7 @@ namespace DiamondStoreSystem.DAO.IDAO
         public TEntity FistOrDefault(Func<TEntity, bool> predicate);
         public Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate);
         public int SaveChanges();
+        public Task<int> SaveChangesAsync();
         public bool IsMin(Func<TEntity, bool> predicate);
         public bool IsMax(Func<TEntity, bool> predicate);
         public TEntity GetMin();
