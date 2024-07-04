@@ -12,7 +12,6 @@ namespace DiamondStoreSystem.BusinessLayer.IServices
     public interface IAuthService
     {
         Task<IDSSResult> Login(string email, string password);
-        Task<IDSSResult> GetByEmail(string email);
         Task<IDSSResult> Register(AccountRequestModel accountRequestModel, string confirmingCode, HttpContext context);
         Task<IDSSResult> ConfirmEmail(string email, HttpContext context);
     }

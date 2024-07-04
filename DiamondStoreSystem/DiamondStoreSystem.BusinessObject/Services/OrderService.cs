@@ -189,6 +189,19 @@ namespace DiamondStoreSystem.BusinessLayer.Services
             }
         }
 
+        private async Task<AccountResponseModel> AssignToOrderResponse(string accID)
+        {
+            var result = await _accountService.GetById(accID);
+            var acc = result.Data as AccountResponseModel;
+            return acc;
+        }
+
+        private async Task<Account> AssignToOrder(string accID)
+        {
+            var result = await _accountService.IsExist(accID);
+            var acc = result.Data as Account;
+            return acc;
+        }
 
         public async Task<IDSSResult> GetAll()
         {
@@ -199,8 +212,13 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                 {
                     return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
                 }
-                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, result.Select(_mapper.Map<OrderResponseModel>)
-                    .ToList());
+                var orders = result.Select(_mapper.Map<OrderResponseModel>).ToList();
+                orders.ForEach(async r =>
+            {
+                r.Customer = await AssignToOrderResponse(r.CustomerID);
+                r.Employee = await AssignToOrderResponse(r.EmployeeAssignID);
+            });
+                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, orders);
             }
             catch (Exception ex)
             {
@@ -217,7 +235,13 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                 {
                     return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
                 }
-                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, result);
+                var orders = result.ToList();
+                orders.ForEach(async r =>
+                {
+                    r.Customer = await AssignToOrder(r.CustomerID);
+                    r.EmployeeAccount = await AssignToOrder(r.EmployeeAssignID);
+                });
+                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, orders);
             }
             catch (Exception ex)
             {
@@ -229,12 +253,13 @@ namespace DiamondStoreSystem.BusinessLayer.Services
         {
             try
             {
-                var result = await _orderRepository.GetWhere(a => !a.Block && a.OrderID == id);
-                if (result.Count() <= 0)
+                var result = await GetAll();
+                if (result.Status <= 0)
                 {
-                    return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
+                    return result;
                 }
-                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, _mapper.Map<OrderResponseModel>(result.FirstOrDefault(r => true)));
+                var r = (result.Data as List<OrderResponseModel>).FirstOrDefault(o => o.OrderID.Equals(id));
+                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, r);
             }
             catch (Exception ex)
             {
@@ -246,12 +271,13 @@ namespace DiamondStoreSystem.BusinessLayer.Services
         {
             try
             {
-                var result = await _orderRepository.GetById(id);
-                if (result == null)
+                var result = GetAllWithAllField();
+                if (result.Status <= 0)
                 {
-                    return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
+                    return result;
                 }
-                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, result);
+                var r = (result.Data as List<Order>).FirstOrDefault(o => o.OrderID.Equals(id));
+                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, r);
             }
             catch (Exception ex)
             {
@@ -317,7 +343,7 @@ namespace DiamondStoreSystem.BusinessLayer.Services
             var result = CreateCart(model, context);
             if (result.Status <= 0)
             {
-                return "Payment failed "+result.Message;
+                return "Payment failed " + result.Message;
             }
             return result.Data as string;
         }
@@ -379,7 +405,7 @@ namespace DiamondStoreSystem.BusinessLayer.Services
 
                     // Create product record
                     string accessoryID = productTemp.AccessoryID;
-                    if (productTemp.AccessoryID.IsNullOrEmpty()) accessoryID = "0000"; 
+                    if (productTemp.AccessoryID.IsNullOrEmpty()) accessoryID = "0000";
                     string productID = "P" + productTemp.MainDiamondID.Substring(1) + accessoryID.Substring(1);
                     var productRequest = new ProductRequestModel
                     {

@@ -6,15 +6,6 @@ using DiamondStoreSystem.BusinessLayer.ResponseModels;
 using DiamondStoreSystem.BusinessLayer.ResquestModels;
 using DiamondStoreSystem.DataLayer.Models;
 using DiamondStoreSystem.Repositories.IRepositories;
-using DiamondStoreSystem.Repositories.Repositories;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace DiamondStoreSystem.BusinessLayer.Services
 {
@@ -248,6 +239,29 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                     return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
                 }
                 return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, _mapper.Map<AccountResponseModel>(account));
+            }
+            catch (Exception ex)
+            {
+                return new DSSResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+        }
+
+        public async Task<IDSSResult> CheckLogin(string email, string password)
+        {
+            try
+            {
+                var result = _accountRepository.GetFirstOrDefault(x => x.Email == email && x.Password == Util.HashPassword(password) && !x.Block);
+
+                if (result == null)
+                {
+                    return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
+                }
+                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, new AuthRequestModel
+                {
+                    AccountID = result.AccountID,
+                    Role = (Role?)result.Role,
+                    Email = email
+                });
             }
             catch (Exception ex)
             {
