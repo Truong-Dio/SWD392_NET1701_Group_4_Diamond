@@ -213,11 +213,11 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                     return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
                 }
                 var orders = result.Select(_mapper.Map<OrderResponseModel>).ToList();
-                orders.ForEach(async r =>
-            {
-                r.Customer = await AssignToOrderResponse(r.CustomerID);
-                r.Employee = await AssignToOrderResponse(r.EmployeeAssignID);
-            });
+                foreach (var order in orders)
+                {
+                    order.Customer = await AssignToOrderResponse(order.CustomerID);
+                    order.Employee = await AssignToOrderResponse(order.EmployeeAssignID);
+                }
                 return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, orders);
             }
             catch (Exception ex)
