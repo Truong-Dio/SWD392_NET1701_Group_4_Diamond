@@ -240,6 +240,8 @@ namespace DiamondStoreSystem.BusinessLayer.Services
 
                 if (warranty == null) return new DSSResult(Const.SUCCESS_DELETE_CODE, Const.SUCCESS_DELETE_MSG);
 
+                warranty.Product = null;
+
                 _warrantyRepository.Delete(warranty);
 
                 var check = _warrantyRepository.SaveChanges();

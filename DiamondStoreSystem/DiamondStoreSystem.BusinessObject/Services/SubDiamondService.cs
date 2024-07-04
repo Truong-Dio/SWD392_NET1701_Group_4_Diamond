@@ -9,6 +9,7 @@ using DiamondStoreSystem.Repositories.IRepositories;
 using DiamondStoreSystem.Repositories.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -96,6 +97,11 @@ namespace DiamondStoreSystem.BusinessLayer.Services
             }
         }
 
+        private async Task<Diamond> AssignDiamond(string id)
+        {
+            var result = await _diamondService.IsExist(id);
+            return result.Data as Diamond;
+        }
 
         public async Task<IDSSResult> GetAll()
         {
@@ -106,8 +112,9 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                 {
                     return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
                 }
-                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, result.Select(_mapper.Map<SubDiamondResponseModel>)
-                    .ToList());
+                var r = result.Select(_mapper.Map < SubDiamondResponseModel > ).ToList();
+                r.ForEach(async d => d.SubDiamond = _mapper.Map<DiamondResponseModel>(await AssignDiamond(d.SubDiamondID)));
+                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, r);
             }
             catch (Exception ex)
             {
@@ -124,7 +131,9 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                 {
                     return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
                 }
-                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, result.ToList());
+                var r = result.ToList();
+                r.ForEach(async d => d.Diamond = await AssignDiamond(d.SubDiamondID));
+                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, r);
             }
             catch (Exception ex)
             {
@@ -141,7 +150,9 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                 {
                     return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
                 }
-                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, _mapper.Map<SubDiamondResponseModel>(result.FirstOrDefault(r => true)));
+                var r = _mapper.Map<SubDiamondResponseModel>(result.FirstOrDefault(r => true));
+                r.SubDiamond = _mapper.Map<DiamondResponseModel>(await AssignDiamond(id));
+                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, r);
             }
             catch (Exception ex)
             {
@@ -158,6 +169,7 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                 {
                     return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
                 }
+                result.Diamond = await AssignDiamond(id);
                 return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, result);
             }
             catch (Exception ex)
@@ -207,6 +219,8 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                 var subDiamond = result.FirstOrDefault(s => s.GetPropertyValue(propertyName).Equals(id));
 
                 if (subDiamond == null) return new DSSResult(Const.SUCCESS_DELETE_CODE, Const.SUCCESS_DELETE_MSG);
+
+                subDiamond.Diamond = null;
 
                 _subDiamondRepository.Delete(subDiamond);
 

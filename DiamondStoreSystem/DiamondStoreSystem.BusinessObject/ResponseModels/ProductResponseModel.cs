@@ -18,6 +18,6 @@ namespace DiamondStoreSystem.BusinessLayer.ResponseModels
         public AccessoryResponseModel? Accessory { get; set; }
         public DiamondResponseModel MainDiamond { get; set; }
         public WarrantyResponseModel? Warranty { get; set; }
-        public ICollection<DiamondResponseModel> SubDiamonds { get; set; }
+        public ICollection<SubDiamondResponseModel> SubDiamonds { get; set; }
     }
 }

@@ -132,7 +132,7 @@ namespace DiamondStoreSystem.BusinessLayer.Services
 
                     prodct.Warranty = _mapper.Map<WarrantyResponseModel>(AssignWarranty("W" + prodct.ProductID.Substring(1)).Result);
 
-                    prodct.SubDiamonds = AssignSubDIamond(prodct.ProductID).Select(_mapper.Map<DiamondResponseModel>).ToList();
+                    prodct.SubDiamonds = AssignSubDIamond(prodct.ProductID).Select(_mapper.Map<SubDiamondResponseModel>).ToList();
                 });
                 return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, products.ToList());
             }
@@ -153,9 +153,9 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                 }
 
                 foreach (var product in products.ToList())
-                {   
+                {
                     product.MainDiamond = AssignDiamond(product.MainDiamondID).Result;
-                    
+
                     product.Accessory = AssignAccessory(product.AccessoryID).Result;
 
                     product.SubDiamonds = AssignSubDIamond(product.ProductID);
@@ -234,11 +234,11 @@ namespace DiamondStoreSystem.BusinessLayer.Services
             try
             {
                 var result = await GetAll();
-                
+
                 if (result.Status <= 0) return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
 
                 var product = (result.Data as List<ProductResponseModel>).ToList().FirstOrDefault(p => p.ProductID.Equals(id));
-                
+
                 if (product == null) return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
 
                 return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, product);
@@ -294,57 +294,89 @@ namespace DiamondStoreSystem.BusinessLayer.Services
         {
             try
             {
-                var result = await IsExist(id);
-                if (result.Status <= 0) return result;
-                var product = result.Data as Product;
+                var product = await _productRepository.GetById(id);
+                IDSSResult result = new DSSResult();
+                if (product == null) return new DSSResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
+                var context = _productRepository.GetDBContext();
 
-                //var context = _productRepository.
-
-                //using (var transaction = await )
-                //{
-                #region Delete SubDiamond
-                if (product.SubDiamonds != null)
+                using (var transaction = await context.Database.BeginTransactionAsync())
                 {
-                    foreach (var subdiamond in product.SubDiamonds)
+                    try
                     {
-                        result = await _diamondService.UnBlock(subdiamond.SubDiamondID);
-                        if (result.Status <= 0) return result;
+                        {
+                            #region Delete SubDiamond
+                            result = _subDiamondService.GetAllWithAllField();
+                            var subdiamonds = result.Data as List<SubDiamond>;
+                            foreach (var subdiamond in subdiamonds)
+                            {
+                                result = await _diamondService.UnBlock(subdiamond.SubDiamondID);
+                                if (result.Status <= 0)
+                                {
+                                    await transaction.RollbackAsync();
+                                    return result;
+                                }
 
-                        result = await _subDiamondService.Delete(subdiamond.ProductID, nameof(subdiamond.ProductID));
-                        if (result.Status <= 0) return result;
+                                result = await _subDiamondService.Delete(subdiamond.ProductID, nameof(subdiamond.ProductID));
+                                if (result.Status <= 0)
+                                {
+                                    await transaction.RollbackAsync();
+                                    return result;
+                                }
+                            }
+                            #endregion
+
+                            #region Unblock Diamond
+                            if (product.MainDiamondID != null)
+                            {
+                                result = await _diamondService.UnBlock(product.MainDiamondID);
+                                if (result.Status <= 0)
+                                {
+                                    await transaction.RollbackAsync();
+                                    return result;
+                                }
+                            }
+                            #endregion
+
+                            #region Restock Accessory
+                            if (product.AccessoryID != null)
+                            {
+                                result = await _accessoryServie.UpdateQuantity(product.AccessoryID, "+", 1);
+                                if (result.Status <= 0)
+                                {
+                                    await transaction.RollbackAsync();
+                                    return result;
+                                }
+                            }
+                            #endregion
+
+                            #region Delete Warranty
+                            result = await _warrantyService.Delete(product.ProductID, nameof(product.Warranty.ProductID));
+                            if (result.Status <= 0)
+                            {
+                                await transaction.RollbackAsync();
+                                return result;
+                            }
+                            #endregion
+
+                            _productRepository.Delete(product);
+
+                            var check = _productRepository.SaveChanges();
+
+                            if (check <= 0)
+                            {
+                                await transaction.RollbackAsync();
+                                return new DSSResult(Const.FAIL_DELETE_CODE, Const.FAIL_DELETE_MSG);
+                            }
+                            await transaction.CommitAsync();
+                            return new DSSResult(Const.SUCCESS_DELETE_CODE, Const.SUCCESS_DELETE_MSG);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        await transaction.RollbackAsync();
+                        return new DSSResult(Const.ERROR_EXCEPTION, ex.Message);
                     }
                 }
-                #endregion
-
-                #region Unblock Diamond
-                if (product.MainDiamondID != null)
-                {
-                    result = await _diamondService.UnBlock(product.MainDiamondID);
-                    if (result.Status <= 0) return result;
-                }
-                #endregion
-
-                #region Restock Accessory
-                if (product.AccessoryID != null)
-                {
-                    result = await _accessoryServie.UpdateQuantity(product.AccessoryID, "+", 1);
-                    if (result.Status <= 0) return result;
-                }
-                #endregion
-
-                #region Delete Warranty
-                result = await _warrantyService.Delete(product.ProductID, nameof(product.Warranty.ProductID));
-                if (result.Status <= 0) return result;
-                #endregion
-
-                await _productRepository.HardDelete(product.ProductID);
-
-                var check = _productRepository.SaveChanges();
-
-                if (check <= 0) return new DSSResult(Const.FAIL_DELETE_CODE, Const.FAIL_DELETE_MSG);
-
-                return new DSSResult(Const.SUCCESS_DELETE_CODE, Const.SUCCESS_DELETE_MSG);
-                //}
             }
             catch (Exception ex)
             {

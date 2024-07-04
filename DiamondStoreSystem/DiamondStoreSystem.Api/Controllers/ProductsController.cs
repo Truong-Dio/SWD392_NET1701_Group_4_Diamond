@@ -23,7 +23,7 @@ namespace ProductStoreSystem.API.Controllers
         public IActionResult GetByOrigin([FromBody] Dictionary<string, object> grades) => Ok(_productService.FilterList(grades));
 
         [HttpGet("GetAllWithAllField")]
-        public IActionResult GetAllWithAllField() => Ok(_productService.GetAllWithAllField().Result);
+        public async Task<IActionResult> GetAllWithAllField() => Ok(await _productService.GetAllWithAllField());
 
         [HttpGet("GetAll")]
         public IActionResult GetAll() => Ok(_productService.GetAll().Result);

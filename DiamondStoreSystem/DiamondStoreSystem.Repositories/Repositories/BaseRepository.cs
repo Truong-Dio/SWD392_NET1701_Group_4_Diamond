@@ -490,6 +490,11 @@ namespace DiamondStoreSystem.Repositories.Repositories
                 throw new Exception(ex.Message);
             }
         }
+
+        public DiamondStoreSystemDBContext GetDBContext()
+        {
+            return BaseDAO<TEntity>.Instance.GetDBContext();
+        }
     }
 
 }

@@ -40,6 +40,8 @@ namespace DiamondStoreSystem.DAO.DAO
             Table = context.Set<TEntity>();
         }
 
+        public DiamondStoreSystemDBContext GetDBContext() => _context;
+
         public virtual bool Any(Func<TEntity, bool> predicate)
         {
             return Table.Any(predicate);

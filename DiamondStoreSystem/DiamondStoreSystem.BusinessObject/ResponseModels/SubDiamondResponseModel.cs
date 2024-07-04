@@ -12,7 +12,7 @@ namespace DiamondStoreSystem.BusinessLayer.ResponseModels
     {
         public string SubDiamondID { get; set; }
         public string ProductID { get; set; }
-        public SubDiamondResponseModel SubDiamond { get; set; }
+        public DiamondResponseModel SubDiamond { get; set; }
         public ProductResponseModel Product {  get; set; }
     }
 }
