@@ -271,45 +271,19 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                 return new DSSResult(Const.ERROR_EXCEPTION, ex.Message);
             }
         }
-        
+
         public IDSSResult GetByCategory(Dictionary<string, object> categories)
         {
             try
             {
                 var allDiamonds = _diamondRepository.GetAll();
                 var diamonds = allDiamonds.Where(d => !d.Block).ToList();
-                foreach (var category in categories)
+                if (categories != null && categories.Count > 0)
                 {
-                    if (int.TryParse(category.Value.ToString(), out int grade))
-                        {
-                        diamonds = diamonds.Where(d => int.TryParse(d.GetPropertyValue(category.Key).ToString(), out var value) &&
-                                                       value == grade).ToList();
-                    }
-
-                    else if (SupportingFeature.Instance.TryParseJsonArrayGrades(category.Value.ToString(), out List<double> range))
+                    diamonds = SupportingFeature.Instance.FilterModel(diamonds, categories);
+                    if (diamonds.Count <= 0)
                     {
-                        diamonds = diamonds.Where(d => double.TryParse(d.GetPropertyValue(category.Key).ToString(), out var value) &&
-                                                       range[0] <= value && value <= range[1]).ToList();
-                    }
-
-                    else if (SupportingFeature.Instance.TryParseJsonArrayDatetimes(category.Value.ToString(), out List<DateTime> datetimes))
-                    {
-                        diamonds = diamonds.Where(d =>
-                        {
-                            if(DateTime.TryParse(d.GetPropertyValue(category.Key).ToString(), out var value))
-                            {
-                                var before = value.CompareTo(datetimes[0]);
-                                var after = value.CompareTo(datetimes[1]);
-                                return before >= 0 && after <= 0;
-                            }
-                            return false;
-                        }).ToList();
-                    }
-
-                    else
-                    {
-                        diamonds = diamonds.Where(d => d.GetPropertyValue(category.Key).ToString().Trim().ToUpper()
-                                                                .Contains(category.Value.ToString().Trim().ToUpper())).ToList();
+                        return new DSSResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
                     }
                 }
                 if (diamonds.Count() <= 0)
