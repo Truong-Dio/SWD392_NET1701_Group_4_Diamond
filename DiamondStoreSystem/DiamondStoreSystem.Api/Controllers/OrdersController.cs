@@ -6,6 +6,7 @@ using DiamondStoreSystem.BusinessLayer.ResquestModels;
 using DiamondStoreSystem.BusinessLayer.Services;
 using DiamondStoreSystem.BusinessLayer.ResponseModels;
 using DiamondStoreSystem.DataLayer.Models;
+using DiamondStoreSystem.BusinessLayer.Commons;
 
 namespace OrderStoreSystem.API.Controllers
 {
@@ -80,20 +81,15 @@ namespace OrderStoreSystem.API.Controllers
         {
             var queryCollection = HttpContext.Request.Query;
 
-            var result = _orderService.PaymentExecute(queryCollection);
+            var result = _orderService.PaymentExecute(queryCollection).Result;
 
-            if (result.Status <= 0) return BadRequest(result);
-            
-            var vnpResponse = result.Data as VnPaymentResponse;
-            
-            string orderID = vnpResponse.OrderId;
-            
-            _orderService.UpdateStatus(orderID, DiamondStoreSystem.BusinessLayer.Commons.OrderStatus.Paid);
-            
             if(result.Status <= 0) return BadRequest(result);
             
             return Ok(result);
         }
+
+        [HttpPost("UpdateStatus/{orderID}")]
+        public IActionResult UpdateStatus(string orderID) => Ok(_orderService.UpdateStatus(orderID, OrderStatus.Paid).Result);
 
     }
 }

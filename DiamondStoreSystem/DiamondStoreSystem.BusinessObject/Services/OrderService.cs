@@ -157,14 +157,17 @@ namespace DiamondStoreSystem.BusinessLayer.Services
         {
             try
             {
-                var result = await IsExist(id);
-                if (result.Status <= 0) return result;
+                var order = _orderRepository.GetById(id).Result;
 
-                var order = result.Data as Order;
+                if (order == null) return new DSSResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
 
-                var check = await UpdateProperty(order, nameof(order.OrderStatus), status);
+                order.OrderStatus = (int)status;
 
-                if (check.Status <= 0) return new DSSResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
+                _orderRepository.Update(order);
+
+                int check = _orderRepository.SaveChanges();
+
+                if (check <= 0) return new DSSResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
 
                 return new DSSResult(Const.SUCCESS_UPDATE_CODE, Const.SUCCESS_UPDATE_MSG);
             }
@@ -690,7 +693,7 @@ namespace DiamondStoreSystem.BusinessLayer.Services
             }
         }
 
-        public IDSSResult PaymentExecute(IQueryCollection collections)
+        public async Task<IDSSResult> PaymentExecute(IQueryCollection collections)
         {
             try
             {
@@ -709,10 +712,10 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                 var vnp_responseCode = vnpay.GetResponseData("vnp_ResponseCode");
                 var vnp_OrderInfo = vnpay.GetResponseData("vnp_OrderInfo");
                 bool checkSignature = vnpay.ValidateSignature(vnp_SecureHash, _config["VnPay:HashSecret"]);
-                //if (!checkSignature)
-                //{
-                //    return new DSSResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
-                //}
+                if (!checkSignature)
+                {
+                    return new DSSResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
+                }
 
                 var orderId = vnp_OrderInfo.Substring(vnp_OrderInfo.IndexOf(":") + 1);
                 var vnpayResponse = new VnPaymentResponse
@@ -727,16 +730,19 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                     VnPayResponseCode = vnp_responseCode,
                 };
 
-                _vnPaymentRepository.Insert(vnpayResponse);
-                var check = _vnPaymentRepository.SaveChanges();
+                await _vnPaymentRepository.InsertAsync(vnpayResponse);
+                var check = await _vnPaymentRepository.SaveChangesAsync();
                 if (check <= 0)
                 {
                     return new DSSResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
                 }
-                var result = UpdateStatus(orderId, OrderStatus.Paid).Result;
-                if (result.Status <= 0)
+                if (vnp_responseCode.Equals("00"))
                 {
-                    return result;
+                    var result = UpdateStatus(orderId, OrderStatus.Paid).Result;
+                    if (result.Status <= 0)
+                    {
+                        return result;
+                    }
                 }
                 return new DSSResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG, vnpayResponse);
             }

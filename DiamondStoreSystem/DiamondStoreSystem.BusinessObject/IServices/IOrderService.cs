@@ -27,6 +27,6 @@ namespace DiamondStoreSystem.BusinessLayer.IServices
         Task<IDSSResult> UpdateStatus(string id, OrderStatus status);
         Task<IDSSResult> UnBlock(string id);
         string CreatePaymentUrl(HttpContext context, VnPaymentRequestModel model);
-        IDSSResult PaymentExecute(IQueryCollection collections);
+        Task<IDSSResult> PaymentExecute(IQueryCollection collections);
     }
 }
