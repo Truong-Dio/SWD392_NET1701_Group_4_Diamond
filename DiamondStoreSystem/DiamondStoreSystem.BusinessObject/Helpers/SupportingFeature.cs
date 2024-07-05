@@ -44,6 +44,23 @@ namespace DiamondStoreSystem.BusinessLayer.Helpers
             }
         }
 
+        public void CopyValues<T>(T target, T source)
+        {
+            if (target == null || source == null)
+            {
+                throw new ArgumentNullException("Target or Source cannot be null");
+            }
+
+            foreach (PropertyInfo property in typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance))
+            {
+                if (property.CanWrite)
+                {
+                    var value = property.GetValue(source);
+                    property.SetValue(target, value);
+                }
+            }
+        }
+
         public object GetValueFromSession(string key, HttpContext context)
         {
             context.Session.TryGetValue(key, out byte[] o);

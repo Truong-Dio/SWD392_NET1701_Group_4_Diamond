@@ -250,16 +250,17 @@ namespace DiamondStoreSystem.BusinessLayer.Services
         {
             try
             {
-                var result = _accountRepository.GetFirstOrDefault(x => x.Email == email && x.Password == Util.HashPassword(password) && !x.Block);
+                var result = await _accountRepository.GetWhere(x => x.Email == email && x.Password == Util.HashPassword(password) && !x.Block);
 
-                if (result == null)
+                if (result.Count() == 0)
                 {
                     return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
                 }
+                var account = result.FirstOrDefault();
                 return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, new AuthRequestModel
                 {
-                    AccountID = result.AccountID,
-                    Role = (Role?)result.Role,
+                    AccountID = account.AccountID,
+                    Role = (Role?)account.Role,
                     Email = email
                 });
             }

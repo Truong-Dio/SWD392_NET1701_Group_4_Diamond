@@ -217,10 +217,17 @@ namespace DiamondStoreSystem.BusinessLayer.Services
         {
             try
             {
-                var result = await IsExist(id);
-                if (result.Status <= 0) return result;
+                if (!id.Equals(model))
+                {
+                    return new DSSResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
+                }
+                var result = await _accessoryRepository.GetById(id);
 
-                await _accessoryRepository.UpdateById(_mapper.Map<Accessory>(model), id);
+                if (result == null) return new DSSResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
+
+                SupportingFeature.Instance.CopyValues(result, _mapper.Map<Accessory>(model));
+
+                _accessoryRepository.Update(result);
 
                 var check = _accessoryRepository.SaveChanges();
 

@@ -191,14 +191,22 @@ namespace DiamondStoreSystem.BusinessLayer.Services
             Status = Const.SUCCESS_READ_CODE,
         };
 
+
         public async Task<IDSSResult> Update(string id, DiamondRequestModel model)
         {
             try
             {
-                var result = await GetById(id);
-                if (result.Status <= 0) return result;
+                if (!id.Equals(model))
+                {
+                    return new DSSResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
+                }
+                var result = _diamondRepository.GetById(id).Result;
+                
+                if (result == null) return new DSSResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
 
-                await _diamondRepository.UpdateById(_mapper.Map<Diamond>(model), id);
+                SupportingFeature.Instance.CopyValues(result, _mapper.Map<Diamond>(model));
+
+                _diamondRepository.Update(result);
 
                 var check = _diamondRepository.SaveChanges();
 

@@ -205,10 +205,17 @@ namespace DiamondStoreSystem.BusinessLayer.Services
         {
             try
             {
-                var result = await IsExist(id);
-                if (result.Status <= 0) return result;
+                if (!id.Equals(model))
+                {
+                    return new DSSResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
+                }
+                var result = await _warrantyRepository.GetById(id);
+                
+                if (result == null) return new DSSResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
 
-                await _warrantyRepository.UpdateById(_mapper.Map<Warranty>(model), id);
+                SupportingFeature.Instance.CopyValues(result, _mapper.Map<Warranty>(model));
+
+                _warrantyRepository.Update(result);
 
                 var check = _warrantyRepository.SaveChanges();
 
