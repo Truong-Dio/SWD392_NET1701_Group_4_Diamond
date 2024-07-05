@@ -98,7 +98,7 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                     return new DSSResult(Const.FAIL_UPDATE_CODE, "Email is not existed!!!");
                 }
                 var account = result.Data as Account;
-                account.Password = Util.HashPassword(password);
+                account.Password = password;
                 result = await _accountService.Update(account.AccountID, _mapper.Map<AccountRequestModel>(account));
                 return result;
             }

@@ -189,11 +189,17 @@ namespace DiamondStoreSystem.BusinessLayer.Services
         {
             try
             {
-                var result = await IsExist(id);
-                if (result.Status <= 0) return result;
+                if (!id.Equals(model.AccountID)) return new DSSResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
 
-                model.Password = Util.HashPassword(model.Password);
-                await _accountRepository.UpdateById(_mapper.Map<Account>(model), id);
+                var result = await _accountRepository.GetById(id);
+
+                if (result == null) return new DSSResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
+
+                SupportingFeature.Instance.CopyValues(result, _mapper.Map<Account>(model));
+
+                result.Password = Util.HashPassword(model.Password);
+
+                _accountRepository.Update(result);
 
                 var check = _accountRepository.SaveChanges();
 
