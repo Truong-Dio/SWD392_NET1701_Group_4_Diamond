@@ -81,5 +81,32 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                 return new DSSResult(Const.ERROR_EXCEPTION, ex.Message);
             }
         }
+
+        public async Task<IDSSResult> SetNewPassword(string password, string confirmingCode, HttpContext context)
+        {
+            try
+            {
+                var email = SupportingFeature.Instance.GetValueFromSession("email", context);
+                var otp = SupportingFeature.Instance.GetValueFromSession("otp", context);
+                if (!otp.ToString().Equals(confirmingCode))
+                {
+                    return new DSSResult(Const.FAIL_UPDATE_CODE, "Confirming code is not correct. Please enter correctly!");
+                }
+                var result = await _accountService.GetByEmail(email.ToString());
+                if (result.Status <= 0)
+                {
+                    return new DSSResult(Const.FAIL_UPDATE_CODE, "Email is not existed!!!");
+                }
+                var account = result.Data as Account;
+                account.Password = Util.HashPassword(password);
+                result = await _accountService.Update(account.AccountID, _mapper.Map<AccountRequestModel>(account));
+                return result;
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
     }
 }

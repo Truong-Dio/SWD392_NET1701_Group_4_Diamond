@@ -14,5 +14,6 @@ namespace DiamondStoreSystem.BusinessLayer.IServices
         Task<IDSSResult> Login(string email, string password);
         Task<IDSSResult> Register(AccountRequestModel accountRequestModel, string confirmingCode, HttpContext context);
         Task<IDSSResult> ConfirmEmail(string email, HttpContext context);
+        Task<IDSSResult> SetNewPassword(string password, string confirmingCode, HttpContext context);
     }
 }

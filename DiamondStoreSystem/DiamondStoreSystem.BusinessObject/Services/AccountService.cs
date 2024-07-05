@@ -238,7 +238,7 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                 {
                     return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
                 }
-                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, _mapper.Map<AccountResponseModel>(account));
+                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, account);
             }
             catch (Exception ex)
             {

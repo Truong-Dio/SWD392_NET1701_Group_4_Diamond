@@ -69,5 +69,8 @@ namespace DiamondStoreSystem.API.Controllers
 
         [HttpPost("Register/{otp}")]
         public async Task<IActionResult> Register(string otp, [FromBody] AccountRequestModel account) => Ok(await _authService.Register(account, otp, HttpContext));
+
+        [HttpPost("SetNewPassword/{otp}&{newPassword}")]
+        public async Task<IActionResult> SetNewPassword(string otp, string newPassword) => Ok(await _authService.SetNewPassword(newPassword, otp, HttpContext));
     }
 }
