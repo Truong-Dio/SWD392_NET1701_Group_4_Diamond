@@ -273,7 +273,7 @@ namespace DiamondStoreSystem.BusinessLayer.Services
         {
             try
             {
-                if (!id.Equals(model))
+                if (!id.Equals(model.OrderID))
                 {
                     return new DSSResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
                 }
