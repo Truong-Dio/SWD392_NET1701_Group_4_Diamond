@@ -311,11 +311,11 @@ namespace DiamondStoreSystem.BusinessLayer.Services
         {
             try
             {
+                if(!id.Equals(model.OrderID)) return new DSSResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
                 var order = await _orderRepository.GetById(id);
                 if (order == null) return new DSSResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
-
-                await _orderRepository.UpdateById(_mapper.Map<Order>(model), id);
-
+                SupportingFeature.Instance.CopyValues(order, _mapper.Map<Order>(model));
+                _orderRepository.Update(order);
                 return new DSSResult(Const.SUCCESS_UPDATE_CODE, Const.SUCCESS_UPDATE_MSG);
             }
             catch (Exception ex)
