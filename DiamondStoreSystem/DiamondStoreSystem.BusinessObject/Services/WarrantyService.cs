@@ -254,5 +254,35 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                 return new DSSResult(Const.ERROR_EXCEPTION, ex.Message);
             }
         }
+
+        public IDSSResult ExpiredWarranty()
+        {
+            try
+            {
+                var result = _warrantyRepository.GetAll().ToList();
+                result = result.Where(w => w.ExpiredDate.Equals(DateTime.Now)).ToList();
+
+                if (result.Count <= 0)
+                {
+                    return new DSSResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
+                }
+
+                result.ForEach(w =>
+                {
+                    w.Block = true;
+                    _warrantyRepository.Update(w);
+                });
+                var check = _warrantyRepository.SaveChanges();
+                if (check <= 0)
+                {
+                    return new DSSResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
+                }
+                return new DSSResult(Const.SUCCESS_UPDATE_CODE, Const.SUCCESS_UPDATE_MSG);
+            }
+            catch (Exception ex)
+            {
+                return new DSSResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+        }
     }
 }

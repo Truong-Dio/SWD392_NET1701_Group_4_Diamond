@@ -23,5 +23,6 @@ namespace DiamondStoreSystem.BusinessLayer.IServices
         Task<IDSSResult> Delete(string id);
         Task<IDSSResult> UnBlock(string id);
         Task<IDSSResult> CheckLogin(string email, string password);
+        Task<IDSSResult> ChangeWorkingSchedule(string id, int schedule);
     }
 }

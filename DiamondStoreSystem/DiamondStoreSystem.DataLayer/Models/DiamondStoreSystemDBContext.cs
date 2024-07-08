@@ -47,7 +47,7 @@ namespace DiamondStoreSystem.DataLayer.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer(GetConnectionString(), sqlOptions => sqlOptions.CommandTimeout(180));
+                optionsBuilder.UseSqlServer("Server=tcp:dssdb111.database.windows.net,1433;Initial Catalog=DiamondStoreSystemDB;Persist Security Info=False;User ID=SWD391Admin;Password=DSSSWD391.;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;", sqlOptions => sqlOptions.CommandTimeout(180));
             }
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)

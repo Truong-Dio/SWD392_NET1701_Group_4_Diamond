@@ -22,5 +22,6 @@ namespace DiamondStoreSystem.BusinessLayer.IServices
         Task<IDSSResult> Delete(string id, string propertyName);
         Task<IDSSResult> UnBlock(string id);
         Task<IDSSResult> GetByProp(string id, string prop);
+        IDSSResult ExpiredWarranty();
     }
 }

@@ -45,6 +45,8 @@ namespace DiamondStoreSystem.API.Controllers
         public IActionResult UnBlock(string id) => Ok(_accountService.UnBlock(id).Result);
         [HttpDelete("Block/{id}")]
         public IActionResult Block(string id) => Ok(_accountService.Block(id).Result);
+        [HttpPost("ChangeWorkingSchedule/{id}")]
+        public IActionResult Block(string id, int workingSchedule) => Ok(_accountService.ChangeWorkingSchedule(id, workingSchedule).Result);
 
         [HttpDelete("Delete/{id}")]
         public IActionResult Delete(string id) => Ok(_accountService.Delete(id).Result);

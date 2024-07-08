@@ -42,6 +42,9 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("Material")
                         .HasColumnType("int");
 
@@ -141,7 +144,7 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                             Email = "admin@example.com",
                             FirstName = "Super",
                             Gender = 1,
-                            JoinDate = new DateTime(2024, 7, 2, 3, 19, 38, 170, DateTimeKind.Local).AddTicks(5465),
+                            JoinDate = new DateTime(2024, 7, 5, 21, 5, 52, 237, DateTimeKind.Local).AddTicks(5087),
                             LastName = "Admin",
                             LoyaltyPoint = 0,
                             Password = "473287f8298dba7163a897908958f7c0eae733e25d2e027992ea2edc9bed2fa8",
@@ -158,7 +161,7 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                             Email = "staff1@example.com",
                             FirstName = "Super",
                             Gender = 1,
-                            JoinDate = new DateTime(2024, 7, 2, 3, 19, 38, 170, DateTimeKind.Local).AddTicks(5512),
+                            JoinDate = new DateTime(2024, 7, 5, 21, 5, 52, 237, DateTimeKind.Local).AddTicks(5119),
                             LastName = "Admin",
                             LoyaltyPoint = 0,
                             Password = "473287f8298dba7163a897908958f7c0eae733e25d2e027992ea2edc9bed2fa8",
@@ -175,7 +178,7 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                             Email = "customer@example.com",
                             FirstName = "Regular",
                             Gender = 0,
-                            JoinDate = new DateTime(2024, 7, 2, 3, 19, 38, 170, DateTimeKind.Local).AddTicks(5533),
+                            JoinDate = new DateTime(2024, 7, 5, 21, 5, 52, 237, DateTimeKind.Local).AddTicks(5141),
                             LastName = "Customer",
                             LoyaltyPoint = 100,
                             Password = "473287f8298dba7163a897908958f7c0eae733e25d2e027992ea2edc9bed2fa8",

@@ -275,5 +275,30 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                 return new DSSResult(Const.ERROR_EXCEPTION, ex.Message);
             }
         }
+
+        public async Task<IDSSResult> ChangeWorkingSchedule(string id, int schedule)
+        {
+            try
+            {
+                var result = await IsExist(id);
+                if (result.Status <= 0) return result;
+
+                var account = result.Data as Account;
+
+                account.WorkingSchedule = schedule;
+
+                _accountRepository.Update(account);
+
+                var check = _accountRepository.SaveChanges();
+
+                if (check <= 0) return new DSSResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
+
+                return new DSSResult(Const.SUCCESS_UPDATE_CODE, Const.SUCCESS_UPDATE_MSG);
+            }
+            catch (Exception ex)
+            {
+                return new DSSResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+        }
     }
 }

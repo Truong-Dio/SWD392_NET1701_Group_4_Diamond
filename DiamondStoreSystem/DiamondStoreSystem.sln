@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiamondStoreSystem.API", "D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiamondStoreSystem.DAO", "DiamondStoreSystem.DAO\DiamondStoreSystem.DAO.csproj", "{AE47C6CE-75C8-4C9F-B715-7D96D8926C10}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiamondStoreSystem.Repositories", "DiamondStoreSystem.Repositories\DiamondStoreSystem.Repositories.csproj", "{8708312D-4735-40F6-A5FB-2F6A47D9E3BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiamondStoreSystem.Repositories", "DiamondStoreSystem.Repositories\DiamondStoreSystem.Repositories.csproj", "{8708312D-4735-40F6-A5FB-2F6A47D9E3BC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiamondStoreSystem.WebJob", "DiamondStoreSystem.WebJob\DiamondStoreSystem.WebJob.csproj", "{A42506B5-7AE3-45BE-81D7-605D003AC513}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{8708312D-4735-40F6-A5FB-2F6A47D9E3BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8708312D-4735-40F6-A5FB-2F6A47D9E3BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8708312D-4735-40F6-A5FB-2F6A47D9E3BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A42506B5-7AE3-45BE-81D7-605D003AC513}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A42506B5-7AE3-45BE-81D7-605D003AC513}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A42506B5-7AE3-45BE-81D7-605D003AC513}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A42506B5-7AE3-45BE-81D7-605D003AC513}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
