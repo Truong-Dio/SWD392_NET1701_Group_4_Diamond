@@ -47,7 +47,7 @@ namespace DiamondStoreSystem.DataLayer.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=tcp:dssdb111.database.windows.net,1433;Initial Catalog=DiamondStoreSystemDB;Persist Security Info=False;User ID=SWD391Admin;Password=DSSSWD391.;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;", sqlOptions => sqlOptions.CommandTimeout(180));
+                optionsBuilder.UseSqlServer("Server=tcp:dss.database.windows.net,1433;Initial Catalog=DiamondStoreSytemDB;Persist Security Info=False;User ID=dssswd391;Password=SWD391dss.;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;", sqlOptions => sqlOptions.CommandTimeout(180));
             }
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -115,7 +115,7 @@ namespace DiamondStoreSystem.DataLayer.Models
                     Password = Util.HashPassword("string"),
                     LastName = "Admin",
                     FirstName = "Super",
-                    Phone = 1234567890,
+                    Phone = "1234567890",
                     Address = "123 Admin St.",
                     Gender = 1,
                     DOB = new DateTime(1980, 1, 1),
@@ -132,7 +132,7 @@ namespace DiamondStoreSystem.DataLayer.Models
                     Password = Util.HashPassword("string"),
                     LastName = "Admin",
                     FirstName = "Super",
-                    Phone = 1234567890,
+                    Phone = "1234567890",
                     Address = "123 Admin St.",
                     Gender = 1,
                     DOB = new DateTime(1980, 1, 1),
@@ -149,7 +149,7 @@ namespace DiamondStoreSystem.DataLayer.Models
                     Password = Util.HashPassword("string"),
                     LastName = "Customer",
                     FirstName = "Regular",
-                    Phone = 9876543210,
+                    Phone = "9876543210",
                     Address = "456 Customer Ave.",
                     Gender = 0,
                     DOB = new DateTime(1990, 1, 1),
@@ -171,7 +171,8 @@ namespace DiamondStoreSystem.DataLayer.Models
                 Block = false,
                 Price = 500.0,
                 UnitInStock = 10,
-                SKU = "GC001"
+                SKU = "GC001",
+                ImageUrl = "https://firebasestorage.googleapis.com/v0/b/diamond-store-system.appspot.com/o/365225250_603232441966413_6481642414490509587_n.jpg?alt=media&token=606330be-f47b-45cf-b157-1a9de4f1f91c"
             });
             modelBuilder.Entity<Diamond>().HasData(new Diamond
             {
@@ -198,7 +199,7 @@ namespace DiamondStoreSystem.DataLayer.Models
                 Price = 500.0,
                 Block = false,
                 SKU = "DIA001",
-                ImageURL = "https://th.bing.com/th/id/R.f570735ea23fb999beba0f0ab75776bf?rik=CmY%2bEAjezLt7Fw&riu=http%3a%2f%2fftwg.org%2fwp-content%2fuploads%2f2018%2f09%2fAdobeStock_103498617-1140x458.jpeg&ehk=j4i4O38TXR1VIDNSDUiMnV9aUME6dlkf0GM6BpnbKbk%3d&risl=&pid=ImgRaw&r=0"
+                ImageURL = "https://firebasestorage.googleapis.com/v0/b/diamond-store-system.appspot.com/o/GP1Lty9XgAAI3l-.jpg?alt=media&token=3d8c0b2e-37bd-44ec-a489-9dcc14482312"
             },
             new Diamond
             {

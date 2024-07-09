@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DiamondStoreSystem.DataLayer.Migrations
 {
     [DbContext(typeof(DiamondStoreSystemDBContext))]
-    [Migration("20240701084522_InitialCreate")]
+    [Migration("20240709072139_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -45,6 +45,9 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("Material")
                         .HasColumnType("int");
 
@@ -73,6 +76,7 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                             Block = false,
                             Brand = "LuxuryBrand",
                             Description = "18k gold chain",
+                            ImageUrl = "https://firebasestorage.googleapis.com/v0/b/diamond-store-system.appspot.com/o/365225250_603232441966413_6481642414490509587_n.jpg?alt=media&token=606330be-f47b-45cf-b157-1a9de4f1f91c",
                             Material = 1,
                             Price = 500.0,
                             SKU = "GC001",
@@ -121,8 +125,9 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("Phone")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Role")
                         .HasColumnType("int");
@@ -144,11 +149,11 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                             Email = "admin@example.com",
                             FirstName = "Super",
                             Gender = 1,
-                            JoinDate = new DateTime(2024, 7, 1, 15, 45, 21, 762, DateTimeKind.Local).AddTicks(9829),
+                            JoinDate = new DateTime(2024, 7, 9, 14, 21, 38, 800, DateTimeKind.Local).AddTicks(7513),
                             LastName = "Admin",
                             LoyaltyPoint = 0,
                             Password = "473287f8298dba7163a897908958f7c0eae733e25d2e027992ea2edc9bed2fa8",
-                            Phone = 1234567890m,
+                            Phone = "1234567890",
                             Role = 3,
                             WorkingSchedule = 1
                         },
@@ -161,11 +166,11 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                             Email = "staff1@example.com",
                             FirstName = "Super",
                             Gender = 1,
-                            JoinDate = new DateTime(2024, 7, 1, 15, 45, 21, 762, DateTimeKind.Local).AddTicks(9869),
+                            JoinDate = new DateTime(2024, 7, 9, 14, 21, 38, 800, DateTimeKind.Local).AddTicks(7548),
                             LastName = "Admin",
                             LoyaltyPoint = 0,
                             Password = "473287f8298dba7163a897908958f7c0eae733e25d2e027992ea2edc9bed2fa8",
-                            Phone = 1234567890m,
+                            Phone = "1234567890",
                             Role = 1,
                             WorkingSchedule = 1
                         },
@@ -178,11 +183,11 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                             Email = "customer@example.com",
                             FirstName = "Regular",
                             Gender = 0,
-                            JoinDate = new DateTime(2024, 7, 1, 15, 45, 21, 762, DateTimeKind.Local).AddTicks(9888),
+                            JoinDate = new DateTime(2024, 7, 9, 14, 21, 38, 800, DateTimeKind.Local).AddTicks(7566),
                             LastName = "Customer",
                             LoyaltyPoint = 100,
                             Password = "473287f8298dba7163a897908958f7c0eae733e25d2e027992ea2edc9bed2fa8",
-                            Phone = 9876543210m,
+                            Phone = "9876543210",
                             Role = 0,
                             WorkingSchedule = 0
                         });
@@ -223,6 +228,9 @@ namespace DiamondStoreSystem.DataLayer.Migrations
 
                     b.Property<double>("Height")
                         .HasColumnType("float");
+
+                    b.Property<string>("ImageURL")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Inscription")
                         .IsRequired()
@@ -281,6 +289,7 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                             FluoresceneGrade = 1,
                             GIAReportNumber = 123456,
                             Height = 4.0,
+                            ImageURL = "https://firebasestorage.googleapis.com/v0/b/diamond-store-system.appspot.com/o/GP1Lty9XgAAI3l-.jpg?alt=media&token=3d8c0b2e-37bd-44ec-a489-9dcc14482312",
                             Inscription = "GIA12345446",
                             IssueDate = new DateTime(2020, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LabCreated = 0,
@@ -307,6 +316,7 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                             FluoresceneGrade = 1,
                             GIAReportNumber = 123456,
                             Height = 4.0,
+                            ImageURL = "https://assets.entrepreneur.com/content/3x2/2000/20160305000536-diamond.jpeg",
                             Inscription = "GIA12345446",
                             IssueDate = new DateTime(2020, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LabCreated = 0,
@@ -386,9 +396,7 @@ namespace DiamondStoreSystem.DataLayer.Migrations
 
                     b.HasKey("ProductID");
 
-                    b.HasIndex("AccessoryID")
-                        .IsUnique()
-                        .HasFilter("[AccessoryID] IS NOT NULL");
+                    b.HasIndex("AccessoryID");
 
                     b.HasIndex("MainDiamondID")
                         .IsUnique();
@@ -502,9 +510,8 @@ namespace DiamondStoreSystem.DataLayer.Migrations
             modelBuilder.Entity("DiamondStoreSystem.DataLayer.Models.Product", b =>
                 {
                     b.HasOne("DiamondStoreSystem.DataLayer.Models.Accessory", "Accessory")
-                        .WithOne()
-                        .HasForeignKey("DiamondStoreSystem.DataLayer.Models.Product", "AccessoryID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .WithMany()
+                        .HasForeignKey("AccessoryID");
 
                     b.HasOne("DiamondStoreSystem.DataLayer.Models.Diamond", "MainDiamond")
                         .WithOne()

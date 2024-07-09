@@ -73,6 +73,7 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                             Block = false,
                             Brand = "LuxuryBrand",
                             Description = "18k gold chain",
+                            ImageUrl = "https://firebasestorage.googleapis.com/v0/b/diamond-store-system.appspot.com/o/365225250_603232441966413_6481642414490509587_n.jpg?alt=media&token=606330be-f47b-45cf-b157-1a9de4f1f91c",
                             Material = 1,
                             Price = 500.0,
                             SKU = "GC001",
@@ -121,8 +122,9 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("Phone")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Role")
                         .HasColumnType("int");
@@ -144,11 +146,11 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                             Email = "admin@example.com",
                             FirstName = "Super",
                             Gender = 1,
-                            JoinDate = new DateTime(2024, 7, 5, 21, 5, 52, 237, DateTimeKind.Local).AddTicks(5087),
+                            JoinDate = new DateTime(2024, 7, 9, 14, 21, 38, 800, DateTimeKind.Local).AddTicks(7513),
                             LastName = "Admin",
                             LoyaltyPoint = 0,
                             Password = "473287f8298dba7163a897908958f7c0eae733e25d2e027992ea2edc9bed2fa8",
-                            Phone = 1234567890m,
+                            Phone = "1234567890",
                             Role = 3,
                             WorkingSchedule = 1
                         },
@@ -161,11 +163,11 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                             Email = "staff1@example.com",
                             FirstName = "Super",
                             Gender = 1,
-                            JoinDate = new DateTime(2024, 7, 5, 21, 5, 52, 237, DateTimeKind.Local).AddTicks(5119),
+                            JoinDate = new DateTime(2024, 7, 9, 14, 21, 38, 800, DateTimeKind.Local).AddTicks(7548),
                             LastName = "Admin",
                             LoyaltyPoint = 0,
                             Password = "473287f8298dba7163a897908958f7c0eae733e25d2e027992ea2edc9bed2fa8",
-                            Phone = 1234567890m,
+                            Phone = "1234567890",
                             Role = 1,
                             WorkingSchedule = 1
                         },
@@ -178,11 +180,11 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                             Email = "customer@example.com",
                             FirstName = "Regular",
                             Gender = 0,
-                            JoinDate = new DateTime(2024, 7, 5, 21, 5, 52, 237, DateTimeKind.Local).AddTicks(5141),
+                            JoinDate = new DateTime(2024, 7, 9, 14, 21, 38, 800, DateTimeKind.Local).AddTicks(7566),
                             LastName = "Customer",
                             LoyaltyPoint = 100,
                             Password = "473287f8298dba7163a897908958f7c0eae733e25d2e027992ea2edc9bed2fa8",
-                            Phone = 9876543210m,
+                            Phone = "9876543210",
                             Role = 0,
                             WorkingSchedule = 0
                         });
@@ -284,7 +286,7 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                             FluoresceneGrade = 1,
                             GIAReportNumber = 123456,
                             Height = 4.0,
-                            ImageURL = "https://th.bing.com/th/id/R.f570735ea23fb999beba0f0ab75776bf?rik=CmY%2bEAjezLt7Fw&riu=http%3a%2f%2fftwg.org%2fwp-content%2fuploads%2f2018%2f09%2fAdobeStock_103498617-1140x458.jpeg&ehk=j4i4O38TXR1VIDNSDUiMnV9aUME6dlkf0GM6BpnbKbk%3d&risl=&pid=ImgRaw&r=0",
+                            ImageURL = "https://firebasestorage.googleapis.com/v0/b/diamond-store-system.appspot.com/o/GP1Lty9XgAAI3l-.jpg?alt=media&token=3d8c0b2e-37bd-44ec-a489-9dcc14482312",
                             Inscription = "GIA12345446",
                             IssueDate = new DateTime(2020, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LabCreated = 0,

@@ -26,7 +26,8 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                     Block = table.Column<bool>(type: "bit", nullable: false),
                     Price = table.Column<double>(type: "float", nullable: false),
                     UnitInStock = table.Column<int>(type: "int", nullable: false),
-                    SKU = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    SKU = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -42,7 +43,7 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Phone = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Gender = table.Column<int>(type: "int", nullable: false),
                     DOB = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -83,7 +84,8 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                     Length = table.Column<double>(type: "float", nullable: false),
                     Price = table.Column<double>(type: "float", nullable: false),
                     Block = table.Column<bool>(type: "bit", nullable: false),
-                    SKU = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    SKU = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ImageURL = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -139,8 +141,7 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                         name: "FK_Products_Accessories_AccessoryID",
                         column: x => x.AccessoryID,
                         principalTable: "Accessories",
-                        principalColumn: "AccessoryID",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "AccessoryID");
                     table.ForeignKey(
                         name: "FK_Products_Diamond_MainDiamondID",
                         column: x => x.MainDiamondID,
@@ -226,26 +227,26 @@ namespace DiamondStoreSystem.DataLayer.Migrations
 
             migrationBuilder.InsertData(
                 table: "Accessories",
-                columns: new[] { "AccessoryID", "AccessoryName", "Block", "Brand", "Description", "Material", "Price", "SKU", "Style", "UnitInStock" },
-                values: new object[] { "A001", "Gold Chain", false, "LuxuryBrand", "18k gold chain", 1, 500.0, "GC001", 1, 10 });
+                columns: new[] { "AccessoryID", "AccessoryName", "Block", "Brand", "Description", "ImageUrl", "Material", "Price", "SKU", "Style", "UnitInStock" },
+                values: new object[] { "A001", "Gold Chain", false, "LuxuryBrand", "18k gold chain", "https://firebasestorage.googleapis.com/v0/b/diamond-store-system.appspot.com/o/365225250_603232441966413_6481642414490509587_n.jpg?alt=media&token=606330be-f47b-45cf-b157-1a9de4f1f91c", 1, 500.0, "GC001", 1, 10 });
 
             migrationBuilder.InsertData(
                 table: "Accounts",
                 columns: new[] { "AccountID", "Address", "Block", "DOB", "Email", "FirstName", "Gender", "JoinDate", "LastName", "LoyaltyPoint", "Password", "Phone", "Role", "WorkingSchedule" },
                 values: new object[,]
                 {
-                    { "C001", "456 Customer Ave.", false, new DateTime(1990, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "customer@example.com", "Regular", 0, new DateTime(2024, 7, 1, 15, 45, 21, 762, DateTimeKind.Local).AddTicks(9888), "Customer", 100, "473287f8298dba7163a897908958f7c0eae733e25d2e027992ea2edc9bed2fa8", 9876543210m, 0, 0 },
-                    { "S001", "123 Admin St.", false, new DateTime(1980, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "admin@example.com", "Super", 1, new DateTime(2024, 7, 1, 15, 45, 21, 762, DateTimeKind.Local).AddTicks(9829), "Admin", 0, "473287f8298dba7163a897908958f7c0eae733e25d2e027992ea2edc9bed2fa8", 1234567890m, 3, 1 },
-                    { "S002", "123 Admin St.", false, new DateTime(1980, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "staff1@example.com", "Super", 1, new DateTime(2024, 7, 1, 15, 45, 21, 762, DateTimeKind.Local).AddTicks(9869), "Admin", 0, "473287f8298dba7163a897908958f7c0eae733e25d2e027992ea2edc9bed2fa8", 1234567890m, 1, 1 }
+                    { "C001", "456 Customer Ave.", false, new DateTime(1990, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "customer@example.com", "Regular", 0, new DateTime(2024, 7, 9, 14, 21, 38, 800, DateTimeKind.Local).AddTicks(7566), "Customer", 100, "473287f8298dba7163a897908958f7c0eae733e25d2e027992ea2edc9bed2fa8", "9876543210", 0, 0 },
+                    { "S001", "123 Admin St.", false, new DateTime(1980, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "admin@example.com", "Super", 1, new DateTime(2024, 7, 9, 14, 21, 38, 800, DateTimeKind.Local).AddTicks(7513), "Admin", 0, "473287f8298dba7163a897908958f7c0eae733e25d2e027992ea2edc9bed2fa8", "1234567890", 3, 1 },
+                    { "S002", "123 Admin St.", false, new DateTime(1980, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "staff1@example.com", "Super", 1, new DateTime(2024, 7, 9, 14, 21, 38, 800, DateTimeKind.Local).AddTicks(7548), "Admin", 0, "473287f8298dba7163a897908958f7c0eae733e25d2e027992ea2edc9bed2fa8", "1234567890", 1, 1 }
                 });
 
             migrationBuilder.InsertData(
                 table: "Diamond",
-                columns: new[] { "DiamondID", "Block", "CaratWeight", "ClarityGrade", "ColorGrade", "CutGrade", "DepthPercent", "Description", "FluoresceneGrade", "GIAReportNumber", "Height", "Inscription", "IssueDate", "LabCreated", "Length", "Origin", "PolishGrade", "Price", "SKU", "Shape", "SymmetryGrade", "TablePercent", "Width" },
+                columns: new[] { "DiamondID", "Block", "CaratWeight", "ClarityGrade", "ColorGrade", "CutGrade", "DepthPercent", "Description", "FluoresceneGrade", "GIAReportNumber", "Height", "ImageURL", "Inscription", "IssueDate", "LabCreated", "Length", "Origin", "PolishGrade", "Price", "SKU", "Shape", "SymmetryGrade", "TablePercent", "Width" },
                 values: new object[,]
                 {
-                    { "D001", false, 1.0, 1, 1, 1, 62.0, "Brilliant cut diamond", 1, 123456, 4.0, "GIA12345446", new DateTime(2020, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 0, 6.0, "Africa", 1, 500.0, "DIA001", 1, 1, 57.5, 6.0 },
-                    { "D002", false, 1.0, 1, 1, 1, 62.0, "Brilliant cut diamond", 1, 123456, 4.0, "GIA12345446", new DateTime(2020, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 0, 6.0, "Africa", 1, 500.0, "DIA001", 1, 1, 57.5, 6.0 }
+                    { "D001", false, 1.0, 1, 1, 1, 62.0, "Brilliant cut diamond", 1, 123456, 4.0, "https://firebasestorage.googleapis.com/v0/b/diamond-store-system.appspot.com/o/GP1Lty9XgAAI3l-.jpg?alt=media&token=3d8c0b2e-37bd-44ec-a489-9dcc14482312", "GIA12345446", new DateTime(2020, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 0, 6.0, "Africa", 1, 500.0, "DIA001", 1, 1, 57.5, 6.0 },
+                    { "D002", false, 1.0, 1, 1, 1, 62.0, "Brilliant cut diamond", 1, 123456, 4.0, "https://assets.entrepreneur.com/content/3x2/2000/20160305000536-diamond.jpeg", "GIA12345446", new DateTime(2020, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 0, 6.0, "Africa", 1, 500.0, "DIA001", 1, 1, 57.5, 6.0 }
                 });
 
             migrationBuilder.CreateIndex(
@@ -261,9 +262,7 @@ namespace DiamondStoreSystem.DataLayer.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Products_AccessoryID",
                 table: "Products",
-                column: "AccessoryID",
-                unique: true,
-                filter: "[AccessoryID] IS NOT NULL");
+                column: "AccessoryID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_MainDiamondID",
