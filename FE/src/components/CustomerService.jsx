@@ -16,4 +16,8 @@ const CustomerService = () => {
         piece.
       </p>
       <div className="flex gap-4 justify-center self-start pt-4 mt-2.5 ml-60 max-w-full text-sm font-medium text-center text-zinc-800 w-[600px] max-md:flex-wrap">
-        <button className="justify-center items-center px-16 py-3.5 border border-solid border
+      <button className="justify-center items-center px-16 py-3.5 border border-solid border-zinc-800"></button>
+      </div>
+    </section>
+  )};
+  export default CustomerService;
