@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DiamondStoreSystem.DataLayer.Migrations
 {
     [DbContext(typeof(DiamondStoreSystemDBContext))]
-    [Migration("20240709072139_InitialCreate")]
+    [Migration("20240709150259_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -149,7 +149,7 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                             Email = "admin@example.com",
                             FirstName = "Super",
                             Gender = 1,
-                            JoinDate = new DateTime(2024, 7, 9, 14, 21, 38, 800, DateTimeKind.Local).AddTicks(7513),
+                            JoinDate = new DateTime(2024, 7, 9, 22, 2, 59, 174, DateTimeKind.Local).AddTicks(2172),
                             LastName = "Admin",
                             LoyaltyPoint = 0,
                             Password = "473287f8298dba7163a897908958f7c0eae733e25d2e027992ea2edc9bed2fa8",
@@ -166,7 +166,7 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                             Email = "staff1@example.com",
                             FirstName = "Super",
                             Gender = 1,
-                            JoinDate = new DateTime(2024, 7, 9, 14, 21, 38, 800, DateTimeKind.Local).AddTicks(7548),
+                            JoinDate = new DateTime(2024, 7, 9, 22, 2, 59, 174, DateTimeKind.Local).AddTicks(2208),
                             LastName = "Admin",
                             LoyaltyPoint = 0,
                             Password = "473287f8298dba7163a897908958f7c0eae733e25d2e027992ea2edc9bed2fa8",
@@ -183,7 +183,7 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                             Email = "customer@example.com",
                             FirstName = "Regular",
                             Gender = 0,
-                            JoinDate = new DateTime(2024, 7, 9, 14, 21, 38, 800, DateTimeKind.Local).AddTicks(7566),
+                            JoinDate = new DateTime(2024, 7, 9, 22, 2, 59, 174, DateTimeKind.Local).AddTicks(2375),
                             LastName = "Customer",
                             LoyaltyPoint = 100,
                             Password = "473287f8298dba7163a897908958f7c0eae733e25d2e027992ea2edc9bed2fa8",

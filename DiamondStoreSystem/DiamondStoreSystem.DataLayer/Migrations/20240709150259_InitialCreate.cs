@@ -235,9 +235,9 @@ namespace DiamondStoreSystem.DataLayer.Migrations
                 columns: new[] { "AccountID", "Address", "Block", "DOB", "Email", "FirstName", "Gender", "JoinDate", "LastName", "LoyaltyPoint", "Password", "Phone", "Role", "WorkingSchedule" },
                 values: new object[,]
                 {
-                    { "C001", "456 Customer Ave.", false, new DateTime(1990, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "customer@example.com", "Regular", 0, new DateTime(2024, 7, 9, 14, 21, 38, 800, DateTimeKind.Local).AddTicks(7566), "Customer", 100, "473287f8298dba7163a897908958f7c0eae733e25d2e027992ea2edc9bed2fa8", "9876543210", 0, 0 },
-                    { "S001", "123 Admin St.", false, new DateTime(1980, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "admin@example.com", "Super", 1, new DateTime(2024, 7, 9, 14, 21, 38, 800, DateTimeKind.Local).AddTicks(7513), "Admin", 0, "473287f8298dba7163a897908958f7c0eae733e25d2e027992ea2edc9bed2fa8", "1234567890", 3, 1 },
-                    { "S002", "123 Admin St.", false, new DateTime(1980, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "staff1@example.com", "Super", 1, new DateTime(2024, 7, 9, 14, 21, 38, 800, DateTimeKind.Local).AddTicks(7548), "Admin", 0, "473287f8298dba7163a897908958f7c0eae733e25d2e027992ea2edc9bed2fa8", "1234567890", 1, 1 }
+                    { "C001", "456 Customer Ave.", false, new DateTime(1990, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "customer@example.com", "Regular", 0, new DateTime(2024, 7, 9, 22, 2, 59, 174, DateTimeKind.Local).AddTicks(2375), "Customer", 100, "473287f8298dba7163a897908958f7c0eae733e25d2e027992ea2edc9bed2fa8", "9876543210", 0, 0 },
+                    { "S001", "123 Admin St.", false, new DateTime(1980, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "admin@example.com", "Super", 1, new DateTime(2024, 7, 9, 22, 2, 59, 174, DateTimeKind.Local).AddTicks(2172), "Admin", 0, "473287f8298dba7163a897908958f7c0eae733e25d2e027992ea2edc9bed2fa8", "1234567890", 3, 1 },
+                    { "S002", "123 Admin St.", false, new DateTime(1980, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "staff1@example.com", "Super", 1, new DateTime(2024, 7, 9, 22, 2, 59, 174, DateTimeKind.Local).AddTicks(2208), "Admin", 0, "473287f8298dba7163a897908958f7c0eae733e25d2e027992ea2edc9bed2fa8", "1234567890", 1, 1 }
                 });
 
             migrationBuilder.InsertData(
