@@ -1,23 +1,25 @@
-﻿<Project Sdk="Microsoft.NET.Sdk;Microsoft.NET.Sdk.Publish">
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>dotnet-DiamondStoreSystem.MyWorkerService-95534e8d-bee3-479f-b293-1f0ddd1f10a8</UserSecretsId>
   </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.Azure.WebJobs" Version="3.0.39" />
-    <PackageReference Include="Microsoft.Azure.WebJobs.Core" Version="3.0.39" />
     <PackageReference Include="Microsoft.Azure.WebJobs.Extensions" Version="5.0.0" />
     <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.Storage" Version="5.3.0" />
-    <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.Storage.Queues" Version="5.3.0" />
     <PackageReference Include="Microsoft.Azure.WebJobs.Host.Storage" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
   </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\DiamondStoreSystem.BusinessObject\DiamondStoreSystem.BusinessLayer.csproj" />
   </ItemGroup>
+
   <ItemGroup>
     <None Update="Settings.job">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

@@ -4,7 +4,7 @@ using DiamondStoreSystem.BusinessLayer.ResquestModels;
 using DiamondStoreSystem.DataLayer.Models;
 using DiamondStoreSystem.BusinessLayer.Commons;
 
-namespace DiamondStoreSystem.API.AppStart
+namespace DiamondStoreSystem.BusinessLayer.AppStart
 {
     public class MapperConfig : Profile
     {

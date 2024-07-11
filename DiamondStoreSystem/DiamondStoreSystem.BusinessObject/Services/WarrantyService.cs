@@ -6,6 +6,7 @@ using DiamondStoreSystem.BusinessLayer.ResponseModels;
 using DiamondStoreSystem.BusinessLayer.ResquestModels;
 using DiamondStoreSystem.DataLayer.Models;
 using DiamondStoreSystem.Repositories.IRepositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace DiamondStoreSystem.BusinessLayer.Services
 {
@@ -255,13 +256,12 @@ namespace DiamondStoreSystem.BusinessLayer.Services
             }
         }
 
-        public IDSSResult ExpiredWarranty()
+        public async Task<IDSSResult> AutoBlockExpiredWarranty()
         {
             try
             {
-                var result = _warrantyRepository.GetAll().ToList();
-                result = result.Where(w => w.ExpiredDate.Equals(DateTime.Now)).ToList();
-
+                var result = await _warrantyRepository.GetAll().ToListAsync();
+                result = result.Where(c => DateTime.Compare(c.ExpiredDate, DateTime.Now) <= 0).ToList();
                 if (result.Count <= 0)
                 {
                     return new DSSResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
@@ -272,7 +272,7 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                     w.Block = true;
                     _warrantyRepository.Update(w);
                 });
-                var check = _warrantyRepository.SaveChanges();
+                var check = await _warrantyRepository.SaveChangesAsync();
                 if (check <= 0)
                 {
                     return new DSSResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);

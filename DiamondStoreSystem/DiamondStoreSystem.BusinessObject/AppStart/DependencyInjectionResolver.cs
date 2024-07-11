@@ -2,8 +2,9 @@
 using DiamondStoreSystem.BusinessLayer.Services;
 using DiamondStoreSystem.Repositories.IRepositories;
 using DiamondStoreSystem.Repositories.Repositories;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace DiamondStoreSystem.API.AppStart
+namespace DiamondStoreSystem.BusinessLayer.AppStart
 {
     public static class DependencyInjectionResolver
     {

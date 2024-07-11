@@ -1,4 +1,4 @@
-using DiamondStoreSystem.API.AppStart;
+using DiamondStoreSystem.BusinessLayer.AppStart;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
