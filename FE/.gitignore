@@ -1,3 +1,28 @@
+<<<<<<< Updated upstream:FE3/diamond/.gitignore
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# production
+/build
+
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+=======
 # Created by https://www.toptal.com/developers/gitignore/api/aspnetcore,visualstudio
 # Edit at https://www.toptal.com/developers/gitignore?templates=aspnetcore,visualstudio
 
@@ -537,3 +562,4 @@ DiamondStoreSystem/.vs/DiamondStoreSystem/DesignTimeBuild/.dtbcache.v2
 DiamondStoreSystem/.vs/DiamondStoreSystem/v17/.futdcache.v2
 DiamondStoreSystem/.vs/ProjectEvaluation/diamondstoresystem.projects.v7.bin
 DiamondStoreSystem/.vs/ProjectEvaluation/diamondstoresystem.metadata.v7.bin
+>>>>>>> Stashed changes:FE/.gitignore

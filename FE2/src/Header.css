@@ -1,0 +1,36 @@
+.header-container {
+  margin-bottom: 20px; 
+  padding-left: 200px;
+  padding-right: 200px;
+  border-radius: 10px; 
+  justify-content: space-evenly
+}
+
+.custom-brand {
+  font-weight: bold;
+  font-size: 1.5em;
+  color: #f9fd07 !important; 
+  margin-right: 20px;
+}
+.navbar-brand custom-brand{
+  border-radius: 50px;
+background: #faf5f5;
+box-shadow:  39px 39px 78px #d5d0d0,
+             -39px -39px 78px #ffffff;
+}
+
+.navbar-nav .nav-item .nav-link {
+  color: #fff;
+  transition: background-color 0.3s ease, border-radius 0.3s ease;
+  border-radius: 8px; 
+  padding: 10px 16px; 
+}
+
+.navbar-nav .nav-item .nav-link:hover {
+  background-color: #555;
+  border-radius: 20px; 
+}
+
+.navbar-nav {
+  flex-wrap: nowrap; 
+}
