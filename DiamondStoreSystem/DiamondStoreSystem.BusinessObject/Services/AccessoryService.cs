@@ -286,8 +286,8 @@ namespace DiamondStoreSystem.BusinessLayer.Services
         {
             try
             {
-                var allAccessories = _accessoryRepository.GetAll();
-                var accessories = allAccessories.Where(d => !d.Block).ToList();
+                var accessories = _accessoryRepository.GetAll().ToList();
+                //var accessories = allAccessories.Where(d => !d.Block).ToList();
                 if(categories!= null && categories.Count>0)
                 {
                     accessories = SupportingFeature.Instance.FilterModel(accessories, categories);

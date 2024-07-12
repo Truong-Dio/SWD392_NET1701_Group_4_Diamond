@@ -130,12 +130,12 @@ namespace DiamondStoreSystem.BusinessLayer.Services
         {
             try
             {
-                var result = _diamondRepository.GetAll();
-                if (result.ToList().Count() <= 0)
+                var result = _diamondRepository.GetAll().ToList();
+                if (result.Count() <= 0)
                 {
                     return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
                 }
-                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, result);
+                return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, result.Select(_mapper.Map<DiamondResponseModel>).ToList());
             }
             catch (Exception ex)
             {
@@ -150,7 +150,7 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                 var result = await _diamondRepository.GetWhere(a => !a.Block && a.DiamondID == id);
                 if (result.Count() <= 0)
                 {
-                    return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
+                    return new DSSResult(Const.FAIL_READ_CODE, Const.WARNING_NO_DATA__MSG);
                 }
                 return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, _mapper.Map<DiamondResponseModel>(result.FirstOrDefault(r => true)));
             }
@@ -167,7 +167,7 @@ namespace DiamondStoreSystem.BusinessLayer.Services
                 var result = await _diamondRepository.GetById(id);
                 if (result == null)
                 {
-                    return new DSSResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
+                    return new DSSResult(Const.FAIL_READ_CODE, Const.WARNING_NO_DATA__MSG);
                 }
                 return new DSSResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, result);
             }
@@ -284,8 +284,7 @@ namespace DiamondStoreSystem.BusinessLayer.Services
         {
             try
             {
-                var allDiamonds = _diamondRepository.GetAll();
-                var diamonds = allDiamonds.Where(d => !d.Block).ToList();
+                var diamonds = _diamondRepository.GetAll().ToList();
                 if (categories != null && categories.Count > 0)
                 {
                     diamonds = SupportingFeature.Instance.FilterModel(diamonds, categories);
