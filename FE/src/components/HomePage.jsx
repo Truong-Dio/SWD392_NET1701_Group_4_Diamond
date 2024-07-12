@@ -1,10 +1,6 @@
 import React from "react";
 import Header from "./Header";
-<<<<<<< Updated upstream
-import HeroSection from "./HeroSection";
-=======
 import HeroBanner from "./HeroBanner";
->>>>>>> Stashed changes
 import DiamondShapes from "./DiamondShapes";
 import ShopByCategory from "./ShopByCategory";
 import PromoBanner from "./PromoBanner";
@@ -22,11 +18,7 @@ const HomePage = () => {
     <div className="flex flex-col items-center bg-[linear-gradient(0deg,#FFF_0%,#FFF_100%,#FFF)]">
       <Header />
       <main>
-<<<<<<< Updated upstream
-        <HeroSection />
-=======
         <HeroBanner />
->>>>>>> Stashed changes
         <DiamondShapes />
         <ShopByCategory />
         <PromoBanner />
