@@ -5,7 +5,9 @@ import {
   useNavigationType,
   useLocation,
 } from "react-router-dom";
-import WwwbrilliantearthcomByHtml from "./pages/WwwbrilliantearthcomByHtml";
+import Homepage from "./pages/homepage";
+import CartCus from "./pages/cartCus";
+import CusProfile from "./pages/cusProfile";
 
 function App() {
   const action = useNavigationType();
@@ -45,7 +47,9 @@ function App() {
 
   return (
     <Routes>
-      <Route path="/" element={<WwwbrilliantearthcomByHtml />} />
+      <Route path="/" element={<Homepage />} />
+      <Route path="/cart" element={<CartCus />} />
+      <Route path="/profile" element={<CusProfile />} />
     </Routes>
   );
 }
