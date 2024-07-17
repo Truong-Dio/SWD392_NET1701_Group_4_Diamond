@@ -2,16 +2,18 @@ import { useCallback } from "react";
 import PropTypes from "prop-types";
 import { cusProfilePath } from '../pages/cusProfile';
 import cartCus, { cartCusPath } from "../pages/cartCus";
-import {BrowserRouter, Route,Routes, Link } from "react-router-dom";
+import {BrowserRouter, Route,Routes, Link, useNavigate} from "react-router-dom";
 
 const Navpage = ({ className = "" }) => {
+
+  const navigate = useNavigate();
   const onLinkContainerClick = useCallback(() => {
     window.open("https://www.brilliantearth.com/stores/palo-alto-ca-94303/");
   }, []);
 
   const onLinkContainerClick1 = useCallback(() => {
-    window.open("/null");
-  }, []);
+    navigate("/");
+  }, [navigate]);
 
   const onLinkContainerClick3 = useCallback(() => {
     window.open("wishlist");
@@ -19,16 +21,12 @@ const Navpage = ({ className = "" }) => {
 
 
   const onLinkContainerClick5 = useCallback(() => {
-    const baseUrl = "http://localhost:3000/profile"; // Adjust the port as needed
-    window.open(`${baseUrl}`);
-  }, []);
+    navigate("/myprofile");
+  }, [navigate]);
 
   const onLinkContainerClick6 = useCallback(() => {
-    const baseUrl = "http://localhost:3000/cart"; // Adjust the port as needed
-    window.open(`${baseUrl}`);
-    
-    
-  }, []);
+    navigate("/cart");
+  }, [navigate]);
 
   return (
     <header
@@ -159,7 +157,6 @@ const Navpage = ({ className = "" }) => {
                   </div>
                 </div>
               </div>
-              <cartCus/>
             </div>
             <div className="flex flex-col items-start justify-start py-0 px-1">
               <div className="flex flex-col items-start justify-start py-0 px-[9px]">

@@ -8,6 +8,7 @@ import {
 import Homepage from "./pages/homepage";
 import CartCus from "./pages/cartCus";
 import CusProfile from "./pages/cusProfile";
+import ProductTable from "./components/ProductTable";
 
 function App() {
   const action = useNavigationType();
@@ -49,7 +50,22 @@ function App() {
     <Routes>
       <Route path="/" element={<Homepage />} />
       <Route path="/cart" element={<CartCus />} />
-      <Route path="/profile" element={<CusProfile />} />
+      <Route path="/myprofile" element={<CusProfile />} />
+      <Route path="/diamond/round" element={<ProductTable />} />
+      <Route path="/diamond/oval" element={<ProductTable />} />
+      <Route path="/diamond/emerald" element={<ProductTable />} />
+      <Route path="/diamond/cushion" element={<ProductTable />} />
+      <Route path="/diamond/pear" element={<ProductTable />} />
+      <Route path="/diamond/radiant" element={<ProductTable />} />
+      <Route path="/diamond/princess" element={<ProductTable />} />
+      <Route path="/diamond/marquise" element={<ProductTable />} />
+      <Route path="/diamond/asscher" element={<ProductTable />} />
+      <Route path="/diamond/heart" element={<ProductTable />} />
+
+
+
+
+
     </Routes>
   );
 }

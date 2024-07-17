@@ -1,46 +1,49 @@
 import { useCallback } from "react";
 import PropTypes from "prop-types";
+import { useNavigate } from "react-router-dom";
 
 const Shopbyshape = ({ className = "" }) => {
+  const navigate = useNavigate();
+
   const onLinkContainerClick = useCallback(() => {
-    window.open("https://www.brilliantearth.com/diamond/round/");
-  }, []);
+    navigate("/diamond/round");
+  }, [navigate]);
 
   const onLinkContainerClick1 = useCallback(() => {
-    window.open("https://www.brilliantearth.com/diamond/oval/");
-  }, []);
+    navigate("/diamond/oval");
+  }, [navigate]);
 
   const onLinkContainerClick2 = useCallback(() => {
-    window.open("https://www.brilliantearth.com/diamond/emerald-cut/");
-  }, []);
+    navigate("/diamond/emerald");
+  }, [navigate]);
 
   const onLinkContainerClick3 = useCallback(() => {
-    window.open("https://www.brilliantearth.com/diamond/cushion/");
-  }, []);
+    navigate("/diamond/cushion");
+  }, [navigate]);
 
   const onLinkContainerClick4 = useCallback(() => {
-    window.open("https://www.brilliantearth.com/diamond/pear/");
-  }, []);
+    navigate("/diamond/pear");
+  }, [navigate]);
 
   const onLinkContainerClick5 = useCallback(() => {
-    window.open("https://www.brilliantearth.com/diamond/radiant/");
-  }, []);
+    navigate("/diamond/radiant");
+  }, [navigate]);
 
   const onLinkContainerClick6 = useCallback(() => {
-    window.open("https://www.brilliantearth.com/diamond/princess/");
-  }, []);
+    navigate("/diamond/princess");
+  }, [navigate]);
 
   const onLinkContainerClick7 = useCallback(() => {
-    window.open("https://www.brilliantearth.com/diamond/marquise/");
-  }, []);
+    navigate("/diamond/marquise");
+  }, [navigate]);
 
   const onLinkContainerClick8 = useCallback(() => {
-    window.open("https://www.brilliantearth.com/diamond/asscher/");
-  }, []);
+    navigate("/diamond/asscher");
+  }, [navigate]);
 
   const onLinkContainerClick9 = useCallback(() => {
-    window.open("https://www.brilliantearth.com/diamond/heart/");
-  }, []);
+    navigate("/diamond/heart");
+  }, [navigate]);
 
   return (
     <div
@@ -68,13 +71,9 @@ const Shopbyshape = ({ className = "" }) => {
                     src="/image-1@2x.png"
                   />
                   <div className="flex flex-col items-center justify-start pt-px px-[11px] pb-0.5">
-                    <a
-                      className="relative text-[inherit] inline-block [text-decoration:none] min-w-[47px]"
-                      href="https://www.brilliantearth.com/diamond/round/"
-                      target="_blank"
-                    >
+                    <span className="relative text-[inherit] inline-block [text-decoration:none] min-w-[47px]">
                       Round
-                    </a>
+                    </span>
                   </div>
                 </div>
               </div>
@@ -89,13 +88,9 @@ const Shopbyshape = ({ className = "" }) => {
                     src="/image-2@2x.png"
                   />
                   <div className="flex flex-col items-center justify-start pt-px px-[18px] pb-0.5">
-                    <a
-                      className="relative text-[inherit] inline-block [text-decoration:none] min-w-[34px]"
-                      href="https://www.brilliantearth.com/diamond/oval/"
-                      target="_blank"
-                    >
+                    <span className="relative text-[inherit] inline-block [text-decoration:none] min-w-[34px]">
                       Oval
-                    </a>
+                    </span>
                   </div>
                 </div>
               </div>
@@ -110,13 +105,9 @@ const Shopbyshape = ({ className = "" }) => {
                     src="/image-3@2x.png"
                   />
                   <div className="flex flex-col items-center justify-start pt-px px-[5px] pb-0.5">
-                    <a
-                      className="relative text-[inherit] inline-block [text-decoration:none] min-w-[60px]"
-                      href="https://www.brilliantearth.com/diamond/emerald-cut/"
-                      target="_blank"
-                    >
+                    <span className="relative text-[inherit] inline-block [text-decoration:none] min-w-[60px]">
                       Emerald
-                    </a>
+                    </span>
                   </div>
                 </div>
               </div>
@@ -131,13 +122,9 @@ const Shopbyshape = ({ className = "" }) => {
                     src="/image-4@2x.png"
                   />
                   <div className="self-stretch flex flex-col items-center justify-start pt-px px-[5px] pb-0.5">
-                    <a
-                      className="self-stretch relative text-[inherit] inline-block [text-decoration:none] min-w-[59px]"
-                      href="https://www.brilliantearth.com/diamond/cushion/"
-                      target="_blank"
-                    >
+                    <span className="self-stretch relative text-[inherit] inline-block [text-decoration:none] min-w-[59px]">
                       Cushion
-                    </a>
+                    </span>
                   </div>
                 </div>
               </div>
@@ -152,13 +139,9 @@ const Shopbyshape = ({ className = "" }) => {
                     src="/image-5@2x.png"
                   />
                   <div className="flex flex-col items-center justify-start pt-px px-[18px] pb-0.5">
-                    <a
-                      className="relative text-[inherit] inline-block [text-decoration:none] min-w-[33px]"
-                      href="https://www.brilliantearth.com/diamond/pear/"
-                      target="_blank"
-                    >
+                    <span className="relative text-[inherit] inline-block [text-decoration:none] min-w-[33px]">
                       Pear
-                    </a>
+                    </span>
                   </div>
                 </div>
               </div>
@@ -173,13 +156,9 @@ const Shopbyshape = ({ className = "" }) => {
                     src="/image-6@2x.png"
                   />
                   <div className="flex flex-col items-center justify-start pt-px px-[7px] pb-0.5">
-                    <a
-                      className="relative text-[inherit] inline-block [text-decoration:none] min-w-[55px]"
-                      href="https://www.brilliantearth.com/diamond/radiant/"
-                      target="_blank"
-                    >
+                    <span className="relative text-[inherit] inline-block [text-decoration:none] min-w-[55px]">
                       Radiant
-                    </a>
+                    </span>
                   </div>
                 </div>
               </div>
@@ -194,13 +173,9 @@ const Shopbyshape = ({ className = "" }) => {
                     src="/image-7@2x.png"
                   />
                   <div className="flex flex-col items-center justify-start pt-px px-[5px] pb-0.5">
-                    <a
-                      className="relative text-[inherit] inline-block [text-decoration:none] min-w-[59px]"
-                      href="https://www.brilliantearth.com/diamond/princess/"
-                      target="_blank"
-                    >
+                    <span className="relative text-[inherit] inline-block [text-decoration:none] min-w-[59px]">
                       Princess
-                    </a>
+                    </span>
                   </div>
                 </div>
               </div>
@@ -215,13 +190,9 @@ const Shopbyshape = ({ className = "" }) => {
                     src="/image-8@2x.png"
                   />
                   <div className="flex flex-col items-center justify-start pt-px px-px pb-0.5">
-                    <a
-                      className="relative text-[inherit] inline-block [text-decoration:none] min-w-[67px]"
-                      href="https://www.brilliantearth.com/diamond/marquise/"
-                      target="_blank"
-                    >
+                    <span className="relative text-[inherit] inline-block [text-decoration:none] min-w-[67px]">
                       Marquise
-                    </a>
+                    </span>
                   </div>
                 </div>
               </div>
@@ -236,13 +207,9 @@ const Shopbyshape = ({ className = "" }) => {
                     src="/image-9@2x.png"
                   />
                   <div className="flex flex-col items-center justify-start pt-px px-[7px] pb-0.5">
-                    <a
-                      className="relative text-[inherit] inline-block [text-decoration:none] min-w-[56px]"
-                      href="https://www.brilliantearth.com/diamond/asscher/"
-                      target="_blank"
-                    >
+                    <span className="relative text-[inherit] inline-block [text-decoration:none] min-w-[56px]">
                       Asscher
-                    </a>
+                    </span>
                   </div>
                 </div>
               </div>
@@ -257,13 +224,9 @@ const Shopbyshape = ({ className = "" }) => {
                     src="/image-10@2x.png"
                   />
                   <div className="flex flex-col items-center justify-start pt-px px-3.5 pb-0.5">
-                    <a
-                      className="relative text-[inherit] inline-block [text-decoration:none] min-w-[41px]"
-                      href="https://www.brilliantearth.com/diamond/heart/"
-                      target="_blank"
-                    >
+                    <span className="relative text-[inherit] inline-block [text-decoration:none] min-w-[41px]">
                       Heart
-                    </a>
+                    </span>
                   </div>
                 </div>
               </div>
