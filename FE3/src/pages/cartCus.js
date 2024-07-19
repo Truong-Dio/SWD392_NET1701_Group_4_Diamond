@@ -4,9 +4,7 @@ import CartContainer from "../components/CartContainer";
 import Footer from "../components/Footer";
 
 const CartCus = () => {
-  const onItemLinkClick = useCallback(() => {
-    window.open(cartCus);
-  }, []);
+  
 
   return (
     <div className="w-full relative bg-wwwbrilliantearthcom-nero overflow-y-auto flex flex-col items-start justify-start leading-[normal] tracking-[normal] text-left text-smi text-wwwbrilliantearthcom-mine-shaft font-wwwbrilliantearthcom-inter-regular-1106">
@@ -24,7 +22,7 @@ const CartCus = () => {
           <div className="rounded flex flex-row items-start justify-start pt-[18px] pb-3 pr-[927px] pl-0 box-border max-h-[999999px]">
             <div
               className="flex flex-row items-start justify-start max-h-[999999px] cursor-pointer"
-              onClick={onItemLinkClick}
+
             >
               <a className="[text-decoration:none] relative leading-[18px] text-[inherit] inline-block min-w-[33px]">
                 Home

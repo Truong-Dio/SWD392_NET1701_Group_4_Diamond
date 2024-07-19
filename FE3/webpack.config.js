@@ -42,4 +42,10 @@ module.exports = {
       compress: true,
       port: 3000,
   },
+  resolve: {
+    fallback: {
+      "url": require.resolve("url/")
+    }
+  }
+
 };
