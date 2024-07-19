@@ -28,25 +28,27 @@ const Container = ({ className = "" }) => {
   ];
 
   const [diamonds, setDiamonds] = useState([]);
+const [mainDiamondID, setMainDiamondID] = useState([]); 
+const [subDiamondID, setSubDiamondID] = useState([]); 
 
   useEffect(() => {
     cartItems.forEach(item => {
-      fetchDiamondDetails(item.mainDiamondID, item.subDiamondID);
+      fetchDiamondDetails(item);
     });
   }, []);
   
-  const fetchDiamondDetails = async (mainDiamondID, subDiamondIDs) => {
+  const fetchDiamondDetails = async (item) => {
     try {
-      const mainDiamondResponse = await axios.get(`https://dss-cactgjg2a9ascrek.southeastasia-01.azurewebsites.net/api/Orders/Get?diamondID=${mainDiamondID}`);
+      const mainDiamondResponse = await axios.get(`https://dss-cactgjg2a9ascrek.southeastasia-01.azurewebsites.net/api/Orders/GetAll`);
       if (mainDiamondResponse.data.status === 1) {
-        setDiamonds(diamonds => [...diamonds, mainDiamondResponse.data.data]);
+        setDiamonds(mainDiamondResponse.data.data);
       } else {
         console.error("Failed to get main diamond data:", mainDiamondResponse.data.message);
       }
-      for (const subDiamondID of subDiamondIDs) {
-        const subDiamondResponse = await axios.get(`https://dss-cactgjg2a9ascrek.southeastasia-01.azurewebsites.net/api/Orders/Get?diamondID=${subDiamondID}`);
+      for (let subDiamondID of item.subDiamondID) {
+        const subDiamondResponse = await axios.get(`https://dss-cactgjg2a9ascrek.southeastasia-01.azurewebsites.net/api/Orders/GetAll `);
         if (subDiamondResponse.data.status === 1) {
-          setDiamonds(diamonds => [...diamonds, subDiamondResponse.data.data]);
+          setSubDiamondID(subDiamondResponse.data.data);
         } else {
           console.error("Failed to get sub diamond data:", subDiamondResponse.data.message);
         }
@@ -55,7 +57,7 @@ const Container = ({ className = "" }) => {
       console.error("Error fetching diamond details:", error);
     }
   };
-
+console.log()
 
   return (
     <section
@@ -89,14 +91,14 @@ const Container = ({ className = "" }) => {
                   <tbody>
                     
                     {diamonds.map((diamond) => (
-                      <tr key={diamond.diamondID}>
+                      <tr key={diamond.orderID}>
                         <td className="tm-product-name">{diamond.orderID}</td>
                         <td>{diamond.email}</td>
                         <td>{diamond.totalPrice}</td>
                         <td>{diamond.cutGrade}</td>
                         <td>{diamond.price}</td>
-                        <td>{diamond.mainDiamondID}</td>
-                        <td>{diamond.subDiamondID}</td>
+                        <td>{cartItems.mainDiamondID}</td>
+                        <td>{cartItems.subDiamondID}</td>
                       </tr>
                     ))}
                   </tbody>
