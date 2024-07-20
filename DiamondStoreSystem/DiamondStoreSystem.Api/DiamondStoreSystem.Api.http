@@ -1,0 +1,5 @@
+# @DiamondStoreSystem.Api_HostAddress = https://ioie.azurewebsites.net
+# GET {{DiamondStoreSystem.Api_HostAddress}}/weatherforecast/
+# Accept: application/json
+
+# ###

@@ -1,0 +1,26 @@
+.header-container {
+  margin-bottom: 20px; 
+  padding-left: 200px;
+  padding-right: 200px;
+  border-radius: 100px;
+  justify-content: space-evenly;
+}
+
+.navbar-nav .nav-item .nav-link {
+  color: #fff;
+  transition: background-color 0.3s ease;
+}
+.navbar-brand custom-brand{
+  border-radius: 50px;
+background: #faf5f5;
+box-shadow:  39px 39px 78px #d5d0d0,
+             -39px -39px 78px #ffffff;
+}
+
+.navbar-nav .nav-item .nav-link:hover {
+  background-color: #555;
+}
+
+.navbar-nav {
+  flex-wrap: nowrap; /* Ngăn các mục điều hướng xuống dòng */
+}
